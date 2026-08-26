@@ -83,3 +83,11 @@ config.local.yaml
 
 # ---- 保留: docs/ 与 skill/ 与 scripts/ 下源码、配置、契约示例 ----
 # (这些默认提交, 无需在此忽略)
+
+# ---- 内部评估基准 (Internal Eval Benchmark, NOT for Public) ----
+skill/references/golden_eval_dataset.json
+skill/test_report.html
+
+# ---- 明确禁止: output/ 任何运行时产物 ----
+output/**
+!/output/.gitkeep
