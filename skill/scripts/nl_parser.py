@@ -73,14 +73,14 @@ def parse_A(text: str, reg: FieldRegistry) -> dict:
     }
 
     # —— 1. 地理空间过滤 ——
-    if "上海市" in text or "上海" in text or "上海城区" in text:
-        q["filters"].append({"field": "省份", "op": "=", "value": "上海市"})
-    elif "江苏省" in text or "江苏" in text:
-        q["filters"].append({"field": "省份", "op": "=", "value": "江苏省"})
-    elif "浙江省" in text or "浙江" in text:
-        q["filters"].append({"field": "省份", "op": "=", "value": "浙江省"})
+    if "目标城市" in text or "目标城市" in text or "目标城区" in text:
+        q["filters"].append({"field": "省份", "op": "=", "value": "目标城市"})
+    elif "目标省份省" in text or "目标省份" in text:
+        q["filters"].append({"field": "省份", "op": "=", "value": "目标省份省"})
+    elif "目标省份省" in text or "目标省份" in text:
+        q["filters"].append({"field": "省份", "op": "=", "value": "目标省份省"})
 
-    big_areas = ["浦西大区", "浦东大区", "苏州大区", "无锡大区", "昆太大区", "嘉兴大区", "南通大区"]
+    big_areas = ["目标子区域B", "目标子区域A", "目标城市1大区", "目标城市5大区", "昆太大区", "目标城市8大区", "目标城市7大区"]
     # 仅当文本明确指定某个具体大区（且不是"各大区/大区分布/所有大区"）时才添加大区过滤
     if not any(k in text for k in ["各大区", "大区分", "所有大区", "每个大区"]):
         for a in big_areas:
@@ -110,7 +110,7 @@ def parse_A(text: str, reg: FieldRegistry) -> dict:
         "TOP", "top", "前", "选", "挑选", "圈选", "要", "找", "拓", "投放",
         "各大区", "大区", "夜宵", "大型", "大型酒", "大型酒店", "周边", "集中度",
         "分布", "渠道", "食杂店", "便利店", "小店", "售点", "客户", "门店",
-        "江苏", "浙江", "上海", "广东", "北京"
+        "目标省份", "目标省份", "目标城市", "广东", "北京"
     }
 
     # 优先匹配明确品牌

@@ -4,7 +4,7 @@
 构建 售点洞察 字段语义字典 (L2 元数据层, 零 LLM)。
 输出: field_dictionary.json —— 每个字段的 业务分组 / 语义 / 是否可作为筛选维度。
 
-业务字段会随版本演进, 故保留此生成器: 拿到一份含全部 152 列的基准导出,
+业务字段会随版本演进, 故保留此生成器: 拿到一份含全部 <n_cols> 列的基准导出,
 重跑即可刷新字典。规则+手工校订混合构建。
 
 用法:
@@ -16,7 +16,7 @@ from collections import Counter
 import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_SRC = os.path.expanduser("~/sh-store-insight/data/exports_89/售点洞察1784601676919.csv")
+DEFAULT_SRC = os.path.expanduser("~/outlet-insight/data/exports_89/售点洞察1784601676919.csv")
 DEFAULT_OUT = os.path.join(HERE, "field_dictionary.json")
 
 GROUPS = {
@@ -89,7 +89,7 @@ def assign_group(col: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description="构建售点洞察字段语义字典")
-    ap.add_argument("--src", default=DEFAULT_SRC, help="含全部 152 列的基准导出 CSV")
+    ap.add_argument("--src", default=DEFAULT_SRC, help="含全部 <n_cols> 列的基准导出 CSV")
     ap.add_argument("--out", default=DEFAULT_OUT, help="输出 JSON 路径")
     args = ap.parse_args()
 

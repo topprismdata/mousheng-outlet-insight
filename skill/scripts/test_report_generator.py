@@ -31,14 +31,14 @@ def test_analytical_goal_planner():
     planner = AnalyticalGoalPlanner()
     
     # 咖啡专项
-    p1 = planner.plan_report("请生成上海现磨咖啡竞争格局与未服务潜客开发报告")
+    p1 = planner.plan_report("请生成目标城市现磨咖啡竞争格局与未服务潜客开发报告")
     assert "咖啡" in p1["report_title"]
     assert len(p1["sections"]) == 4
     assert p1["sections"][0]["chart_type"] in ("donut", "pie")
     assert p1["sections"][1]["chart_type"] == "horizontal_bar"
 
     # 冰柜专项
-    p2 = planner.plan_report("华东食杂便利渠道全景与 200 台冰柜投放开发研报")
+    p2 = planner.plan_report("目标区域食杂便利渠道全景与 200 台冰柜投放开发研报")
     assert "冰柜" in p2["report_title"]
     assert len(p2["sections"]) >= 3
 
@@ -65,7 +65,7 @@ def test_chart_adapter_specs():
 def test_executive_report_synthesizer_e2e():
     """测试研报合成器端到端生成完整 HTML 报告。"""
     synthesizer = ExecutiveReportSynthesizer()
-    goal = "上海市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报"
+    goal = "目标城市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报"
     
     t0 = time.perf_counter()
     report = synthesizer.generate_report(goal)
@@ -96,7 +96,7 @@ def test_demo_server_report_endpoints():
     # 触发生成研报
     req = urllib.request.Request(
         f"{base}/api/generate_report",
-        data=json.dumps({"goal": "华东食杂便利渠道全景与 200 台冰柜投放开发研报"}).encode("utf-8"),
+        data=json.dumps({"goal": "目标区域食杂便利渠道全景与 200 台冰柜投放开发研报"}).encode("utf-8"),
         headers={"Content-Type": "application/json"}
     )
     res = json.loads(urllib.request.urlopen(req).read())

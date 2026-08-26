@@ -100,7 +100,7 @@ class ExecutiveReportSynthesizer:
 
         # 3. 跨章节宏观执行摘要 (Executive Summary) 提炼
         exec_summary = (
-            f"本专题研报针对「{goal_text}」进行了 4 维度深度数据挖掘，覆盖 629,074 个华东在册售点。"
+            f"本专题研报针对「{goal_text}」进行了 4 维度深度数据挖掘，覆盖 <n_rows> 个目标区域在册售点。"
             f"分析发现：{ '；'.join(s['verdict'] for s in executed_sections[:3]) }。"
         )
 
@@ -278,7 +278,7 @@ class ExecutiveReportSynthesizer:
 if __name__ == "__main__":
     synthesizer = ExecutiveReportSynthesizer()
     print("=== 智能多维研报合成器测试 ===")
-    rep = synthesizer.generate_report("请生成上海现磨咖啡竞争格局与未服务潜客开发报告")
+    rep = synthesizer.generate_report("请生成目标城市现磨咖啡竞争格局与未服务潜客开发报告")
     print(f"\n[研报生成成功] {rep['report_title']}")
     print(f"包含章节数: {rep['total_sections']} 个 | 总耗时: {rep['total_elapsed_seconds']}s")
     print(f"HTML 研报输出路径: {rep['html_report_path']}")

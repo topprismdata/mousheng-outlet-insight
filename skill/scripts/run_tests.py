@@ -2,7 +2,7 @@
 """
 run_tests.py
 ============
-sh-store-insight 数据分析 Agent —— 场景化测试套件（固化进 Skill）。
+outlet-insight 数据分析 Agent —— 场景化测试套件（固化进 Skill）。
 
 覆盖能力：A类明确查询 / B类分布探索 / C类规则排行 / 多步会话 / Dry-plan 透明计划 /
          负向编译护栏 / 数据质量体检 / 纠偏闭环 / embedding 召回 / MCP 多步暴露。
@@ -69,10 +69,10 @@ def _ask(text, use_memory=False, sess=None):
 
 # ============================================================ A 类：明确查询
 def test_A():
-    r = _ask("浦西大区的美宜佳清单")
-    R.ok("T01", "A-品牌+大区(美宜佳+浦西)", "A类明确查询",
+    r = _ask("目标子区域B的美宜佳清单")
+    R.ok("T01", "A-品牌+大区(美宜佳+目标子区域B)", "A类明确查询",
          r["rows"] == 37, "37 行", f'{r["rows"]} 行',
-         detail="DSL 过滤: 规划大区=浦西大区; 连锁品牌名称 contains 美宜佳")
+         detail="DSL 过滤: 规划大区=目标子区域B; 连锁品牌名称 contains 美宜佳")
 
     r = _ask("美宜佳清单")
     R.ok("T02", "A-品牌全量(美宜佳)", "A类明确查询",
@@ -127,9 +127,9 @@ def test_B():
     R.ok("T09", "B-餐饮街的客户分布", "B类分布探索",
          r["rows"] > 0, "行数>0", f'{r["rows"]} 行 (聚合: {r["columns"]})')
 
-    r = _ask("各业态在江苏的数量")
+    r = _ask("各业态在目标省份的数量")
     out = r["out"]
-    R.ok("T10", "B-江苏各业态数量", "B类分布探索",
+    R.ok("T10", "B-目标省份各业态数量", "B类分布探索",
          r["rows"] > 0 and "渠道组" in out.columns,
          "行数>0 且含 渠道组 维度", f'行数={r["rows"]}, 维度列={list(out.columns)}')
 
@@ -139,9 +139,9 @@ def test_B():
          r["rows"] > 0 and "规划大区" in out.columns,
          "行数>0 且含 规划大区 维度", f'行数={r["rows"]}, 维度列={list(out.columns)}')
 
-    r = _ask("上海市各城市的客户数量")
+    r = _ask("目标城市各城市的客户数量")
     out = r["out"]
-    R.ok("T12", "B-上海市各城市数量", "B类分布探索",
+    R.ok("T12", "B-目标城市各城市数量", "B类分布探索",
          r["rows"] > 0 and "城市" in out.columns,
          "行数>0 且含 城市 维度", f'行数={r["rows"]}, 维度列={list(out.columns)}')
 
@@ -169,12 +169,12 @@ def test_multistep():
     s = QuerySession(use_cache=True)
     r1 = s.ask("美宜佳清单", verbose=False, use_memory=False)
     assert r1["rows"] == 346
-    r2 = s.ask("这些里浦西大区的", verbose=False, use_memory=False)
+    r2 = s.ask("这些里目标子区域B的", verbose=False, use_memory=False)
     ws_after2 = len(s.current)
     r3 = s.ask("看它们的业态分布", verbose=False, use_memory=False)
     r4 = s.ask("整个数据里客房数大于100间的酒店", verbose=False, use_memory=False)
     ws_after4 = len(s.current)
-    R.ok("T15", "多步会话(取美宜佳→筛浦西→看分布→回全量)", "多步会话",
+    R.ok("T15", "多步会话(取美宜佳→筛目标子区域B→看分布→回全量)", "多步会话",
          ws_after2 == 37 and r3["rows"] > 0 and ws_after4 == r4["rows"] and r4["rows"] > 0,
          "工作集: 346→37→(分布 N 行)→客房>100全量",
          f'step2工作集={ws_after2}, step3分布={r3["rows"]}行, step4={ws_after4}行(全量客房>100)')
@@ -241,10 +241,10 @@ def test_correction_and_embedding():
     QueryMemory().clear()
     s = QuerySession(use_cache=True)
     r1 = s.ask("美宜佳清单", verbose=False, use_memory=True)
-    r2 = s.fix_last(correct_nl="美宜佳且规划大区=浦西大区", verbose=False)
+    r2 = s.fix_last(correct_nl="美宜佳且规划大区=目标子区域B", verbose=False)
     s2 = QuerySession(use_cache=True)
     r3 = s2.ask("美宜佳清单", verbose=False, use_memory=True)
-    R.ok("T22", "纠偏闭环(美宜佳346 → :fix浦西37 → 重复命中对)", "纠偏闭环",
+    R.ok("T22", "纠偏闭环(美宜佳346 → :fix目标子区域B37 → 重复命中对)", "纠偏闭环",
          r1["rows"] == 346 and r2["rows"] == 37 and r3["rows"] == 37,
          "首问346, fix后37, 重复原话命中37",
          f'r1={r1["rows"]}, r2(fix)={r2["rows"]}, r3(重复)={r3["rows"]}')
@@ -284,7 +284,7 @@ def test_mcp():
                            "arguments": {"question": "美宜佳清单", "session_id": "unit25"}}}),
         frame({"jsonrpc": "2.0", "id": 5, "method": "tools/call",
                 "params": {"name": "query",
-                           "arguments": {"question": "这些里浦西大区的",
+                           "arguments": {"question": "这些里目标子区域B的",
                                          "session_id": "unit25", "scope": "current"}}}),
         frame({"jsonrpc": "2.0", "id": 6, "method": "tools/call",
                 "params": {"name": "session_reset", "arguments": {"session_id": "unit25"}}}),
@@ -336,7 +336,7 @@ def test_mcp():
 
 # ============================================================ 统计/画像层（第5块）
 def test_profile():
-    """画像层用合成小数据验证（不依赖 584MB 全量，保持套件快速）。"""
+    """画像层用合成小数据验证（不依赖 <size> MB 全量，保持套件快速）。"""
     import tempfile
     from profiler import build_profile, load_profile, route_metric, gen_schema_md
     from agent_core import FieldRegistry
@@ -344,7 +344,7 @@ def test_profile():
     # ---- 合成数据：餐饮有点评评分、住宿有携程评分/房间数；按业态覆盖率不同 ----
     df = pd.DataFrame({
         "渠道组": ["餐饮", "餐饮", "住宿", "住宿", "餐饮"],
-        "省份": ["江苏省", "江苏省", "浙江省", "浙江省", "江苏省"],
+        "省份": ["目标省份省", "目标省份省", "目标省份省", "目标省份省", "目标省份省"],
         "大众点评餐饮点评评分星级": [4.0, 3.5, None, None, 4.2],
         "携程-综合评分": [None, None, 4.5, 4.0, None],
         "携程-房间数": [None, None, 120, 80, None],
@@ -478,7 +478,7 @@ def test_engine():
 
     df = pd.DataFrame({
         "渠道组": ["餐饮", "餐饮", "住宿", "住宿", "餐饮"],
-        "规划大区": ["浦西大区", "浦西大区", "浦东大区", "浦东大区", "苏州大区"],
+        "规划大区": ["目标子区域B", "目标子区域B", "目标子区域A", "目标子区域A", "目标城市1大区"],
         "周末均值客流(人)": [100, 200, 300, 400, 500],
         "连锁品牌名称": ["美宜佳", "美宜佳", "如家", "如家", "美宜佳"],
     })
@@ -545,12 +545,12 @@ def test_insight():
             and bool(c_ins["conclusion"].get("verdict")) and "action" not in c_ins)
 
     # B 类：分布
-    b_df = pd.DataFrame({"规划大区": ["浦西大区", "浦东大区"], "客户数": [100, 50]})
+    b_df = pd.DataFrame({"规划大区": ["目标子区域B", "目标子区域A"], "客户数": [100, 50]})
     b_ins = synthesize({"type": "B", "group_by": ["规划大区"]}, b_df, None)
-    ok_b = ("浦西大区" in b_ins["conclusion"]["summary"]) and len(b_ins["followups"]) >= 1 and "action" not in b_ins
+    ok_b = ("目标子区域B" in b_ins["conclusion"]["summary"]) and len(b_ins["followups"]) >= 1 and "action" not in b_ins
 
     # A 类：明细
-    a_df = pd.DataFrame({"规划大区": ["浦西大区"] * 3 + ["浦东大区"]})
+    a_df = pd.DataFrame({"规划大区": ["目标子区域B"] * 3 + ["目标子区域A"]})
     a_ins = synthesize({"type": "A"}, a_df, None)
     ok_a = "主要集中在" in a_ins["conclusion"]["summary"] and "action" not in a_ins
 
@@ -633,7 +633,7 @@ def test_dm_layer():
         return
 
     dsl = {"type": "B",
-           "filters": [{"field": "城市", "op": "=", "value": "上海城区"},
+           "filters": [{"field": "城市", "op": "=", "value": "目标城区"},
                        {"field": "渠道组", "op": "=", "value": "餐饮"},
                        {"field": "是否连锁", "op": "=", "value": "是"}],
            "group_by": ["连锁品牌名称"],
@@ -823,8 +823,8 @@ def test_boundary_contracts():
     import yaml
 
     # BCT-01: 输出结构中绝对不得存在 action 字段 (A/B/C/空) 且严格为 11 顶级字段
-    sample_a = synthesize({"type": "A"}, pd.DataFrame({"省份": ["江苏省"] * 5}), None)
-    sample_b = synthesize({"type": "B", "group_by": ["省份"]}, pd.DataFrame({"省份": ["江苏省"], "客户数": [100]}), None)
+    sample_a = synthesize({"type": "A"}, pd.DataFrame({"省份": ["目标省份省"] * 5}), None)
+    sample_b = synthesize({"type": "B", "group_by": ["省份"]}, pd.DataFrame({"省份": ["目标省份省"], "客户数": [100]}), None)
     sample_c = synthesize({"type": "C"}, pd.DataFrame({"经营场所名称": ["A商场"], "餐饮基数": [30], "达标率": [0.8], "等级": ["高"]}), {"audited": True, "flags": ["缺失提示"]})
     sample_empty = synthesize({"type": "A"}, None, None)
 
@@ -1012,7 +1012,7 @@ def gen_report(out_path: Path, total: float):
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
-<title>sh-store-insight 测试报告</title>
+<title>outlet-insight 测试报告</title>
 <style>
  body{{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:0;background:#f6f8fa;color:#1f2328}}
  .wrap{{max-width:1180px;margin:0 auto;padding:28px}}
@@ -1031,8 +1031,8 @@ def gen_report(out_path: Path, total: float):
  .summary{{background:#fff;border:1px solid #d0d7de;border-radius:10px;padding:14px 18px;font-size:14px;line-height:1.7}}
 </style></head>
 <body><div class="wrap">
- <h1>sh-store-insight 数据分析 Agent · 场景化测试报告</h1>
- <div class="sub">生成时间：{time.strftime('%Y-%m-%d %H:%M:%S')} ｜ 数据：SH全量售点洞察（{len(SESS.full_df):,} 行）｜ 运行耗时 {total:.1f}s</div>
+ <h1>outlet-insight 数据分析 Agent · 场景化测试报告</h1>
+ <div class="sub">生成时间：{time.strftime('%Y-%m-%d %H:%M:%S')} ｜ 数据：<data>):,} 行）｜ 运行耗时 {total:.1f}s</div>
 
  <div class="cards">
    <div class="card"><div class="n">{len(R.cases)}</div><div class="l">总用例数</div></div>
@@ -1069,7 +1069,7 @@ def gen_report(out_path: Path, total: float):
 # ============================================================ 主入口
 def main():
     import argparse
-    ap = argparse.ArgumentParser(description="sh-store-insight 场景化测试套件")
+    ap = argparse.ArgumentParser(description="outlet-insight 场景化测试套件")
     ap.add_argument("--out", default=str(SKILL_DIR / "test_report.html"),
                     help="HTML 报告输出路径（默认 SKILL_DIR/test_report.html）")
     ap.add_argument("--no-report", action="store_true", help="不生成 HTML 报告")

@@ -40,12 +40,12 @@ DIMENSIONS = ["省份", "城市", "规划大区", "渠道组", "细分渠道", "
 # 地理归一化：用户口语（省级/简称）→ 底表 城市 列真实取值
 # 生产环境应下沉到 field_registry 语义层，这里先做最小可用映射让示例跑通
 GEO_NORM = {
-    "上海市": "上海城区",
-    "上海": "上海城区",
-    "苏州": "苏州市",
-    "无锡": "无锡市",
-    "嘉兴": "嘉兴市",
-    "南通": "南通市",
+    "目标城市": "目标城区",
+    "目标城市": "目标城区",
+    "目标城市1": "目标城市1市",
+    "目标城市5": "目标城市5市",
+    "目标城市8": "目标城市8市",
+    "目标城市7": "目标城市7市",
 }
 
 MEASURE_COLS = {
@@ -131,7 +131,7 @@ def query_stat(db_path: str,
     统计级别查询，命中 DM 表（不扫底表）。
 
     group_by : 需是 DM 维度之一（省份/城市/规划大区/渠道组/细分渠道/是否连锁/连锁品牌名称）
-    filters  : {维度: 值} 等值过滤（如 {"城市":"上海市","渠道组":"餐饮","是否连锁":"是"}）
+    filters  : {维度: 值} 等值过滤（如 {"城市":"目标城市","渠道组":"餐饮","是否连锁":"是"}）
     order_by : "cnt" / "avg_rating" / "avg_traffic" / "sum_potential"
     returns  : (DataFrame, drill_note)
     """
@@ -160,7 +160,7 @@ def query_stat(db_path: str,
                 # 不静默丢弃（Q-province 静默忽略教训）：记入 drill_note.ignored
                 ignored.append(k)
                 continue
-            # 地理归一化：上海市 → 上海城区
+            # 地理归一化：目标城市 → 目标城区
             if k == "城市" and v in GEO_NORM:
                 v = GEO_NORM[v]
             where.append(f'"{k}" = ?')
@@ -274,7 +274,7 @@ def drilldown(parquet_path: str, filters: dict, limit: int = 200):
     """
     下钻：给定过滤键，回底表取原始明细。
 
-    filters : {维度: 值} 精确过滤（如 城市=上海市, 渠道组=餐饮, 是否连锁=是, 连锁品牌名称=肯德基）
+    filters : {维度: 值} 精确过滤（如 城市=目标城市, 渠道组=餐饮, 是否连锁=是, 连锁品牌名称=肯德基）
     returns : DataFrame（原始行，限量）
     """
     df = pd.read_parquet(parquet_path, engine="pyarrow")
@@ -409,30 +409,30 @@ def route_b_query(query: dict, reg=None, db_path: str | None = None):
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import sys
-    PARQUET = "/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.parquet"
-    DB = "/Users/ghb/sh-store-insight/data/sh_dm.sqlite"
+    PARQUET = "/Users/ghb/outlet-insight/data/<data>.parquet"
+    DB = "/Users/ghb/outlet-insight/data/sh_dm.sqlite"
 
     if "--build" in sys.argv or not os.path.exists(DB):
         build_dm(PARQUET, DB)
 
-    # 示例：上海市餐饮的连锁品牌都有哪些，按照门店数量排序
+    # 示例：目标城市餐饮的连锁品牌都有哪些，按照门店数量排序
     res, note = query_stat(
         DB,
         group_by="连锁品牌名称",
-        filters={"城市": "上海市", "渠道组": "餐饮", "是否连锁": "是"},
+        filters={"城市": "目标城市", "渠道组": "餐饮", "是否连锁": "是"},
         order_by="cnt",
         limit=15,
     )
     pd.set_option("display.max_rows", 30)
     pd.set_option("display.width", 120)
-    print("\n=== 统计查询：上海市餐饮连锁品牌（按门店数排序 TOP15）===")
+    print("\n=== 统计查询：目标城市餐饮连锁品牌（按门店数排序 TOP15）===")
     print(res.to_string(index=False))
 
     if "--drill" in sys.argv and len(res) > 0:
         top_brand = res.iloc[0]["dim_value"]
-        print(f"\n=== 下钻：上海市餐饮 连锁品牌={top_brand} 的原始明细（前 5 行）===")
+        print(f"\n=== 下钻：目标城市餐饮 连锁品牌={top_brand} 的原始明细（前 5 行）===")
         detail = drilldown(PARQUET, {
-            "城市": "上海市", "渠道组": "餐饮",
+            "城市": "目标城市", "渠道组": "餐饮",
             "是否连锁": "是", "连锁品牌名称": top_brand,
         }, limit=5)
         print(detail[["腾讯售点名称", "城市", "渠道组", "连锁品牌名称",

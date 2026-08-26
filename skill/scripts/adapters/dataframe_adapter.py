@@ -56,7 +56,7 @@ DIMENSION_CONCEPT_MAP = {
 def extract_insight_request(dsl: dict, result_df: pd.DataFrame | None,
                             audit_report: dict | None = None,
                             request_id: str | None = None,
-                            dataset_id: str = "sh-store-insight-152",
+                            dataset_id: str = "outlet-data-profile",
                             data_version: str = "2026.08",
                             ontology_profile_version: str = "0.1.0-rc2",
                             dataset_mapping_version: str = "2.1.0") -> dict[str, Any]:

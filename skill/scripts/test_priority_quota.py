@@ -61,7 +61,7 @@ def test_freezer_quota_selection_200(shared_data):
 def test_fmcg_food_quota_selection_100(shared_data):
     """测试场景 B：餐饮新品铺货圈选（目标 100 家，优先餐饮街，按客流降序）。"""
     reg, df = shared_data
-    q_text = "浦东大区圈选100家餐饮店，优先餐饮街，按周末客流降序"
+    q_text = "目标子区域A圈选100家餐饮店，优先餐饮街，按周末客流降序"
     dsl = auto_parse(q_text, reg)
 
     assert dsl["limit"] == 100

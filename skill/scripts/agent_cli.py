@@ -4,7 +4,7 @@ agent_cli.py
 售点洞察通用查询智能体 — 命令行入口（供智能体或直接调用）。
 
 单条查询（向后兼容）：
-    python agent_cli.py -q "浦西大区的美宜佳清单" --data /path/to.csv --out /tmp/r.csv
+    python agent_cli.py -q "目标子区域B的美宜佳清单" --data /path/to.csv --out /tmp/r.csv
 
 多步会话（推荐：会话态 + Dry-plan + RAG 记忆）：
     python agent_cli.py -s --data /path/to.csv
@@ -292,7 +292,7 @@ def main():
 
     # 旧版单条 REPL（无状态，向后兼容）
     print("\n售点洞察智能体 — 输入中文需求，Ctrl+D 退出")
-    print("示例: 浦西大区的美宜佳清单 / 客房数大于100间的非连锁酒店 /")
+    print("示例: 目标子区域B的美宜佳清单 / 客房数大于100间的非连锁酒店 /")
     print("     餐饮街的客户分布 / 街道餐饮不低于20家+评分3.8+占比50%为高")
     while True:
         try:

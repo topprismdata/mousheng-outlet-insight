@@ -3,7 +3,7 @@
 run_52_benchmark.py
 ===================
 谋圣·售点洞察 52 组快消/零售全景业务查询基准压测套件 (FMCG 52-Query Benchmark Pipeline)。
-在 629,074 行 × 153 列真实全量底表上端到端执行全量 52 组业务查询：
+在 <n_rows> 行 × <n_cols> 列真实全量底表上端到端执行全量 52 组业务查询：
 NL -> auto_parse -> DSL -> validate_query -> run_query -> audit -> dataframe_adapter -> InsightRequest -> insight -> InsightPackage
 
 生成详尽的执行报告：output/fmcg_52_benchmark_execution_report.md
@@ -34,7 +34,7 @@ BENCHMARK_QUERIES = [
     # ── 主题一：连锁品牌与市场集中度格局 (Q01 ~ Q10) ──
     {
         "id": "Q01", "theme": "连锁品牌与市场集中度格局",
-        "question": "浦西大区的美宜佳清单", "category": "positive", "expected_type": "A",
+        "question": "目标子区域B的美宜佳清单", "category": "positive", "expected_type": "A",
         "desc": "单品牌特定大区明细提取"
     },
     {
@@ -44,7 +44,7 @@ BENCHMARK_QUERIES = [
     },
     {
         "id": "Q03", "theme": "连锁品牌与市场集中度格局",
-        "question": "上海城区餐饮连锁品牌集中度", "category": "positive", "expected_type": "B",
+        "question": "目标城区餐饮连锁品牌集中度", "category": "positive", "expected_type": "B",
         "desc": "核心品类集中度 HHI/CR4/Gini 建模"
     },
     {
@@ -79,14 +79,14 @@ BENCHMARK_QUERIES = [
     },
     {
         "id": "Q10", "theme": "连锁品牌与市场集中度格局",
-        "question": "浙江各业态连锁品牌数量", "category": "positive", "expected_type": "B",
+        "question": "目标省份各业态连锁品牌数量", "category": "positive", "expected_type": "B",
         "desc": "省域业态品牌池聚集特征"
     },
 
     # ── 主题二：渠道业态与商圈空间盲区 (Q11 ~ Q20) ──
     {
         "id": "Q11", "theme": "渠道业态与商圈空间盲区",
-        "question": "江苏各业态数量", "category": "positive", "expected_type": "B",
+        "question": "目标省份各业态数量", "category": "positive", "expected_type": "B",
         "desc": "全省细分业态全景结构"
     },
     {
@@ -205,12 +205,12 @@ BENCHMARK_QUERIES = [
     },
     {
         "id": "Q34", "theme": "多源数据冲突与异常背离",
-        "question": "上海城区各业态售点数量", "category": "positive", "expected_type": "B",
+        "question": "目标城区各业态售点数量", "category": "positive", "expected_type": "B",
         "desc": "特大城市核心区业态基准分布"
     },
     {
         "id": "Q35", "theme": "多源数据冲突与异常背离",
-        "question": "浦东大区食杂店清单", "category": "positive", "expected_type": "A",
+        "question": "目标子区域A食杂店清单", "category": "positive", "expected_type": "A",
         "desc": "单大区基础食杂售点清单"
     },
     {
@@ -447,7 +447,7 @@ def generate_markdown_report(results: list[dict], passed_count: int, total_time:
         "# 谋圣·售点洞察 52 组快消/零售全景业务查询基准压测实测报告",
         "",
         f"> **测试时间**: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}  ",
-        f"> **底表规模**: 629,074 行 × 153 列 (华东全量潜客大宽表)  ",
+        f"> **底表规模**: <n_rows> 行 × <n_cols> 列 (目标区域全量潜客大宽表)  ",
         f"> **通过率**: **{passed_count} / {len(results)} (100.0%)** | **总耗时**: {total_time}s  ",
         f"> **契约版本**: `InsightPackage v1.2` (11 顶级字段强封闭，0 越界命令注入)",
         "",

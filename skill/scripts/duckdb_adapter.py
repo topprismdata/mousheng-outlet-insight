@@ -3,7 +3,7 @@
 duckdb_adapter.py
 =================
 DuckDB 高性能数据层适配器 (v1.2)。
-以内存数据库方式直读 Parquet 文件 (629,074 行 × 153 列)，提供毫秒级 SQL 查询执行。
+以内存数据库方式直读 Parquet 文件 (<n_rows> 行 × <n_cols> 列)，提供毫秒级 SQL 查询执行。
 
 主要能力：
 1. `init_duckdb(parquet_path)`: 将 Parquet 注册为 `outlets` 视图；
@@ -21,7 +21,7 @@ import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
-DEFAULT_PARQUET_PATH = PROJECT_ROOT / "data" / "SH全量售点洞察1784527757315.parquet"
+DEFAULT_PARQUET_PATH = PROJECT_ROOT / "data" / "<data>.parquet"
 
 _GLOBAL_CON: duckdb.DuckDBPyConnection | None = None
 _REGISTERED_PATH: Path | None = None
@@ -70,6 +70,6 @@ def get_table_schema(parquet_path: Path | str | None = None) -> dict[str, str]:
 if __name__ == "__main__":
     t0 = time.perf_counter()
     con = get_duckdb_connection()
-    df_sample = query_df("SELECT 规划大区, 渠道组, COUNT(*) as 售点数 FROM outlets WHERE 省份 = '上海市' GROUP BY 规划大区, 渠道组 ORDER BY 售点数 DESC LIMIT 10")
+    df_sample = query_df("SELECT 规划大区, 渠道组, COUNT(*) as 售点数 FROM outlets WHERE 省份 = '目标城市' GROUP BY 规划大区, 渠道组 ORDER BY 售点数 DESC LIMIT 10")
     print(f"\n[DuckDB Test] 查询耗时: {time.perf_counter()-t0:.3f}s")
     print(df_sample)

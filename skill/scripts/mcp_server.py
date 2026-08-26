@@ -26,9 +26,9 @@ mcp_server.py
 注册到 ~/.workbuddy/mcp.json 示例：
   {
     "mcpServers": {
-      "sh-store-insight": {
+      "outlet-insight": {
         "command": "/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python",
-        "args": ["/Users/ghb/.workbuddy/skills/sh-store-insight/scripts/mcp_server.py"]
+        "args": ["/Users/ghb/.workbuddy/skills/outlet-insight/scripts/mcp_server.py"]
       }
     }
   }
@@ -52,7 +52,7 @@ from adapters.legacy_dataframe_api import synthesize
 HERE = Path(__file__).resolve().parent
 NODE = "/Users/ghb/.workbuddy/binaries/node/versions/22.22.2/bin/node"
 NODE_PATH = "/Users/ghb/.workbuddy/binaries/node/workspace/node_modules"
-CHART_OUT = Path("/Users/ghb/sh-store-insight/output/charts")
+CHART_OUT = Path("/Users/ghb/outlet-insight/output/charts")
 
 # 启动时加载一次全量数据，常驻（MCP 服务进程级单例）
 print("[mcp] 启动：加载全量售点数据...", file=sys.stderr)
@@ -64,7 +64,7 @@ set_profile(PROFILE)
 print(f"[mcp] 字段画像：{PROFILE.get('n_fields') if PROFILE else 0} 字段已载入", file=sys.stderr)
 
 # 服务端多会话管理：每个 session_id 持有独立的「门店级工作集(current)」与步骤历史。
-# 复用同一个 ENGINE（reg + full_df + compute），不重复加载 584MB。
+# 复用同一个 ENGINE（reg + full_df + compute），不重复加载 <size> MB。
 # sessions: sid -> {"current": DataFrame, "steps": [nl, ...], "rows": int}
 SESSIONS: dict[str, dict] = {}
 
@@ -146,8 +146,8 @@ TOOLS = [
                              "description": "聚合维度（须是 DM 维度之一，如 连锁品牌名称/渠道组）"},
                 "filters": {"type": "object",
                             "description": "可选。{维度: 值} 等值过滤，如 "
-                                           '{"城市":"上海市","渠道组":"餐饮","是否连锁":"是"}'
-                                           "（城市口语词自动归一化，如 上海市→上海城区）"},
+                                           '{"城市":"目标城市","渠道组":"餐饮","是否连锁":"是"}'
+                                           "（城市口语词自动归一化，如 目标城市→目标城区）"},
                 "order_by": {"type": "string", "enum": ["cnt", "avg_rating", "avg_traffic", "sum_potential"],
                              "description": "可选。排序度量，默认 cnt"},
                 "ascending": {"type": "boolean", "description": "可选。默认 false（降序）"},
@@ -167,7 +167,7 @@ TOOLS = [
             "type": "object",
             "properties": {
                 "filters": {"type": "object",
-                            "description": '{维度: 值} 精确过滤键，如 {"城市":"上海市","渠道组":"餐饮",'
+                            "description": '{维度: 值} 精确过滤键，如 {"城市":"目标城市","渠道组":"餐饮",'
                                            '"是否连锁":"是","连锁品牌名称":"瑞幸咖啡"}'},
                 "limit": {"type": "integer", "description": "可选。明细行数上限，默认 200"},
                 "columns": {"type": "array", "items": {"type": "string"},
@@ -201,7 +201,7 @@ TOOLS = [
                        "description": "可选。组合图（Combo）第二个度量列；传入即生成『柱(y,左轴)+线(y2,右轴)』双轴图。"},
                 "filters": {"type": "object",
                             "description": "可选。{维度: 值} 等值过滤，如 "
-                                           '{"城市":"上海市","渠道组":"餐饮","是否连锁":"是"}'},
+                                           '{"城市":"目标城市","渠道组":"餐饮","是否连锁":"是"}'},
                 "order_by": {"type": "string", "enum": ["cnt", "avg_rating", "avg_traffic", "sum_potential"],
                              "description": "可选。排序（也是默认绘制的度量 y），默认 cnt"},
                 "ascending": {"type": "boolean", "description": "可选。默认 false（降序）"},
@@ -587,7 +587,7 @@ def handle(request: dict):
         return {"jsonrpc": "2.0", "id": rid, "result": {
             "protocolVersion": PROTOCOL,
             "capabilities": {"tools": {}},
-            "serverInfo": {"name": "sh-store-insight", "version": "1.0.0"},
+            "serverInfo": {"name": "outlet-insight", "version": "1.0.0"},
         }}
     if method == "notifications/initialized":
         return None  # 通知，不回

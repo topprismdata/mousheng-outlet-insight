@@ -27,7 +27,7 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = PROJECT_ROOT / "skill" / "scripts"
-DATA_PATH = PROJECT_ROOT / "data" / "SH全量售点洞察1784527757315.csv"
+DATA_PATH = PROJECT_ROOT / "data" / "<data>.csv"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from agent_core import FieldRegistry, validate_query, run_query, load_store_data, apply_filters
@@ -112,7 +112,7 @@ class DemoSession:
 class DemoState:
     def __init__(self) -> None:
         self.status = "loading"
-        self.message = "正在加载 629,074 行真实售点数据"
+        self.message = "正在加载 <n_rows> 行真实售点数据"
         self.session: DemoSession | None = None
         self.overview: dict[str, Any] | None = None
         self.error: str | None = None
@@ -176,21 +176,21 @@ def clean_records(frame: pd.DataFrame, limit: int = 100) -> list[dict[str, Any]]
 
 
 def district_counts(frame: pd.DataFrame) -> list[dict[str, Any]]:
-    """提取上海各区县在当前数据集中的分布统计。"""
+    """提取目标城市各区县在当前数据集中的分布统计。"""
     if frame is None or frame.empty or "区县" not in frame.columns:
         return []
-    sh_frame = frame[frame["省份"].eq("上海市")] if "省份" in frame.columns else frame
+    sh_frame = frame[frame["省份"].eq("目标城市")] if "省份" in frame.columns else frame
     values = sh_frame["区县"].dropna().astype(str).str.strip()
     counts = values[values.ne("")].value_counts()
     return [{"name": name, "value": int(value)} for name, value in counts.items()]
 
 
 def build_overview(frame: pd.DataFrame) -> dict[str, Any]:
-    sh = frame[frame["省份"].eq("上海市")].copy()
+    sh = frame[frame["省份"].eq("目标城市")].copy()
     service = sh["服务状态"].fillna("未知").astype(str).value_counts().to_dict()
     channel = sh["渠道组"].fillna("未知").astype(str).value_counts().head(8).to_dict()
     return {
-        "scope": "上海市",
+        "scope": "目标城市",
         "total": int(len(sh)),
         "full_total": int(len(frame)),
         "district_count": int(sh["区县"].nunique(dropna=True)),
@@ -198,8 +198,8 @@ def build_overview(frame: pd.DataFrame) -> dict[str, Any]:
         "channels": [{"name": str(k), "value": int(v)} for k, v in channel.items()],
         "districts": district_counts(sh),
         "preview": clean_records(sh, 40),
-        "question": "快速了解上海各区县的售点总量和清单",
-        "summary": f"当前华东数据全集共包含 {len(frame):,} 个售点，其中上海市包含 {len(sh):,} 个售点，覆盖全部 {sh['区县'].nunique(dropna=True)} 个区县。点击地图可直接下钻到该区县的真实清单。",
+        "question": "快速了解目标城市各区县的售点总量和清单",
+        "summary": f"当前目标大区数据全集共包含 {len(frame):,} 个售点，其中目标城市包含 {len(sh):,} 个售点，覆盖全部 {sh['区县'].nunique(dropna=True)} 个区县。点击地图可直接下钻到该区县的真实清单。",
         "quality": "区县空间归属可用；当前物理数据无经纬度，地图准确呈现行政区聚合，不表达精确点位。",
     }
 
@@ -209,7 +209,7 @@ def examples_payload() -> list[dict[str, str]]:
     categories = [
         {"theme": "🎯 目标配额与优先级", "queries": [
             {"id": "Q_QT1", "question": "在未服务食杂店中选200家投放冰柜，按月均潜力排序", "desc": "目标200家配额选点 · 潜力截断线 · 390:1溢出比"},
-            {"id": "Q_QT2", "question": "浦东大区圈选100家餐饮店，优先餐饮街，按周末客流降序", "desc": "目标100家配额 · 优先级加权 · 客流截断线"},
+            {"id": "Q_QT2", "question": "目标子区域A圈选100家餐饮店，优先餐饮街，按周末客流降序", "desc": "目标100家配额 · 优先级加权 · 客流截断线"},
             {"id": "Q_QT3", "question": "挑选50家非连锁酒店，按客房数降序", "desc": "大客户攻坚50家 · 独立单体大体量酒店"},
             {"id": "Q_QT4", "question": "选500家客房大于300间的酒店", "desc": "严苛条件缺口诊断 · 触发 gap_detected 与放宽建议"}
         ]},
@@ -229,13 +229,13 @@ def examples_payload() -> list[dict[str, str]]:
             {"id": "Q12", "question": "餐饮街的客户分布", "desc": "餐饮街便利零售 White Space 供给盲区"},
             {"id": "Q14", "question": "商场业态客户分布", "desc": "商业综合体内部业态多样性结构"},
             {"id": "Q13", "question": "客房>100且非连锁酒店", "desc": "独立大体量住宿售点空间清单"},
-            {"id": "Q11", "question": "江苏各业态数量", "desc": "全省细分业态全景结构分布"}
+            {"id": "Q11", "question": "目标省份各业态数量", "desc": "全省细分业态全景结构分布"}
         ]},
         {"theme": "📊 品牌集中度格局", "queries": [
-            {"id": "Q03", "question": "上海城区餐饮连锁品牌集中度", "desc": "HHI / CR4 / Gini 产业经济学集中度建模"},
+            {"id": "Q03", "question": "目标城区餐饮连锁品牌集中度", "desc": "HHI / CR4 / Gini 产业经济学集中度建模"},
             {"id": "Q04", "question": "肯德基和麦当劳各省门店分布", "desc": "洋快餐双雄跨省同态对比与份额差"},
             {"id": "Q06", "question": "便利店渠道连锁品牌分布", "desc": "便利店连锁化率与长尾白牌分布"},
-            {"id": "Q01", "question": "浦西大区的美宜佳清单", "desc": "单品牌特定大区明细提取"}
+            {"id": "Q01", "question": "目标子区域B的美宜佳清单", "desc": "单品牌特定大区明细提取"}
         ]},
         {"theme": "🛡️ 数据质量与安全拒答", "queries": [
             {"id": "Q46", "question": "门店竞品真实出货量统计", "desc": "缺失概念不可回答声明 (prism:metric/CompetitorSales)"},
@@ -325,13 +325,13 @@ def query_payload(text: str) -> dict[str, Any]:
     # 5. 地图空间投影：如果结果是明细表，直接从 out_df 提取区县分布；如果是分布表，则在全量底表上按过滤条件映射
     if result.get("is_detail") and len(out_df) > 0 and "区县" in out_df.columns:
         map_districts = district_counts(out_df)
-        map_total = len(out_df[out_df["省份"].eq("上海市")]) if "省份" in out_df.columns else len(out_df)
+        map_total = len(out_df[out_df["省份"].eq("目标城市")]) if "省份" in out_df.columns else len(out_df)
     else:
         # 对 B 类或 C 类，过滤底层数据后统计区县
         filters = list(dsl.get("filters") or [])
         filtered_df, _ = apply_filters(session.full_df, filters, session.reg)
         map_districts = district_counts(filtered_df)
-        map_total = len(filtered_df[filtered_df["省份"].eq("上海市")]) if "省份" in filtered_df.columns else len(filtered_df)
+        map_total = len(filtered_df[filtered_df["省份"].eq("目标城市")]) if "省份" in filtered_df.columns else len(filtered_df)
 
     # 6. 构建 Agent 执行过程步骤追踪
     steps = [
@@ -377,7 +377,7 @@ def district_payload(name: str) -> dict[str, Any]:
         raise RuntimeError("数据仍在加载中，请稍候")
 
     frame = session.full_df[
-        session.full_df["省份"].eq("上海市") & session.full_df["区县"].astype(str).eq(name)
+        session.full_df["省份"].eq("目标城市") & session.full_df["区县"].astype(str).eq(name)
     ]
     if len(frame) == 0:
         return {
@@ -402,14 +402,14 @@ def district_payload(name: str) -> dict[str, Any]:
         f"头部连锁品牌包括：{', '.join(f'{k}({v:,})' for k, v in list(brands.items())[:3]) or '以独立单店为主'}。"
     )
 
-    dsl = {"type": "A", "filters": [{"field": "省份", "op": "=", "value": "上海市"}, {"field": "区县", "op": "=", "value": name}]}
+    dsl = {"type": "A", "filters": [{"field": "省份", "op": "=", "value": "目标城市"}, {"field": "区县", "op": "=", "value": name}]}
     req = extract_insight_request(dsl, frame)
     package = synthesize_from_request(req, analysis_id=f"district-{int(time.time()*1000)}")
 
     return {
         "ok": True,
         "question": f"下钻查看「{name}」售点分布与清单",
-        "scope": f"上海市 · {name}",
+        "scope": f"目标城市 · {name}",
         "kind": "A",
         "rows": len(frame),
         "time_s": 0.05,
@@ -588,7 +588,7 @@ class DemoHandler(BaseHTTPRequestHandler):
                 payload = json.loads(raw.decode("utf-8")) if raw else {}
                 goal = str(payload.get("goal", "")).strip()
                 if not goal:
-                    goal = "上海市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报"
+                    goal = "目标城市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报"
                 from report_synthesizer import ExecutiveReportSynthesizer
                 synthesizer = ExecutiveReportSynthesizer()
                 rep = synthesizer.generate_report(goal)

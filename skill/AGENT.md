@@ -15,22 +15,22 @@
 
 ## 2. 统一项目目录与核心模块地图
 
-**项目根目录：`~/sh-store-insight/`**
+**项目根目录：`~/outlet-insight/`**
 
 | 子目录 | 内容 | 关键模块与文件 |
 |---|---|---|
 | `skill/scripts/` | **核心代码与适配器** | · `insight.py` (核心第二棱镜合成器，11 顶级字段封装)<br>· `dual_router.py` (双轨路由器：Vanna+DuckDB 主轨 / DSL 规则轨)<br>· `duckdb_adapter.py` (DuckDB 内存 Parquet 直读，毫秒级执行)<br>· `vanna_adapter.py` (Vanna 2.0 语义转译与黄金 SQL 知识库)<br>· `firewall.py` (SQL 确定性只读防火墙与注入拦截)<br>· `quality_layer.py` (scipy 双样本显著性 + Placebo 反驳检验)<br>· `report_planner.py` (分析目标规划器，多任务拆解)<br>· `chart_adapter.py` (ECharts 5 规则化图表适配器)<br>· `report_synthesizer.py` (Executive 叙事研报合成器)<br>· `trace_logger.py` (OpenTelemetry 兼容全链路追踪)<br>· `feedback_integration.py` (失败案例自动回流闭环) |
-| `skill/references/` | **受管语义与契约底座** | · `field_registry.json` (153 列物理映射 + 私有实体 + 歧义隔离)<br>· `profile.lock` (105 个受管 URI 原子锁定)<br>· `insight-request.schema.json` (三元输入 Draft 2020-12 Schema)<br>· `insight-package.schema.json` (输出强封闭 Draft 2020-12 Schema)<br>· `golden_eval_dataset.json` (50 题金标评估数据集与 Rubric) |
-| `demo/` | **Agentic 交互前端** | · `server.py` (本地服务，提供 8 个 API 端点)<br>· `index.html` (上海 16 区县矢量着色地图 + 折叠轨迹栏 + 研报生成弹窗) |
+| `skill/references/` | **受管语义与契约底座** | · `field_registry.json` (<n_cols> 列物理映射 + 私有实体 + 歧义隔离)<br>· `profile.lock` (105 个受管 URI 原子锁定)<br>· `insight-request.schema.json` (三元输入 Draft 2020-12 Schema)<br>· `insight-package.schema.json` (输出强封闭 Draft 2020-12 Schema)<br>· `golden_eval_dataset.json` (50 题金标评估数据集与 Rubric) |
+| `demo/` | **Agentic 交互前端** | · `server.py` (本地服务，提供 8 个 API 端点)<br>· `index.html` (目标城市 16 区县矢量着色地图 + 折叠轨迹栏 + 研报生成弹窗) |
 | `output/` | **评估产物与研报** | · `reports/` (生成的自包含交互式 HTML 研报)<br>· `all_tested_query_scenarios.csv` (全量 69 条测试场景 12 列清单)<br>· `blind_eval_report_v1.md` (50 题金标盲测评估报告)<br>· `quality_report.html` (数据质量与统计画像体检报告) |
 
 ---
 
 ## 3. 数据与运行环境
 
-- **底表**：`data/SH全量售点洞察1784527757315.parquet`（122MB，629,074 行 × 153 列华东全量潜客大宽表）
+- **底表**：`data/<data>.parquet`（<size> MB，<n_rows> 行 × <n_cols> 列目标区域全量潜客大宽表）
 - **Python**：`/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python`（DuckDB 1.5.5, Vanna 2.0.2, scipy, ECharts 已就绪）
-- **数据核心特征**：100% 服务状态=未服务（全是潜客）；省份=江苏 51.7% + 上海 37.6% + 浙江 10.7%；"SH"≠上海（中国华东大区口径）；城市列存 "上海城区" 而非 "上海市"
+- **数据核心特征**：100% 服务状态=未服务（全是潜客）；省份=目标省份 <p>% + 目标城市 <p>% + 目标省份 <p>%；"SH"≠目标城市（目标大区口径）；城市列存 "目标城区" 而非 "目标城市"
 
 ---
 
@@ -38,7 +38,7 @@
 
 ```bash
 PY=/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python
-cd ~/sh-store-insight
+cd ~/outlet-insight
 
 # 1. 运行自动化 CI 安全门禁与越界词断言 (19/19 必须全绿)
 $PY skill/scripts/test_ci_eval_assertions.py

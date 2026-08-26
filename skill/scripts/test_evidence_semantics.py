@@ -60,7 +60,7 @@ def test_explicit_semantics_driven_synthesis():
     req = {
         "request_id": "req-sem-001",
         "analysis_intent": {
-            "question": "中国华东大区各省份餐饮售点月均收入潜力对比",
+            "question": "目标大区各省份餐饮售点月均收入潜力对比",
             "intent": "distribution_comparison",
             "target_entity": "prism:outlet/AdministrativeRegion"
         },
@@ -88,13 +88,13 @@ def test_explicit_semantics_driven_synthesis():
                 "as_of_date": "2026-08-25"
             },
             "records": [
-                {"省份": "上海市", "月均收入潜力预测(无协议无冰柜)": 85000},
-                {"省份": "江苏省", "月均收入潜力预测(无协议无冰柜)": 62000},
-                {"省份": "浙江省", "月均收入潜力预测(无协议无冰柜)": 59000}
+                {"省份": "目标城市", "月均收入潜力预测(无协议无冰柜)": 85000},
+                {"省份": "目标省份省", "月均收入潜力预测(无协议无冰柜)": 62000},
+                {"省份": "目标省份省", "月均收入潜力预测(无协议无冰柜)": 59000}
             ],
-            "drilldown_keys": [{"省份": "上海市"}],
+            "drilldown_keys": [{"省份": "目标城市"}],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152",
+                "dataset_id": "outlet-data-profile",
                 "data_version": "2026.08",
                 "ontology_profile_version": "0.1.0-rc2",
                 "generated_at": "2026-08-25T12:00:00Z"
@@ -132,12 +132,12 @@ def test_backward_compatibility_with_v11_request():
             "effective_sample_size": 1000,
             "primary_dimension": "规划大区",
             "records": [
-                {"规划大区": "浦东大区", "门店数": 600},
-                {"规划大区": "浦西大区", "门店数": 400}
+                {"规划大区": "目标子区域A", "门店数": 600},
+                {"规划大区": "目标子区域B", "门店数": 400}
             ],
-            "drilldown_keys": [{"规划大区": "浦东大区"}],
+            "drilldown_keys": [{"规划大区": "目标子区域A"}],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152",
+                "dataset_id": "outlet-data-profile",
                 "data_version": "2026.08",
                 "ontology_profile_version": "0.1.0-rc2",
                 "generated_at": "2026-08-25T12:00:00Z"
@@ -153,7 +153,7 @@ def test_backward_compatibility_with_v11_request():
     validate_insight_request(req_v11)
     pkg = synthesize_from_request(req_v11)
     assert pkg["artifact_type"] == "InsightPackage"
-    assert "浦东大区" in pkg["conclusion"]["summary"]
+    assert "目标子区域A" in pkg["conclusion"]["summary"]
     assert pkg["structure"]["concentration_metrics"]["hhi"] == 5200.0
 
 

@@ -131,7 +131,7 @@ if __name__ == "__main__":
     router = DualEngineRouter()
     print("=== 双轨路由器 (Dual Engine Router) 测试 ===")
 
-    res_a = router.execute("浦西大区的美宜佳清单")
+    res_a = router.execute("目标子区域B的美宜佳清单")
     print(f"\n[轨道一 A类] 耗时 {res_a['time_s']}s | 引擎: {res_a['engine']} | 行数: {res_a['rows']}")
 
     res_b = router.execute("美宜佳各大区分布")

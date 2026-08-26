@@ -2,8 +2,8 @@
 
 **生成时间**：2026-08-25  
 **数据集结构界定**：
-- **物理底层 Schema (Physical Schema)**：152 列（真实底层 Parquet / CSV 物理列）
-- **运行时分析 Frame (Runtime Analysis Frame)**：153 列（含加载时构建的运行时派生列）
+- **物理底层 Schema (Physical Schema)**：<n_cols> 列（真实底层 Parquet / CSV 物理列）
+- **运行时分析 Frame (Runtime Analysis Frame)**：<n_cols> 列（含加载时构建的运行时派生列）
 - **治理映射记录 (Governance Mapping Records)**：153 条（152 条物理字段映射 + 1 条 `unavailable` 缺失业务概念声明）
 
 **本体治理框架**：`prism-ontology` 三层架构（Reference Ontology → Operational Profile → Dataset Mapping）  
@@ -16,11 +16,11 @@
 
 ## 1. 核心设计原则：看见并解释全部字段，但绝不生造 152 个本体概念
 
-本体工程审视了宽表全部 152 列，以发现缺失的实体、关系、观察和指标语义；本体只吸收稳定概念，其余分别留在 Operational Profile、Dataset Mapping、Provenance 或隔离区。
+本体工程审视了宽表全部 <n_cols> 列，以发现缺失的实体、关系、观察和指标语义；本体只吸收稳定概念，其余分别留在 Operational Profile、Dataset Mapping、Provenance 或隔离区。
 
 ---
 
-## 2. 152 列物理宽表七类语义模式全量分布与验证结果
+## 2. <n_cols> 列物理宽表七类语义模式全量分布与验证结果
 
 | 分类标识 (Field Class) | 涵盖物理列数 | 核心语义与本体模式 (Semantic Pattern) | 典型物理字段 | 语义绑定状态 | 存在性验证结果 |
 |---|---|---|---|---|---|

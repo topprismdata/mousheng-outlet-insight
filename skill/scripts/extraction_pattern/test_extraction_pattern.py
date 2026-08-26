@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-提取数据模式 —— 单元/集成测试 (sh-store-insight §9).
+提取数据模式 —— 单元/集成测试 (outlet-insight §9).
 
 基于 6 个核心洞察设计用例:
   1. A/B/C/D/E 分类逻辑

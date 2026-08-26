@@ -11,7 +11,7 @@ from pathlib import Path
 
 import mcp_server as m
 
-V3 = Path("/Users/ghb/sh-store-insight/output/charts_v3")
+V3 = Path("/Users/ghb/outlet-insight/output/charts_v3")
 V3.mkdir(parents=True, exist_ok=True)
 
 DB_READY = getattr(m.SESS, "dm_db", None) is not None
@@ -68,7 +68,7 @@ def series_has_area(opt):
 # G1 饼图 Pie Chart（门店数占比）
 # ------------------------------------------------------------------
 print("== G1 饼图 Pie ==")
-d = call_chart("G1_pie", group_by="渠道组", filters={"城市": "上海城区"}, y="cnt", chart_type="Pie Chart")
+d = call_chart("G1_pie", group_by="渠道组", filters={"城市": "目标城区"}, y="cnt", chart_type="Pie Chart")
 check("G1 ok", d.get("ok"), str(d.get("error", "")))
 htm = Path(d["html"]).read_text(encoding="utf-8") if d.get("ok") else ""
 opt = load_option(htm)
@@ -83,7 +83,7 @@ REPORT.append(f"     html={d.get('html')}")
 # G2 环形图 Donut Chart
 # ------------------------------------------------------------------
 print("== G2 环形 Donut ==")
-d = call_chart("G2_donut", group_by="渠道组", filters={"城市": "上海城区"}, y="cnt", chart_type="Donut Chart")
+d = call_chart("G2_donut", group_by="渠道组", filters={"城市": "目标城区"}, y="cnt", chart_type="Donut Chart")
 check("G2 ok", d.get("ok"), str(d.get("error", "")))
 htm = Path(d["html"]).read_text(encoding="utf-8") if d.get("ok") else ""
 opt = load_option(htm)
@@ -108,7 +108,7 @@ REPORT.append(f"     html={d.get('html')}")
 # G4 折线图 Line Chart（门店数趋势）
 # ------------------------------------------------------------------
 print("== G4 折线 Line ==")
-d = call_chart("G4_line", group_by="渠道组", filters={"城市": "上海城区"}, y="cnt", chart_type="Line Chart")
+d = call_chart("G4_line", group_by="渠道组", filters={"城市": "目标城区"}, y="cnt", chart_type="Line Chart")
 check("G4 ok", d.get("ok"), str(d.get("error", "")))
 htm = Path(d["html"]).read_text(encoding="utf-8") if d.get("ok") else ""
 opt = load_option(htm)
@@ -140,7 +140,7 @@ REPORT.append(f"     html={d.get('html')}")
 # G6 组合图异常：y2 与 y 相同 → 应报错
 # ------------------------------------------------------------------
 print("== G6 组合异常校验 ==")
-d = call_chart("G6_err", group_by="渠道组", filters={"城市": "上海城区"}, y="cnt", y2="cnt")
+d = call_chart("G6_err", group_by="渠道组", filters={"城市": "目标城区"}, y="cnt", y2="cnt")
 check("G6 应失败", not d.get("ok"), "")
 check("G6 报错含提示", "相同" in str(d.get("error", "")), str(d.get("error", "")))
 
@@ -148,7 +148,7 @@ check("G6 报错含提示", "相同" in str(d.get("error", "")), str(d.get("erro
 # G7 暗色主题 + 饼图
 # ------------------------------------------------------------------
 print("== G7 暗色主题 ==")
-d = call_chart("G7_dark", group_by="渠道组", filters={"城市": "上海城区"}, y="cnt",
+d = call_chart("G7_dark", group_by="渠道组", filters={"城市": "目标城区"}, y="cnt",
                chart_type="Pie Chart", theme="dark")
 check("G7 ok", d.get("ok"), str(d.get("error", "")))
 htm = Path(d["html"]).read_text(encoding="utf-8") if d.get("ok") else ""
@@ -160,9 +160,9 @@ REPORT.append(f"     html={d.get('html')}")
 # ------------------------------------------------------------------
 print("== G8 safe_name 隔离 ==")
 import re
-n1 = m._safe_name({"group_by": "渠道组", "filters": {"城市": "上海城区"},
+n1 = m._safe_name({"group_by": "渠道组", "filters": {"城市": "目标城区"},
                    "order_by": "cnt", "chart_type": "Pie Chart"})
-n2 = m._safe_name({"group_by": "渠道组", "filters": {"城市": "上海城区"},
+n2 = m._safe_name({"group_by": "渠道组", "filters": {"城市": "目标城区"},
                    "order_by": "cnt", "chart_type": "Line Chart"})
 check("G8 不同 chart_type 文件名不同", n1 != n2, f"{n1} vs {n2}")
 

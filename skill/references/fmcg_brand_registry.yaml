@@ -1,6 +1,6 @@
 # ==============================================================================
 # fmcg_brand_registry.yaml
-# 顶级连锁品牌标准知识库 - 涵盖华东快消/餐饮/住宿关键连锁品牌
+# 顶级连锁品牌标准知识库 - 涵盖目标区域快消/餐饮/住宿关键连锁品牌
 # 每个品牌均带权威溯源(Wikidata QID, 母公司, 商标注册, 主营品类)
 # ==============================================================================
 
@@ -49,7 +49,7 @@ brands:
 
   - uri: "prism:brand/FamilyMart"
     prefLabel: "全家便利店"
-    definition: "源自日本的全家便利店(FamilyMart),由顶新国际集团引入中国,在华东、华南与华北主要城市运营,主营鲜食、关东煮与日韩进口快消品。"
+    definition: "源自日本的全家便利店(FamilyMart),由顶新国际集团引入中国,在目标区域、华南与华北主要城市运营,主营鲜食、关东煮与日韩进口快消品。"
     altLabels: ["FamilyMart", "全家", "Famima"]
     category: "ConvenienceStore"
     parent_company: "顶新国际集团 (Ting Hsin International Group)"
@@ -58,12 +58,12 @@ brands:
       wikidata_qid: "Q1194746"
       official_uri: "https://www.wikidata.org/wiki/Q1194746"
       confidence_tier: "OPEN_KNOWLEDGE"
-    geographic_reach: "华东、华南、华北"
+    geographic_reach: "目标区域、华南、华北"
     avg_store_revenue_tier: "Silver"
 
   - uri: "prism:brand/Lawson"
     prefLabel: "罗森"
-    definition: "源自日本 Lawson 株式会社的连锁便利店,在华东(上海/南京/杭州)与华北(北京/大连)拥有高密度门店网络,以日式鲜食盒饭与自有品牌甜品著称。"
+    definition: "源自日本 Lawson 株式会社的连锁便利店,在目标区域(目标城市/目标城市2/目标城市3)与华北(北京/大连)拥有高密度门店网络,以日式鲜食盒饭与自有品牌甜品著称。"
     altLabels: ["Lawson", "罗森便利店", "Lawson CVS"]
     category: "ConvenienceStore"
     parent_company: "罗森株式会社 (Lawson, Inc., Japan)"
@@ -99,14 +99,14 @@ brands:
       authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
       official_uri: "https://www.linx-cc.com/"
       confidence_tier: "ENTERPRISE_PRACTICE"
-    geographic_reach: "华东、华中 5,000+ 门店"
+    geographic_reach: "目标区域、华中 5,000+ 门店"
 
   - uri: "prism:brand/Haoxianglai"
     prefLabel: "好想来"
-    definition: "好想来(浙江)品牌管理有限公司旗下的零食量贩集合店品牌,主打散装零食、饮品折扣与社区高频复购场景,加盟扩张迅速。"
+    definition: "好想来(目标省份)品牌管理有限公司旗下的零食量贩集合店品牌,主打散装零食、饮品折扣与社区高频复购场景,加盟扩张迅速。"
     altLabels: ["好想来零食", "Haoxianglai Snack"]
     category: "SnackDiscountStore"
-    parent_company: "好想来(浙江)品牌管理有限公司"
+    parent_company: "好想来(目标省份)品牌管理有限公司"
     provenance:
       authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
       confidence_tier: "ENTERPRISE_PRACTICE"
@@ -114,7 +114,7 @@ brands:
 
   - uri: "prism:brand/ZhaoYiming"
     prefLabel: "赵一鸣零食"
-    definition: "赵一鸣零食品牌管理有限公司旗下的零食量贩连锁品牌,深耕华中与华东下沉市场,以折扣零食+饮料组合为核心品类。"
+    definition: "赵一鸣零食品牌管理有限公司旗下的零食量贩连锁品牌,深耕华中与目标区域下沉市场,以折扣零食+饮料组合为核心品类。"
     altLabels: ["赵一鸣零食", "ZhaoYiMing Snack"]
     category: "SnackDiscountStore"
     parent_company: "赵一鸣零食品牌管理有限公司"
@@ -271,21 +271,21 @@ brands:
 
   - uri: "prism:brand/BarbieMantou"
     prefLabel: "巴比馒头"
-    definition: "中饮巴比食品股份有限公司(巴比馒头)运营的华东早市包点连锁龙头,主营包子、馒头与豆浆早餐外卖配送。"
+    definition: "中饮巴比食品股份有限公司(巴比馒头)运营的目标区域早市包点连锁龙头,主营包子、馒头与豆浆早餐外卖配送。"
     altLabels: ["巴比", "巴比包子", "Babi Mantou"]
     category: "QuickServiceRestaurant"
     parent_company: "中饮巴比食品股份有限公司"
     provenance:
       authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
       confidence_tier: "ENTERPRISE_PRACTICE"
-    geographic_reach: "华东早市包点连锁龙头 (门店 5,000+)"
+    geographic_reach: "目标区域早市包点连锁龙头 (门店 5,000+)"
 
   - uri: "prism:brand/ZhengxinJipai"
     prefLabel: "正新鸡排"
-    definition: "正新集团(上海正新食品有限公司)旗下全国小吃鸡排连锁品牌,门店数 20,000+,以 15 元大鸡排单品类爆品为标志性品类。"
+    definition: "正新集团(目标城市正新食品有限公司)旗下全国小吃鸡排连锁品牌,门店数 20,000+,以 15 元大鸡排单品类爆品为标志性品类。"
     altLabels: ["正新鸡排", "Zhengxin Chicken", "ZX-Group"]
     category: "QuickServiceRestaurant"
-    parent_company: "正新集团(上海正新食品有限公司)"
+    parent_company: "正新集团(目标城市正新食品有限公司)"
     provenance:
       authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
       confidence_tier: "ENTERPRISE_PRACTICE"

@@ -2,7 +2,7 @@
 """
 build_accurate_dataset_mapping.py
 =================================
-基于业务本体语义治理原则，对 152 列物理宽表进行精确分类映射：
+基于业务本体语义治理原则，对 <n_cols> 列物理宽表进行精确分类映射：
 1. 数值度量指标 (prism:metric/*) - 仅限真正可数值聚合与统计分布的度量
 2. 外部平台观测属性 (prism:observed/*) - 平台定性分类、营业状态、榜单、文本等观测
 3. 算法派生估计 (prism:estimate/*) - 3类收入潜力预测、营业面积、开店年限等算法模型推导值
@@ -16,9 +16,9 @@ import pandas as pd
 import yaml
 from pathlib import Path
 
-DATA_PATH = Path("/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.parquet")
+DATA_PATH = Path("/Users/ghb/outlet-insight/data/<data>.parquet")
 if not DATA_PATH.exists():
-    DATA_PATH = Path("/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.csv")
+    DATA_PATH = Path("/Users/ghb/outlet-insight/data/<data>.csv")
 
 if DATA_PATH.suffix == '.parquet':
     df = pd.read_parquet(DATA_PATH)
@@ -446,8 +446,8 @@ output_yaml_data = {
     "version": "2.1.0",
     "governance_model": "prism-ontology-three-layer",
     "dataset": {
-        "name": "sh-store-insight-152",
-        "description": "中国华东大区售点洞察全量宽表（152列完整七类结构化模式映射）",
+        "name": "outlet-data-profile",
+        "description": "目标大区售点洞察全量宽表（152列完整七类结构化模式映射）",
         "physical_schema_columns": len(cols),
         "runtime_analysis_frame_columns": 153,
         "total_governance_mapping_records": len(mappings),
@@ -465,7 +465,7 @@ output_yaml_data = {
     "mappings": mappings
 }
 
-out_path = Path("/Users/ghb/sh-store-insight/skill/references/dataset_mapping.yaml")
+out_path = Path("/Users/ghb/outlet-insight/skill/references/dataset_mapping.yaml")
 with open(out_path, "w", encoding="utf-8") as f:
     yaml.dump(output_yaml_data, f, allow_unicode=True, sort_keys=False)
 

@@ -32,7 +32,7 @@ ENV/
 *~
 
 # ---- 数据与缓存 (大文件, 远程获取, 见 README "数据获取" 章节) ----
-# 底表与缓存 (SH全量售点洞察 584MB CSV / 122MB parquet)
+# 底表与缓存 (<data> <size> MB CSV / <size> MB parquet)
 data/*.csv
 data/*.parquet
 data/*.sqlite
@@ -42,7 +42,7 @@ data/*.profile.json
 data/*.profile.lock
 data/*.parquet.lock
 
-# 业务导出样例 (89 份散落 CSV)
+# 业务导出样例 (N 份散落 CSV)
 data/exports_*/
 !data/exports_*/.gitkeep
 data/sh_dm.sqlite

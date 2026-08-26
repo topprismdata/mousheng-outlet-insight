@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-PRD 一致性 lint（基于 sh-store-insight_PRD.md 实跑校验）
+PRD 一致性 lint（基于 outlet-insight_PRD.md 实跑校验）
 校验项：
   1. §11/§13/§14 中引用的 FR 必须都在 §5 定义
   2. 每个 ✅ FR 都必须有对应的真实测试（R.ok/R.fail 存在于 run_tests.py）
@@ -15,8 +15,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path("/Users/ghb/WorkBuddy/2026-07-22-17-52-31")
-PRD = ROOT / "sh-store-insight_PRD.md"
-TESTS = Path("/Users/ghb/.workbuddy/skills/sh-store-insight/scripts/run_tests.py")
+PRD = ROOT / "outlet-insight_PRD.md"
+TESTS = Path("/Users/ghb/.workbuddy/skills/outlet-insight/scripts/run_tests.py")
 
 prd_text = PRD.read_text(encoding="utf-8")
 test_text = TESTS.read_text(encoding="utf-8")

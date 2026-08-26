@@ -52,7 +52,7 @@
 <body>
 <div class="wrap">
   <h1>售点洞察 Skill · 10 题能力对比</h1>
-  <div class="sub">全部题目均在真实数据（629,074 行 × 153 列）上实跑，左列为本 Skill 实测输出，右列为"把 Schema 直接丢给大模型"的典型失效点 · 2026-07-24</div>
+  <div class="sub">全部题目均在真实数据（<n_rows> 行 × <n_cols> 列）上实跑，左列为本 Skill 实测输出，右列为"把 Schema 直接丢给大模型"的典型失效点 · 2026-07-24</div>
 
   <div class="lead">
     核心区别一句话：本 Skill 把<b>客户业务黑话 + 数据真实形状</b>沉淀成确定性语义层，让任何解析器（含大模型）都只能在护栏内跑——<b>查得准</b>（实体/度量对齐）、<b>错不了</b>（编译期拦截幻觉）、<b>还能给决策建议</b>（派单体检），规模上有<b>逃生舱</b>（DataFusion / DataSketches）。以下 10 题逐条印证。
@@ -66,16 +66,16 @@
   <div class="card">
     <div class="qh"><div class="num">1</div><div class="qt">私有实体 + 区域 + 潜力字段消歧（A 类复合）</div></div>
     <div class="cap">考察：把内部黑话"美宜佳""潜力"对齐到确定的物理列，并链式过滤 + 排序</div>
-    <div class="q"><span class="lbl">问</span>浦西大区未服务的美宜佳，按月均收入潜力预测从高到低取前 10</div>
+    <div class="q"><span class="lbl">问</span>目标子区域B未服务的美宜佳，按月均收入潜力预测从高到低取前 10</div>
     <div class="grid">
       <div class="col skill">
         <div class="ct">✓ 本 Skill 实测</div>
         <ul>
           <li>"美宜佳" → <code>连锁品牌名称 contains 美宜佳</code>（实体字典确定性展开）</li>
           <li>"潜力" → <code>月均收入潜力预测(无协议无冰柜)</code>（3 个潜力列里选对口径）</li>
-          <li>链式：浦西 138,745 → 美宜佳 346 → <b>命中 37 行</b>，输出 TOP10</li>
+          <li>链式：目标子区域B 138,745 → 美宜佳 346 → <b>命中 37 行</b>，输出 TOP10</li>
         </ul>
-        <span class="mono"><span class="k">filters</span>: 规划大区=浦西大区, 服务状态=未服务,
+        <span class="mono"><span class="k">filters</span>: 规划大区=目标子区域B, 服务状态=未服务,
         连锁品牌名称 contains 美宜佳
 <span class="k">order_by</span>: 月均收入潜力预测(无协议无冰柜) desc</span>
       </div>
@@ -244,7 +244,7 @@
   <div class="card">
     <div class="qh"><div class="num">8</div><div class="qt">多步会话 · 工作集在追问间收缩</div></div>
     <div class="cap">考察：连续追问时状态化传递结果集，而不是每次从全量重查</div>
-    <div class="q"><span class="lbl">问</span>① 美宜佳清单 → ② 这些里浦西大区的 → ③ 看它们的经营场所分布</div>
+    <div class="q"><span class="lbl">问</span>① 美宜佳清单 → ② 这些里目标子区域B的 → ③ 看它们的经营场所分布</div>
     <div class="grid">
       <div class="col skill">
         <div class="ct">✓ 本 Skill 实测</div>
@@ -253,7 +253,7 @@
           <li>② "这些里" 自动 scope=current，在 346 上再筛 → <b>37 行</b></li>
           <li>③ "它们的" 在 37 行上聚合 → 20 个经营场所分组（工作集不变）</li>
         </ul>
-        <span class="mono">346 →(这些里浦西)→ 37 →(它们的分布)→ 20 组</span>
+        <span class="mono">346 →(这些里目标子区域B)→ 37 →(它们的分布)→ 20 组</span>
       </div>
       <div class="col llm">
         <div class="ct">✗ 直接问大模型</div>

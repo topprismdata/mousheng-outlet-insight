@@ -4,7 +4,7 @@ report_planner.py
 =================
 分析目标规划器 (Analytical Goal & Storyboard Planner v1.0)。
 基于 Databricks Genie Deep Research 与 IEEE VIS 数据故事板理论，
-将用户的高层宏观分析诉求（如"上海现磨咖啡竞争格局与未服务潜客开发报告"）
+将用户的高层宏观分析诉求（如"目标城市现磨咖啡竞争格局与未服务潜客开发报告"）
 自动结构化拆解为 3~5 组逻辑递进的子分析任务 (Analytical Cuts)。
 
 标准故事板编排节奏：
@@ -45,31 +45,31 @@ class AnalyticalGoalPlanner:
 
     def _plan_coffee_special_report(self, goal_text: str) -> dict[str, Any]:
         return {
-            "report_title": "上海市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报",
+            "report_title": "目标城市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报",
             "executive_theme": "现磨咖啡品类在核心商圈的头部集中度、下沉大区渗透差异与独立潜客拓展",
             "target_industry": "现磨咖啡 / 现制饮品",
-            "target_region": "上海市 / 中国华东大区",
+            "target_region": "目标区域",
             "sections": [
                 {
                     "section_id": "SEC-1",
                     "section_title": "1. 宏观业态大盘与咖啡售点基底",
-                    "chapter_goal": "掌握上海餐饮大盘各细分业态构成与咖啡售点基数",
-                    "query": "上海城区各业态售点数量",
+                    "chapter_goal": "掌握目标城市餐饮大盘各细分业态构成与咖啡售点基数",
+                    "query": "目标城区各业态售点数量",
                     "chart_type": "donut",
-                    "chart_title": "上海城区各业态售点分布结构"
+                    "chart_title": "目标城区各业态售点分布结构"
                 },
                 {
                     "section_id": "SEC-2",
                     "section_title": "2. 连锁咖啡品牌集中度与竞争格局 (HHI/CR4)",
                     "chapter_goal": "纯数学建模评估咖啡连锁大盘垄断度与长尾白牌占比",
-                    "query": "上海城区餐饮连锁品牌集中度",
+                    "query": "目标城区餐饮连锁品牌集中度",
                     "chart_type": "horizontal_bar",
-                    "chart_title": "上海餐饮连锁品牌集中度 TOP10 与长尾"
+                    "chart_title": "目标城市餐饮连锁品牌集中度 TOP10 与长尾"
                 },
                 {
                     "section_id": "SEC-3",
                     "section_title": "3. 头部双雄大区空间渗透对比 (瑞幸 vs 星巴克)",
-                    "chapter_goal": "同态对比两大咖啡巨头在华东各大区的渗透差异",
+                    "chapter_goal": "同态对比两大咖啡巨头在目标区域各大区的渗透差异",
                     "query": "瑞幸咖啡各大区门店分布",
                     "chart_type": "grouped_bar",
                     "chart_title": "各大区咖啡头部品牌门店分布"
@@ -78,7 +78,7 @@ class AnalyticalGoalPlanner:
                     "section_id": "SEC-4",
                     "section_title": "4. 目标配额潜客圈选与门槛截断 (Top 50 潜客)",
                     "chapter_goal": "按客流与口碑优先级圈选 50 家核心未开发独立咖啡潜客",
-                    "query": "浦东大区圈选100家餐饮店，优先餐饮街，按周末客流降序",
+                    "query": "目标子区域A圈选100家餐饮店，优先餐饮街，按周末客流降序",
                     "chart_type": "map_choropleth",
                     "chart_title": "入围潜客区县空间分布与截断清单"
                 }
@@ -87,14 +87,14 @@ class AnalyticalGoalPlanner:
 
     def _plan_convenience_freezer_report(self, goal_text: str) -> dict[str, Any]:
         return {
-            "report_title": "华东食杂便利渠道全景与 200 台冰柜投放开发研报",
+            "report_title": "目标区域食杂便利渠道全景与 200 台冰柜投放开发研报",
             "executive_theme": "食杂小店省域分布结构、连锁化率特征与 200 家高潜未服务门店精准截断",
             "target_industry": "食杂店 / 便利零售",
-            "target_region": "全华东 (苏/浙/沪)",
+            "target_region": "全目标区域 (苏/浙/沪)",
             "sections": [
                 {
                     "section_id": "SEC-1",
-                    "section_title": "1. 华东食杂便利渠道省域大盘分布",
+                    "section_title": "1. 目标区域食杂便利渠道省域大盘分布",
                     "chapter_goal": "呈现食杂小店在苏、浙、沪三省的宏观空间分布",
                     "query": "食杂业态各省分布",
                     "chart_type": "pie",
@@ -124,7 +124,7 @@ class AnalyticalGoalPlanner:
             "report_title": "都市夜间经济活力售点与夜宵街区专项分析研报",
             "executive_theme": "深夜营业时间谓词解析、客流潮汐爆发特征与核心夜宵街区潜客筛选",
             "target_industry": "夜宵餐饮 / 全天候便民零售",
-            "target_region": "全华东",
+            "target_region": "全目标区域",
             "sections": [
                 {
                     "section_id": "SEC-1",
@@ -155,10 +155,10 @@ class AnalyticalGoalPlanner:
 
     def _plan_hotel_ka_report(self, goal_text: str) -> dict[str, Any]:
         return {
-            "report_title": "华东大体量单体酒店大客户攻坚与空间画像研报",
+            "report_title": "目标区域大体量单体酒店大客户攻坚与空间画像研报",
             "executive_theme": "非连锁大客房住宿售点画像、空间聚集度与 50 家核心单体酒店攻坚名单",
             "target_industry": "住宿 / 酒店大客户",
-            "target_region": "全华东",
+            "target_region": "全目标区域",
             "sections": [
                 {
                     "section_id": "SEC-1",
@@ -185,13 +185,13 @@ class AnalyticalGoalPlanner:
             "report_title": f"售点洞察专项分析研报：{goal_text}",
             "executive_theme": f"围绕「{goal_text}」展开的结构、集中度与潜客综合洞察",
             "target_industry": "综合零售与餐饮",
-            "target_region": "全华东",
+            "target_region": "全目标区域",
             "sections": [
                 {
                     "section_id": "SEC-1",
                     "section_title": "1. 宏观业态与空间大盘结构",
                     "chapter_goal": "掌握当前大盘各业态售点分布",
-                    "query": "上海城区各业态售点数量",
+                    "query": "目标城区各业态售点数量",
                     "chart_type": "donut",
                     "chart_title": "各业态售点数量构成"
                 },
@@ -199,7 +199,7 @@ class AnalyticalGoalPlanner:
                     "section_id": "SEC-2",
                     "section_title": "2. 品牌格局与市场集中度评估",
                     "chapter_goal": "评估头部品牌集中率与垄断格局",
-                    "query": "上海城区餐饮连锁品牌集中度",
+                    "query": "目标城区餐饮连锁品牌集中度",
                     "chart_type": "horizontal_bar",
                     "chart_title": "连锁品牌集中度排行"
                 },
@@ -207,7 +207,7 @@ class AnalyticalGoalPlanner:
                     "section_id": "SEC-3",
                     "section_title": "3. 目标潜客圈选与门槛截断",
                     "chapter_goal": "按优先级锁定核心潜客并提取截断门槛线",
-                    "query": "浦东大区圈选100家餐饮店，优先餐饮街，按周末客流降序",
+                    "query": "目标子区域A圈选100家餐饮店，优先餐饮街，按周末客流降序",
                     "chart_type": "map_choropleth",
                     "chart_title": "目标潜客空间分布与清单"
                 }
@@ -218,7 +218,7 @@ class AnalyticalGoalPlanner:
 if __name__ == "__main__":
     planner = AnalyticalGoalPlanner()
     print("=== 研报目标规划器测试 ===")
-    p1 = planner.plan_report("请生成上海现磨咖啡竞争格局与未服务潜客开发报告")
+    p1 = planner.plan_report("请生成目标城市现磨咖啡竞争格局与未服务潜客开发报告")
     print(f"\n[规划专题 1] {p1['report_title']}")
     print(f"包含 {len(p1['sections'])} 个递进章节:")
     for s in p1["sections"]:

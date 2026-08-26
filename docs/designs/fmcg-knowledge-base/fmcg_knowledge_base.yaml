@@ -8,7 +8,7 @@ schema: "https://prism.top/topprism/schema/fmcg-knowledge-base/v1"
 
 metadata:
   name: "谋圣·售点洞察 受管 FMCG 行业知识库"
-  description: "基于国际/国家法定标准、全球快消测量巨头(NielsenIQ/Kantar)、快消巨头分销操作手册(饮料品牌RED/宝洁PJP)、学术界权威综述与开放知识图谱(Wikidata)构建的高可信 FMCG 实体与溯源知识母体。"
+  description: "基于国际/国家法定标准、全球快消测量巨头(NielsenIQ/Kantar)、快消巨头分销操作手册(RED (通用 RTM 框架)/宝洁PJP)、学术界权威综述与开放知识图谱(Wikidata)构建的高可信 FMCG 实体与溯源知识母体。"
   governance_authority: "TopPrism Ontology Engineering Committee"
   release_date: "2026-08-26"
   confidence_tier_governance:

@@ -1,4 +1,4 @@
-# AGENT.md — sh-store-insight 承接指南
+# AGENT.md — outlet-insight 承接指南
 
 > 面向：承接本项目的任何 Agent（人类或 AI）。读完本文件即可独立继续开发。
 > 最后更新：2026-07-31 ｜ 当前状态：10 块能力已落地，回归 39/39 全绿
@@ -7,16 +7,16 @@
 
 ## 1. 一句话定位
 
-**售点/潜客宽表（629,074 行 × 152/153 列）的自然语言查询智能体**：把业务黑话（"美宜佳"、"高评分"、"景区周边"）确定性地翻译成结构化 DSL 并在本地执行，零 LLM 依赖、编译期护栏防幻觉。项目目的是**提升自有 Agent 工程能力**，调研结论必须落地为代码增强，不停留在文档。
+**售点/潜客宽表（<n_rows> 行 × 152/<n_cols> 列）的自然语言查询智能体**：把业务黑话（"美宜佳"、"高评分"、"景区周边"）确定性地翻译成结构化 DSL 并在本地执行，零 LLM 依赖、编译期护栏防幻觉。项目目的是**提升自有 Agent 工程能力**，调研结论必须落地为代码增强，不停留在文档。
 
 ## 2. 统一项目目录（2026-07-31 起）
 
-**一切都在 `~/sh-store-insight/`**：
+**一切都在 `~/outlet-insight/`**：
 
 | 子目录 | 内容 |
 |---|---|
-| `skill/` | **代码 + SKILL.md + 本文件**（一切开发在这里；`~/.workbuddy/skills/sh-store-insight` 是指向它的符号链接，技能照常加载） |
-| `data/` | 底表 CSV/parquet/DM sqlite + `exports_89/`（89 份业务导出） |
+| `skill/` | **代码 + SKILL.md + 本文件**（一切开发在这里；`~/.workbuddy/skills/outlet-insight` 是指向它的符号链接，技能照常加载） |
+| `data/` | 底表 CSV/parquet/DM sqlite + `exports_89/`（N 份业务导出） |
 | `docs/` | PRD（v3.6 权威版 + 历史版本）、开源调研、实例问题集、HTML 对比报告、`lint_prd.py` |
 | `output/` | 全部分析报告 MD、查询结果 CSV（`sh_query_tests/`、`adhoc/`）、agent 产物 |
 
@@ -24,19 +24,19 @@
 
 ## 3. 数据与运行环境
 
-- **底表**：`~/sh-store-insight/data/SH全量售点洞察1784527757315.csv`（584MB）；同名 `.parquet` 为缓存（122MB，自动生成）
-- **DM 库**：`<data>.dm.sqlite`（数据同目录，`ensure_dm` 按 mtime 自愈重建）；早期实验产物 `~/sh-store-insight/data/sh_dm.sqlite`
+- **底表**：`~/outlet-insight/data/<data>.csv`（<size> MB）；同名 `.parquet` 为缓存（<size> MB，自动生成）
+- **DM 库**：`<data>.dm.sqlite`（数据同目录，`ensure_dm` 按 mtime 自愈重建）；早期实验产物 `~/outlet-insight/data/sh_dm.sqlite`
 - **Python**：`/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python`（pandas/pyarrow/datafusion 等已装）
-- 数据特征：**100% 服务状态=未服务**（全是潜客）；省份=江苏 51.7% + 上海 37.6% + 浙江 10.7%；**"SH"≠上海**（是中国华东大区口径）；城市列存 **"上海城区"** 而非"上海市"
+- 数据特征：**100% 服务状态=未服务**（全是潜客）；省份=目标省份 <p>% + 目标城市 <p>% + 目标省份 <p>%；**"SH"≠目标城市**（是目标大区口径）；城市列存 **"目标城区"** 而非"目标城市"
 
 ## 4. 快速上手（先跑这三条）
 
 ```bash
 PY=/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python
-cd ~/.workbuddy/skills/sh-store-insight/scripts
+cd ~/.workbuddy/skills/outlet-insight/scripts
 
 $PY run_tests.py                 # 回归 39/39 应全绿（任何改动后必跑）
-$PY agent_cli.py "浦西大区的美宜佳清单"   # 单条 NL 查询
+$PY agent_cli.py "目标子区域B的美宜佳清单"   # 单条 NL 查询
 $PY dm_demo.py                   # DM 统计→点选→下钻 两步流演示（--repl 交互）
 ```
 
@@ -52,7 +52,7 @@ $PY dm_demo.py                   # DM 统计→点选→下钻 两步流演示�
 | 6 | RAG 黄金查询记忆（本地 embedding，复用阈值 ≥0.82） | `memory.py` + `../references/query_memory.jsonl` |
 | 7 | 洞察综合（InsightBench 式 summary/action/followups） | `insight.py` |
 | 8 | MCP 服务（8 tool：query/validate/profile/…/stat/drilldown） | `mcp_server.py` |
-| 9 | 导出模式扫描（89 份导出 A/B/C/D/E 分类 + E 两步走检测） | `extraction_pattern/` |
+| 9 | 导出模式扫描（N 份导出 A/B/C/D/E 分类 + E 两步走检测） | `extraction_pattern/` |
 | 10 | **DM 汇总层 + 交互下钻**（B 类自动路由，24x 加速） | `dm_layer.py` + `dm_demo.py` |
 
 辅助：`bizhours.py`（营业时间谓词）、`data_assertions.py`（漂移断言 T37）、`feedback_log.py`（W3C PROV 纠偏审计 T38）、`run_examples.py`。
@@ -74,7 +74,7 @@ $PY dm_demo.py                   # DM 统计→点选→下钻 两步流演示�
 - "火锅" 等菜系 → `大众点评菜系 contains`（当前误判为连锁品牌名）
 - "景区周边/景区附近" → `景区外50米/1公里/2公里` 三字段
 - "连锁/直接服务/待开发" 口语词
-- "上海市"→"上海城区"：`GEO_NORM` 目前在 dm_layer 临时兜底，**应下沉到 field_registry 让 nl_parser 也吃到**
+- "目标城市"→"目标城区"：`GEO_NORM` 目前在 dm_layer 临时兜底，**应下沉到 field_registry 让 nl_parser 也吃到**
 
 **P1**：多级 group_by（"按省份看渠道组分布"只聚一层）；条件互斥检测（"独立运营"+"国营"）；输出列选择（"需要有人数"）；C 类等级阈值 grade_high 0.5→0.75（当前 SH 底表上全"高"无区分度）。
 
@@ -82,16 +82,16 @@ $PY dm_demo.py                   # DM 统计→点选→下钻 两步流演示�
 
 **数据语义注意**：`渠道组=教育` 指**学校周边店铺**而非学校本体；餐饮无真实开业年份字段（C 类用建档时间近似）。
 
-## 8. 文档地图（项目根：`~/sh-store-insight/`）
+## 8. 文档地图（项目根：`~/outlet-insight/`）
 
 | 文档 | 说明 |
 |---|---|
-| `docs/sh-store-insight_PRD.md` | **PRD v3.6**（权威需求文档：41 FR、12 NFR、路线图、数仓设计、HIP） |
+| `docs/outlet-insight_PRD.md` | **PRD v3.6**（权威需求文档：41 FR、12 NFR、路线图、数仓设计、HIP） |
 | `skill/SKILL.md` | 使用手册：10 块能力用法 + 命令 + 关键文件表 |
-| `output/售点洞察导出数据模式分析报告.md` | 89 份业务导出的 A/B/C/D/E 模式分析（12 章） |
-| `output/SH全量售点洞察_模式分析报告.md` | SH 底表 13 章模式分析 |
+| `output/售点洞察导出数据模式分析报告.md` | N 份业务导出的 A/B/C/D/E 模式分析（12 章） |
+| `output/<data>` | SH 底表 13 章模式分析 |
 | `output/7个业务场景查询测试报告.md` | 8 个业务场景（含 C 类）NL 查询测试 + gap 分析 |
-| `output/SH底表_业务查询模式复现测试报告.md` | 17 条查询复现（9 正确 8 失败根因） |
+| `output/base-data_业务查询模式复现测试报告.md` | 17 条查询复现（9 正确 8 失败根因） |
 | `output/extraction_pattern_test_report.md` | 53 条 pytest 用例报告 |
 | `output/sh_query_tests/` | 全部查询结果 CSV + `run_8_queries.py` 复现脚本 |
 | `~/WorkBuddy/2026-07-22-17-52-31/.workbuddy/memory/2026-07-*.md` | 逐日工作日志（承接前建议倒序浏览最近 3 天） |
@@ -101,7 +101,7 @@ $PY dm_demo.py                   # DM 统计→点选→下钻 两步流演示�
 
 - 简体中文交流；结论直接、少客套
 - 调研/分析必须转成可执行的代码增强，落到本 Skill；不要只产出文档
-- 每个查询任务要求输出 CSV 结果文件（放 `~/sh-store-insight/output/sh_query_tests/`）
+- 每个查询任务要求输出 CSV 结果文件（放 `~/outlet-insight/output/sh_query_tests/`）
 - 完成实质工作后写工作日志到 workspace `.workbuddy/memory/YYYY-MM-DD.md`
 
 ## 10. 承接后第一步建议

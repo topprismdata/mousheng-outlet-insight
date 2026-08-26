@@ -293,7 +293,7 @@ def gen_schema_md(profile: dict, reg: FieldRegistry, out_path: Path) -> None:
     lines = [
         "# 售点洞察数据字典（参考数据画像 · 由 profiler 自动生成）",
         "",
-        f"> 数据来源：`SH全量售点洞察*.csv`（约 {n:,} 行 × {profile.get('n_fields', 0)} 字段）。",
+        f"> 数据来源：`<data>.csv`（约 {n:,} 行 × {profile.get('n_fields', 0)} 字段）。",
         "> 本文件由 `scripts/profiler.py` 的 `gen_schema_md` 依据真实数据自动生成，",
         "> 数字随数据刷新，不会过期。供解析器、LLM 兜底与排查问题时参考。",
         "",

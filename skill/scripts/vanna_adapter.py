@@ -31,16 +31,16 @@ from nl_parser import auto_parse
 # 黄金训练集：自然语言提问与标准 DuckDB SQL 映射
 GOLDEN_SQL_TRAINING_PAIRS = [
     {
-        "question": "浦西大区的美宜佳清单",
-        "sql": "SELECT * FROM outlets WHERE 规划大区 = '浦西大区' AND 连锁品牌名称 LIKE '%美宜佳%'"
+        "question": "目标子区域B的美宜佳清单",
+        "sql": "SELECT * FROM outlets WHERE 规划大区 = '目标子区域B' AND 连锁品牌名称 LIKE '%美宜佳%'"
     },
     {
         "question": "美宜佳各大区分布",
         "sql": "SELECT 规划大区, COUNT(*) AS 客户数 FROM outlets WHERE 连锁品牌名称 LIKE '%美宜佳%' GROUP BY 规划大区 ORDER BY 客户数 DESC"
     },
     {
-        "question": "上海城区餐饮连锁品牌集中度",
-        "sql": "SELECT 连锁品牌名称, COUNT(*) AS 客户数 FROM outlets WHERE 省份 = '上海市' AND 渠道组 = '餐饮' AND 连锁品牌名称 IS NOT NULL GROUP BY 连锁品牌名称 ORDER BY 客户数 DESC LIMIT 100"
+        "question": "目标城区餐饮连锁品牌集中度",
+        "sql": "SELECT 连锁品牌名称, COUNT(*) AS 客户数 FROM outlets WHERE 省份 = '目标城市' AND 渠道组 = '餐饮' AND 连锁品牌名称 IS NOT NULL GROUP BY 连锁品牌名称 ORDER BY 客户数 DESC LIMIT 100"
     },
     {
         "question": "便利店渠道连锁品牌分布",
@@ -59,8 +59,8 @@ GOLDEN_SQL_TRAINING_PAIRS = [
         "sql": "SELECT 规划大区, COUNT(*) AS 客户数 FROM outlets WHERE 连锁品牌名称 LIKE '%瑞幸咖啡%' GROUP BY 规划大区 ORDER BY 客户数 DESC"
     },
     {
-        "question": "江苏各业态数量",
-        "sql": "SELECT 渠道组, COUNT(*) AS 客户数 FROM outlets WHERE 省份 = '江苏省' GROUP BY 渠道组 ORDER BY 客户数 DESC"
+        "question": "目标省份各业态数量",
+        "sql": "SELECT 渠道组, COUNT(*) AS 客户数 FROM outlets WHERE 省份 = '目标省份省' GROUP BY 渠道组 ORDER BY 客户数 DESC"
     },
     {
         "question": "餐饮街的客户分布",
@@ -75,8 +75,8 @@ GOLDEN_SQL_TRAINING_PAIRS = [
         "sql": "SELECT * FROM outlets WHERE 渠道组 = '食杂' AND 服务状态 = '未服务' ORDER BY \"月均收入潜力预测(无协议无冰柜)\" DESC LIMIT 200"
     },
     {
-        "question": "浦东大区圈选100家餐饮店，优先餐饮街，按周末客流降序",
-        "sql": "SELECT * FROM outlets WHERE 规划大区 = '浦东大区' AND 渠道组 = '餐饮' ORDER BY CASE WHEN 经营场所 LIKE '%餐饮街%' THEN 1 ELSE 2 END, \"周末均值客流(人)\" DESC LIMIT 100"
+        "question": "目标子区域A圈选100家餐饮店，优先餐饮街，按周末客流降序",
+        "sql": "SELECT * FROM outlets WHERE 规划大区 = '目标子区域A' AND 渠道组 = '餐饮' ORDER BY CASE WHEN 经营场所 LIKE '%餐饮街%' THEN 1 ELSE 2 END, \"周末均值客流(人)\" DESC LIMIT 100"
     },
     {
         "question": "挑选50家非连锁酒店，按客房数降序",
@@ -188,11 +188,11 @@ if __name__ == "__main__":
     adapter = LocalVannaAdapter()
     print("=== Vanna + DuckDB 端到端查询测试 ===")
     test_queries = [
-        "浦西大区的美宜佳清单",
+        "目标子区域B的美宜佳清单",
         "在未服务食杂店中选200家投放冰柜，按月均潜力排序",
         "美宜佳各大区分布",
         "挑选50家非连锁酒店，按客房数降序",
-        "浦东大区食杂店清单"
+        "目标子区域A食杂店清单"
     ]
     for q in test_queries:
         t0 = time.perf_counter()

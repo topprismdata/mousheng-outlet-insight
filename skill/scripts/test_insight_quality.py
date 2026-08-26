@@ -147,16 +147,16 @@ def test_cq001_detail_list_insight_quality():
     request = {
         "request_id": "req-cq001",
         "analysis_intent": {
-            "question": "浦西大区的美宜佳清单",
+            "question": "目标子区域B的美宜佳清单",
             "intent": "detail_list",
             "target_entity": "prism:outlet/Outlet",
-            "scope": {"territory": "浦西大区"}
+            "scope": {"territory": "目标子区域B"}
         },
         "evidence_set": {
             "sample_size": 37,
             "effective_sample_size": 37,
             "primary_dimension": "规划大区",
-            "records": [{"腾讯售点id": f"T_{i}", "腾讯售点名称": f"美宜佳浦西{i}号店", "规划大区": "浦西大区"} for i in range(1, 38)],
+            "records": [{"腾讯售点id": f"T_{i}", "腾讯售点名称": f"美宜佳目标子区域B{i}号店", "规划大区": "目标子区域B"} for i in range(1, 38)],
             "drilldown_keys": [{"腾讯售点id": "T_1"}],
             "evidence_provenance": {
                 "dataset_id": "custom-retail-ds-01",
@@ -177,7 +177,7 @@ def test_cq001_detail_list_insight_quality():
     assert len(pkg.keys()) == 11, f"Expected strictly 11 top-level keys, got {len(pkg.keys())}: {list(pkg.keys())}"
     assert pkg["evidence"]["effective_sample_size"] == 37
     assert "37" in pkg["conclusion"]["summary"]
-    assert "浦西大区" in pkg["conclusion"]["summary"]
+    assert "目标子区域B" in pkg["conclusion"]["summary"]
     # 验证 provenance 真实流转
     assert pkg["provenance"]["request_id"] == "req-cq001"
     assert pkg["provenance"]["evidence_provenance"]["dataset_id"] == "custom-retail-ds-01"
@@ -189,10 +189,10 @@ def test_cq002_channel_distribution_insight_quality():
     request = {
         "request_id": "req-cq002",
         "analysis_intent": {
-            "question": "江苏省各业态分布",
+            "question": "目标省份省各业态分布",
             "intent": "distribution_comparison",
             "target_entity": "prism:outlet/Outlet",
-            "scope": {"province": "江苏省"}
+            "scope": {"province": "目标省份省"}
         },
         "evidence_set": {
             "sample_size": 2830,
@@ -208,7 +208,7 @@ def test_cq002_channel_distribution_insight_quality():
             ],
             "drilldown_keys": [{"渠道组": "餐饮"}],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152",
+                "dataset_id": "outlet-data-profile",
                 "data_version": "2026.08",
                 "ontology_profile_version": "0.1.0-rc2",
                 "generated_at": "2026-08-25T12:00:00Z"
@@ -248,7 +248,7 @@ def test_cq004_group_comparison_insight_quality():
     request = {
         "request_id": "req-cq004",
         "analysis_intent": {
-            "question": "浦东 vs 浦西食杂店客流对比",
+            "question": "目标子区域A vs 目标子区域B食杂店客流对比",
             "intent": "distribution_comparison",
             "target_entity": "prism:outlet/Outlet"
         },
@@ -257,12 +257,12 @@ def test_cq004_group_comparison_insight_quality():
             "effective_sample_size": 2,
             "primary_dimension": "规划大区",
             "records": [
-                {"规划大区": "浦西大区", "平均客流": 1200.0},
-                {"规划大区": "浦东大区", "平均客流": 800.0}
+                {"规划大区": "目标子区域B", "平均客流": 1200.0},
+                {"规划大区": "目标子区域A", "平均客流": 800.0}
             ],
             "drilldown_keys": [],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152",
+                "dataset_id": "outlet-data-profile",
                 "data_version": "2026.08",
                 "ontology_profile_version": "0.1.0-rc2",
                 "generated_at": "2026-08-25T12:00:00Z"
@@ -298,13 +298,13 @@ def test_cq005_rule_evaluation_insight_quality():
             "effective_sample_size": 3,
             "primary_dimension": "经营场所名称",
             "records": [
-                {"经营场所名称": "南京西路餐饮街", "餐饮基数": 35, "达标率": 0.9, "等级": "高"},
+                {"经营场所名称": "目标城市2西路餐饮街", "餐饮基数": 35, "达标率": 0.9, "等级": "高"},
                 {"经营场所名称": "淮海路餐饮街", "餐饮基数": 28, "达标率": 0.7, "等级": "中"},
                 {"经营场所名称": "徐家汇商圈", "餐饮基数": 22, "达标率": 0.4, "等级": "低"}
             ],
-            "drilldown_keys": [{"经营场所名称": "南京西路餐饮街"}],
+            "drilldown_keys": [{"经营场所名称": "目标城市2西路餐饮街"}],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152",
+                "dataset_id": "outlet-data-profile",
                 "data_version": "2026.08",
                 "ontology_profile_version": "0.1.0-rc2",
                 "generated_at": "2026-08-25T12:00:00Z"
@@ -321,7 +321,7 @@ def test_cq005_rule_evaluation_insight_quality():
     assert len(list(PKG_VALIDATOR.iter_errors(pkg))) == 0
     assert len(pkg.keys()) == 11
     assert "高" in pkg["conclusion"]["summary"]
-    assert "南京西路餐饮街" in pkg["conclusion"]["summary"]
+    assert "目标城市2西路餐饮街" in pkg["conclusion"]["summary"]
     print("  ✓ CQ-005 (规则符合度评估洞察质量): PASSED")
 
 
@@ -351,7 +351,7 @@ def test_cq007_quality_gating_and_confidence_calibration():
             "records": [{"腾讯售点名称": "西湖客栈1号", "携程-房间数": 10}],
             "drilldown_keys": [],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
+                "dataset_id": "outlet-data-profile", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
             }
         },
         "quality_context": {
@@ -375,7 +375,7 @@ def test_cq008_unavailable_concept_rejection():
         "evidence_set": {
             "sample_size": 0, "effective_sample_size": 0, "primary_dimension": None, "records": [], "drilldown_keys": [],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
+                "dataset_id": "outlet-data-profile", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
             }
         },
         "quality_context": {"completeness_score": 0.0, "field_coverage": {}, "applicable_dimensions": []}
@@ -396,7 +396,7 @@ def test_cq009_drilldown_keys_generation():
             "records": [{"连锁品牌名称": "瑞幸咖啡", "门店数": 1822}, {"连锁品牌名称": "星巴克", "门店数": 1192}],
             "drilldown_keys": [{"连锁品牌名称": "瑞幸咖啡"}, {"连锁品牌名称": "星巴克"}],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
+                "dataset_id": "outlet-data-profile", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
             }
         },
         "quality_context": {"completeness_score": 1.0, "field_coverage": {"连锁品牌名称": 1.0}, "applicable_dimensions": ["连锁品牌名称"]}
@@ -415,10 +415,10 @@ def test_cq010_insight_package_schema_and_zero_crossing():
         "analysis_intent": {"question": "大区分布", "intent": "distribution_comparison", "target_entity": "prism:outlet/Outlet"},
         "evidence_set": {
             "sample_size": 100, "effective_sample_size": 100, "primary_dimension": "规划大区",
-            "records": [{"规划大区": "浦西大区", "客户数": 100}],
+            "records": [{"规划大区": "目标子区域B", "客户数": 100}],
             "drilldown_keys": [],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
+                "dataset_id": "outlet-data-profile", "data_version": "2026.08", "ontology_profile_version": "0.1.0-rc2", "generated_at": "2026-08-25T12:00:00Z"
             }
         },
         "quality_context": {"completeness_score": 1.0, "field_coverage": {"规划大区": 1.0}, "applicable_dimensions": ["规划大区"]}
@@ -478,7 +478,7 @@ def test_cq011_metric_conflict_diagnosis_insight_quality():
             ],
             "drilldown_keys": [{"腾讯售点名称": "隐世私房菜#0"}],
             "evidence_provenance": {
-                "dataset_id": "sh-store-insight-152",
+                "dataset_id": "outlet-data-profile",
                 "data_version": "2026.08",
                 "ontology_profile_version": "0.1.0-rc2",
                 "generated_at": "2026-08-26T12:00:00Z"

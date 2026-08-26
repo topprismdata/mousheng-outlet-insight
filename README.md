@@ -43,14 +43,14 @@
 ## 3. 真实问句的完整链路示例
 
 ```text
-用户问: "查一下夫妻老婆店的清单,优先看浦东大区的"
+用户问: "查一下夫妻老婆店的清单,优先看目标子区域A的"
 
   [第一棱镜 Insight Compiler]
     ├── 实体识别: "夫妻老婆店" ─→ prism:concept/MomAndPopStore
     │     溯源: GB/T 18106-2004 §3.2 食杂店定义 + 大众点评传统通路口语
     │     置信: STATUTORY (法定国标)
-    ├── 区域识别: "浦东大区" ─→ 字段 "规划大区"
-    └── DSL 编译: {filters: [{渠道组=食杂, 是否连锁=否, 规划大区=浦东大区}], order_by: [潜力 desc]}
+    ├── 区域识别: "目标子区域A" ─→ 字段 "规划大区"
+    └── DSL 编译: {filters: [{渠道组=食杂, 是否连锁=否, 规划大区=目标子区域A}], order_by: [潜力 desc]}
 
   [中间光谱 Insight Engine]
     ├── DuckDB+Vanna 双轨执行 (毫秒级)
@@ -91,7 +91,7 @@
 | 受管资产 | 实体数 | 权威源 |
 |---|---|---|
 | `fmcg_channel_taxonomy.yaml` | 13 个 4 级通路 (MT/TT/AFH/ST) | GB/T 18106-2021 · NIQ RMS · CCFA |
-| `fmcg_metrics_provenance.yaml` | 8 项核心分销度量 (ND/WD/ROS/SOS/Cooler Purity/5P/Tier/Potential) | NIQ · 饮料品牌 RED · 学术专著 |
+| `fmcg_metrics_provenance.yaml` | 8 项核心分销度量 (ND/WD/ROS/SOS/Cooler Purity/5P/Tier/Potential) | NIQ · RED (通用 RTM 框架) · 学术专著 |
 | `fmcg_brand_registry.yaml` | 25 个 Top 连锁品牌 (含 Wikidata QID) | Wikidata · 企业公开披露 |
 | `cognitive_concepts_provenance.yaml` | 11 个业务黑话与认知概念 (AliCoCo-style) | SIGMOD 2020 · 大众点评 · 饮料品牌 |
 
@@ -102,7 +102,7 @@
 **禁止任何** `UNVERIFIED` / `LLM_GENERATED_NO_SOURCE` 等级。**置信等级分层**:
 - `STATUTORY` 法定国标 (GB/T)
 - `INDUSTRY_STANDARD` 行业标准 (NIQ / CCFA / GS1)
-- `ENTERPRISE_PRACTICE` 企业披露 (饮料品牌 RED / 宝洁 PJP / 企业年报)
+- `ENTERPRISE_PRACTICE` 企业披露 (RED (通用 RTM 框架) / 宝洁 PJP / 企业年报)
 - `ACADEMIC_AUTHORITY` 顶级论文 (SIGMOD / KDD / ISWC)
 - `OPEN_KNOWLEDGE` 开放图谱 (Wikidata)
 - `EMPIRICAL` 实证统计
@@ -115,7 +115,7 @@
 
 ```bash
 PY=/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python
-cd ~/sh-store-insight/skill/scripts
+cd ~/outlet-insight/skill/scripts
 
 # 受管 FMCG 知识库严苛溯源 CI Gate (无需任何数据)
 $PY fmcg_knowledge_engine.py ci
@@ -138,7 +138,7 @@ $PY -m pytest -v test_fmcg_provenance.py       # Phase F: 受管 FMCG 溯源   9
 ### 2. 有数据时的自然语言查询(需先获取底表)
 
 ```bash
-$PY agent_cli.py "浦西大区的美宜佳清单"
+$PY agent_cli.py "目标子区域B的美宜佳清单"
 $PY agent_cli.py "查一下夫妻老婆店的清单"
 $PY agent_cli.py "餐饮街 ≥20 家 + 周末客流排序 + 评分 3.8+ 占比 50%+ 为高"
 $PY dm_demo.py                           # DM 统计 + 交互下钻演示
@@ -151,28 +151,20 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 ```
 
 ---
+## 7. 数据接入
 
-## 7. 数据获取
+本组件是一个**纯计算型 Insight 组件**,**不内置任何样本数据**。当用户提供结构化的售点宽表 (CSV / Parquet) 时,组件自动发现 `data/` 目录下的数据文件并加载。底表由消费方按各自合规流程提供,组件本身不托管、不分发、不公开任何真实业务数据。
 
-**底表受 `.gitignore` 排除**(单文件过大)。最小可运行子集**零数据**:源码、`skill/scripts/`、`docs/`、`examples/`、受管 FMCG 知识库 5 个 YAML。
+最小可运行子集(零数据):源码、`skill/scripts/`、`docs/`、`examples/`、受管 FMCG 知识库 5 个 YAML。
 
-| 文件 | 大小 | 获取途径 |
-|---|---|---|
-| `SH全量售点洞察*.csv` | 584 MB | 某饮料企业内网 OneDrive · · 项目 Wiki |
-| `SH全量售点洞察*.parquet` | 122 MB | 首次运行 `engine.py` 自动从 CSV 缓存生成 |
-| `SH全量售点洞察*.dm.sqlite` | 自动 | 首次查询 `dm_layer.py` 按 mtime 自愈重建 |
-| `exports_89/` 89 份业务导出 | 162 MB | 业务导出库 |
-
-放入 `data/` 目录即可,程序默认自动发现。
-
-> 注:`SH全量售点洞察*` 中的 `SH` 是**数据域标识**(代表华东售点数据域),**不是产品名**。本组件的正式产品名为 `谋圣·售点洞察 / Mousheng Outlet Insight / mousheng-outlet-insight`。
+当数据接入后,执行 `engine.py` 会自动从 CSV 派生 Parquet 加速缓存,`dm_layer.py` 会按 mtime 自愈重建 DM 汇总层。组件对底表的字段命名与隐私边界保持完全中立 —— 不假设任何特定客户的字段、地区、品类体系,所有领域语义都通过受管知识库 (W3C PROV-O 溯源) 显式声明。
 
 ---
 
 ## 8. 目录结构
 
 ```text
-~/sh-store-insight/
+~/outlet-insight/
 ├── README.md                                       ← 你正在看
 ├── AGENT.md                                        ← Agent 交接文档
 ├── .gitignore                                      ← 精细化排除大文件与缓存
@@ -204,7 +196,7 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 │   ├── designs/fmcg-knowledge-base/                ← 设计沉淀镜像
 │   ├── 开源Data_Agent生态研究*.md                  ← WrenAI/Cube/TaskWeaver/Vanna 调研
 │   ├── 售点洞察实例问题集.md
-│   ├── sh-store-insight_PRD*.md                    ← 历史 PRD 版本(已废弃,仅作追溯)
+│   ├── outlet-insight_PRD*.md                    ← 历史 PRD 版本(已废弃,仅作追溯)
 │   └── ...
 ├── examples/                                       ← 权威 Insight Package 契约示例
 ├── demo/                                           ← 浏览器交互 demo (HTML+Flask)
@@ -252,10 +244,10 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
               └── visit-scheduling-optimizer   (技术标识 / GitHub repo)
 
 数据域标识 (data domain identifier, 不是产品名):
-        └── sh-outlet-domain  (SH 代表华东售点数据域, 仅用于 data/ 文件命名)
+        └── outlet-data-domain  (SH 代表目标区域售点数据域, 仅用于 data/ 文件命名)
 ```
 
-历史研发代号 `sh-store-insight` 已降级为**数据域标识**(代表华东售点数据域),**不再作为产品主名称**。新的业务讨论与代码注释请使用 `mousheng-outlet-insight` / `谋圣·售点洞察` / `Mousheng Outlet Insight`。
+历史研发代号 `outlet-insight` 已降级为**数据域标识**(代表目标区域售点数据域),**不再作为产品主名称**。新的业务讨论与代码注释请使用 `mousheng-outlet-insight` / `谋圣·售点洞察` / `Mousheng Outlet Insight`。
 
 ---
 
@@ -265,7 +257,7 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 - **指导稿**:`《谋圣·售点洞察产品定位与改进指导》v1.1`
 - **生态调研**:WrenAI / Cube / TaskWeaver / Vanna / ktx(见 `docs/开源Data_Agent生态研究*.md`)
 - **本体研究**:PROV-O · SOSA/SSN · OBO Foundry · FIBO · AliCoCo (SIGMOD 2020) · AutoKnow (KDD 2020) · LLMs4OL (ISWC 2024/2025)
-- **FMCG 知识源**:GB/T 18106-2021 (零售业态) · GB/T 4754-2017 (国民经济行业) · NIQ RMS · GS1 GPC · CCFA · 饮料品牌 RED · 宝洁 PJP · Wikidata · 大众点评
+- **FMCG 知识源**:GB/T 18106-2021 (零售业态) · GB/T 4754-2017 (国民经济行业) · NIQ RMS · GS1 GPC · CCFA · RED (通用 RTM 框架) · 宝洁 PJP · Wikidata · 大众点评
 
 ---
 

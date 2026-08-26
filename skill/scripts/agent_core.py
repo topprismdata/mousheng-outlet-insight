@@ -253,30 +253,30 @@ def add_derived(df: pd.DataFrame, reg: FieldRegistry) -> pd.DataFrame:
 def find_default_data() -> Path:
     """自动发现售点洞察 CSV。
 
-    优先级：环境变量 SH_STORE_DATA → ~/sh-store-insight/data → ~/Downloads
+    优先级：环境变量 OUTLET_DATA → ~/outlet-insight/data → ~/Downloads
     下文件名包含「售点洞察/售点」的 CSV。
     找不到时抛出 FileNotFoundError，调用方应改用 --data 显式指定。
     """
     import os
 
-    env = os.environ.get("SH_STORE_DATA")
+    env = os.environ.get("OUTLET_DATA")
     if env:
         return Path(env)
-    for base in (Path.home() / "sh-store-insight" / "data", Path.home() / "Downloads"):
+    for base in (Path.home() / "outlet-insight" / "data", Path.home() / "Downloads"):
         if base.exists():
-            for pat in ("SH全量售点洞察*.csv", "*售点洞察*.csv", "*售点*.csv"):
+            for pat in ("<data>.csv", "*售点洞察*.csv", "*售点*.csv"):
                 hits = sorted(base.glob(pat))
                 if hits:
                     return hits[-1]
     raise FileNotFoundError(
-        "未在 ~/sh-store-insight/data 或 ~/Downloads 找到售点数据，"
-        "请通过 --data 指定 CSV 路径，或设置环境变量 SH_STORE_DATA"
+        "未在 ~/outlet-insight/data 或 ~/Downloads 找到售点数据，"
+        "请通过 --data 指定 CSV 路径，或设置环境变量 OUTLET_DATA"
     )
 
 
 def load_store_data(path: Path | str | None = None, reg: FieldRegistry | None = None,
                     use_cache: bool = True) -> pd.DataFrame:
-    """加载售点数据，自动用 parquet 缓存加速（584MB CSV 首次约 15-25s，之后 <3s）。
+    """加载售点数据，自动用 parquet 缓存加速（<size> MB CSV 首次约 15-25s，之后 <3s）。
 
     参数：
       path        CSV 或 parquet 路径；为 None 时走 find_default_data()

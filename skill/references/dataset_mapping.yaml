@@ -1,8 +1,8 @@
 version: 2.1.0
 governance_model: prism-ontology-three-layer
 dataset:
-  name: sh-store-insight-152
-  description: 中国华东大区售点洞察全量宽表（152列完整七类结构化模式映射）
+  name: outlet-data-profile
+  description: 目标大区售点洞察全量宽表（152列完整七类结构化模式映射）
   physical_schema_columns: 152
   runtime_analysis_frame_columns: 153
   total_governance_mapping_records: 153

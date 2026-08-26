@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-提取数据模式扫描器 (sh-store-insight · 第9块能力)。
+提取数据模式扫描器 (outlet-insight · 第9块能力)。
 
 对「一批 售点洞察*.csv 导出」做**客观的结构模式刻画**，不推断业务人员的查询动机或决策目的。
 核心方法论 (用户实证, 零 LLM):
 
   导出模式 = 行数 + 维度列取值集中度 + 各列填充率
 
-  - 维度列 (渠道组/经营场所/省份/大区): 导出全 152 列表头, 非空率永远≈100%,
+  - 维度列 (渠道组/经营场所/省份/大区): 导出全 <n_cols> 列表头, 非空率永远≈100%,
     客观判别力在【取值集中度】—— 单值=单一维度主导, 多值=多维度分散。
   - enrichment 列 (携程/点评/连锁/销售/拜访): 客观判别力在【填充率】—— 填充率>0=本次导出带了这一列。
 
@@ -17,7 +17,7 @@
 
 用法:
   $PY extraction_pattern_scan.py --data-dir /path/to/exports --out-dir /tmp/ep
-  $PY extraction_pattern_scan.py            # 默认扫 ~/sh-store-insight/data/exports_89 下的 售点洞察*.csv
+  $PY extraction_pattern_scan.py            # 默认扫 ~/outlet-insight/data/exports_89 下的 售点洞察*.csv
 输出:
   <out>/extraction_pattern_classification.csv   逐文件结构画像
   <out>/extraction_pattern_summary.json        聚合结构分布
@@ -29,7 +29,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_DATA = os.path.expanduser("~/sh-store-insight/data/exports_89")
+DEFAULT_DATA = os.path.expanduser("~/outlet-insight/data/exports_89")
 DEFAULT_DICT = os.path.join(HERE, "field_dictionary.json")
 
 
@@ -280,8 +280,8 @@ def scan(data_dir, out_dir, dict_path):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="售点洞察提取数据模式扫描器")
-    ap.add_argument("--data-dir", default=DEFAULT_DATA, help="含 售点洞察*.csv 的目录 (默认 ~/sh-store-insight/data/exports_89)")
-    ap.add_argument("--out-dir", default=os.path.expanduser("~/sh-store-insight/output/extraction_pattern_out"), help="结果输出目录")
+    ap.add_argument("--data-dir", default=DEFAULT_DATA, help="含 售点洞察*.csv 的目录 (默认 ~/outlet-insight/data/exports_89)")
+    ap.add_argument("--out-dir", default=os.path.expanduser("~/outlet-insight/output/extraction_pattern_out"), help="结果输出目录")
     ap.add_argument("--dict", default=DEFAULT_DICT, help="L2 字段字典路径")
     args = ap.parse_args()
     scan(args.data_dir, args.out_dir, args.dict)

@@ -4,12 +4,12 @@
 DM 交互式下钻 Demo —— 演示「统计级查询 → 客户点选 → 原始明细下钻」两步流。
 
 用法:
-    $PY dm_demo.py                      # 跑内置示例对话（上海市餐饮连锁品牌）
+    $PY dm_demo.py                      # 跑内置示例对话（目标城市餐饮连锁品牌）
     $PY dm_demo.py --repl              # 进入交互 REPL，自行输入统计查询 + 点选下钻
     $PY dm_demo.py --build             # 强制重建 DM
 
-数据: ~/sh-store-insight/data/SH全量售点洞察1784527757315.{parquet,csv}
-DM : ~/sh-store-insight/data/sh_dm.sqlite (首次自动构建)
+数据: ~/outlet-insight/data/<data>,csv}
+DM : ~/outlet-insight/data/sh_dm.sqlite (首次自动构建)
 """
 
 import sys
@@ -19,9 +19,9 @@ import pandas as pd
 
 from dm_layer import build_dm, query_stat, drilldown, GEO_NORM, DIMENSIONS
 
-PARQUET = "/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.parquet"
-CSV = "/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.csv"
-DB = "/Users/ghb/sh-store-insight/data/sh_dm.sqlite"
+PARQUET = "/Users/ghb/outlet-insight/data/<data>.parquet"
+CSV = "/Users/ghb/outlet-insight/data/<data>.csv"
+DB = "/Users/ghb/outlet-insight/data/sh_dm.sqlite"
 
 pd.set_option("display.width", 160)
 pd.set_option("display.max_rows", 40)
@@ -131,11 +131,11 @@ def run_scripted_demo():
     ensure_dm()
     print("=" * 72)
     print("DM 交互式下钻 Demo")
-    print("场景：客户先问统计（上海市餐饮连锁品牌按门店数排序），再决定下钻")
+    print("场景：客户先问统计（目标城市餐饮连锁品牌按门店数排序），再决定下钻")
     print("=" * 72)
 
     # 第一步：统计查询
-    df, note = show_stat("上海市餐饮的连锁品牌都有哪些，按照门店数量排序")
+    df, note = show_stat("目标城市餐饮的连锁品牌都有哪些，按照门店数量排序")
 
     # 第二步：客户决定看 TOP1（瑞幸咖啡）的明细
     print("\n" + "-" * 72)
@@ -145,9 +145,9 @@ def run_scripted_demo():
 
     # 第三步：客户换个维度，看业态分布
     print("\n" + "=" * 72)
-    print("客户：「那上海市整体各业态分布是什么样？」")
+    print("客户：「那目标城市整体各业态分布是什么样？」")
     print("=" * 72)
-    df2, note2 = show_stat("上海市按业态看门店数量分布")
+    df2, note2 = show_stat("目标城市按业态看门店数量分布")
     do_drill(df2, note2, "餐饮")
 
 

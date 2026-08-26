@@ -17,7 +17,7 @@
 
 ## 运行时使用
 
-### 1. 从项目根目录 (`/Users/ghb/sh-store-insight/`) 运行 CLI：
+### 1. 从项目根目录 (`/Users/ghb/outlet-insight/`) 运行 CLI：
 ```bash
 python skill/scripts/insight_cli.py \
     --request examples/insight-request.example.json \

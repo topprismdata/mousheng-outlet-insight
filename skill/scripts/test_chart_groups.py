@@ -38,8 +38,8 @@ CASES = [
     ("A1", "便利店 连锁品牌 门店数 TOP20（rank）",
      {"group_by": "连锁品牌名称", "filters": {"渠道组": "便利店"}, "order_by": "cnt", "limit": 20,
       "palette": "rank", "theme": "light"}, True, "rank", "rank", "light"),
-    ("A2", "上海城区 各渠道组 门店数排行（rank）",
-     {"group_by": "渠道组", "filters": {"城市": "上海城区"}, "order_by": "cnt", "limit": 20,
+    ("A2", "目标城区 各渠道组 门店数排行（rank）",
+     {"group_by": "渠道组", "filters": {"城市": "目标城区"}, "order_by": "cnt", "limit": 20,
       "palette": "auto", "theme": "light"}, True, "rank", "rank", "light"),
     ("A3", "餐饮 细分渠道 门店数 TOP20（rank）",
      {"group_by": "细分渠道", "filters": {"渠道组": "餐饮"}, "order_by": "cnt", "limit": 20,
@@ -52,16 +52,16 @@ CASES = [
     ("B2", "规划大区 均周末客流 排行（ramp）",
      {"group_by": "规划大区", "order_by": "avg_traffic", "limit": 20,
       "palette": "auto", "theme": "light"}, True, "ramp", "ramp", "light"),
-    ("B3", "上海城区 渠道组 潜力合计 排行（ramp）",
-     {"group_by": "渠道组", "filters": {"城市": "上海城区"}, "order_by": "sum_potential", "limit": 20,
+    ("B3", "目标城区 渠道组 潜力合计 排行（ramp）",
+     {"group_by": "渠道组", "filters": {"城市": "目标城区"}, "order_by": "sum_potential", "limit": 20,
       "palette": "auto", "theme": "light"}, True, "ramp", "ramp", "light"),
 
     # ===== C 多系列分组（z 着色，categorical）— 新能力 =====
     ("C1", "渠道组 × 是否连锁 门店数（多系列 categorical）",
-     {"group_by": "渠道组", "z": "是否连锁", "filters": {"城市": "上海城区"}, "order_by": "cnt",
+     {"group_by": "渠道组", "z": "是否连锁", "filters": {"城市": "目标城区"}, "order_by": "cnt",
       "palette": "auto", "theme": "light"}, True, "categorical", "categorical", "light"),
     ("C2", "规划大区 × 渠道组 门店数（多系列 categorical）",
-     {"group_by": "规划大区", "z": "渠道组", "filters": {"城市": "上海城区"}, "order_by": "cnt",
+     {"group_by": "规划大区", "z": "渠道组", "filters": {"城市": "目标城区"}, "order_by": "cnt",
       "palette": "auto", "theme": "light"}, True, "categorical", "categorical", "light"),
     ("C3", "餐饮 品牌 × 是否连锁 均评分（多系列 categorical）",
      {"group_by": "连锁品牌名称", "z": "是否连锁", "filters": {"渠道组": "餐饮"}, "order_by": "avg_rating",
@@ -69,18 +69,18 @@ CASES = [
 
     # ===== D 热力图（Heatmap，品牌蓝渐变）— 新能力 =====
     ("D1", "渠道组 × 细分渠道 门店数（热力图 brandBlue）",
-     {"group_by": "渠道组", "z": "细分渠道", "filters": {"城市": "上海城区"}, "order_by": "cnt",
+     {"group_by": "渠道组", "z": "细分渠道", "filters": {"城市": "目标城区"}, "order_by": "cnt",
       "chart_type": "Heatmap", "palette": "auto", "theme": "light"}, True, "categorical", "heatmap", "light"),
     ("D2", "规划大区 × 渠道组 门店数（热力图 brandBlue）",
-     {"group_by": "规划大区", "z": "渠道组", "filters": {"城市": "上海城区"}, "order_by": "cnt",
+     {"group_by": "规划大区", "z": "渠道组", "filters": {"城市": "目标城区"}, "order_by": "cnt",
       "chart_type": "Heatmap", "palette": "auto", "theme": "light"}, True, "categorical", "heatmap", "light"),
 
     # ===== E 暗色主题 =====
     ("E1", "餐饮连锁 品牌门店数（rank + dark）",
      {"group_by": "连锁品牌名称", "filters": {"渠道组": "餐饮", "是否连锁": "是"}, "order_by": "cnt", "limit": 20,
       "palette": "rank", "theme": "dark"}, True, "rank", "rank", "dark"),
-    ("E2", "上海城区 渠道组 潜力（ramp + dark）",
-     {"group_by": "渠道组", "filters": {"城市": "上海城区"}, "order_by": "sum_potential", "limit": 20,
+    ("E2", "目标城区 渠道组 潜力（ramp + dark）",
+     {"group_by": "渠道组", "filters": {"城市": "目标城区"}, "order_by": "sum_potential", "limit": 20,
       "palette": "ramp", "theme": "dark"}, True, "ramp", "ramp", "dark"),
 
     # ===== F 边界 / 异常（回归保障）=====

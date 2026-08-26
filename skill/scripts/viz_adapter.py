@@ -1,10 +1,10 @@
-"""viz_adapter.py — sh-store-insight × Flint Chart 适配层（Python 侧）
+"""viz_adapter.py — outlet-insight × Flint Chart 适配层（Python 侧）
 
 职责：把咱们的查询/统计结果（pandas DataFrame）转成 Flint 的
 `ChartAssemblyInput` JSON —— 即 data + semantic_types + chart_spec。
 Flint 负责后续"数据 → 原生图表"的编译（见 render_flint.mjs）。
 
-设计原则（对齐 sh-store-insight 铁律）：
+设计原则（对齐 outlet-insight 铁律）：
 - 绝不静默丢字段：列若无法推断语义，显式回退到 Category / Quantity 而非丢弃。
 - 零 LLM：语义类型与图表类型靠规则 + 已知 schema 推导，不调模型。
 - 确定性：同名同数据 → 同 spec。

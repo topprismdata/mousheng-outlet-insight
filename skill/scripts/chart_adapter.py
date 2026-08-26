@@ -156,7 +156,7 @@ if __name__ == "__main__":
         {"连锁品牌名称": "肯德基", "门店数": 2178},
         {"连锁品牌名称": "巴比馒头", "门店数": 1869}
     ]
-    spec1 = generate_echarts_spec("horizontal_bar", test_data, "上海连锁品牌排行", "连锁品牌名称", "门店数")
+    spec1 = generate_echarts_spec("horizontal_bar", test_data, "目标城市连锁品牌排行", "连锁品牌名称", "门店数")
     print("=== ECharts Spec 生成测试 (横向柱状图) ===")
     print(f"Title: {spec1['title']['text']}")
     print(f"Categories: {spec1['yAxis']['data']}")

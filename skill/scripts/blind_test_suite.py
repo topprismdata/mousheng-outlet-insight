@@ -22,7 +22,7 @@ from insight import synthesize_from_request, validate_insight_package
 BLIND_TEST_QUERIES = [
     # ── 1. 目标容量选点与优先级 (10 题) ──
     {"id": "B01", "q": "在未服务食杂店中选200家投放冰柜，按月均潜力排序", "exp_min": 200, "type": "quota"},
-    {"id": "B02", "q": "浦东大区圈选100家餐饮店，优先餐饮街，按周末客流降序", "exp_min": 100, "type": "quota"},
+    {"id": "B02", "q": "目标子区域A圈选100家餐饮店，优先餐饮街，按周末客流降序", "exp_min": 100, "type": "quota"},
     {"id": "B03", "q": "挑选50家非连锁酒店，按客房数降序", "exp_min": 50, "type": "quota"},
     {"id": "B04", "q": "选500家客房大于300间的酒店", "exp_min": 0, "type": "gap_quota"},
     {"id": "B05", "q": "圈选100家大客房单体酒店", "exp_min": 50, "type": "quota"},
@@ -33,25 +33,25 @@ BLIND_TEST_QUERIES = [
     {"id": "B10", "q": "首发100家商圈核心售点", "exp_min": 100, "type": "quota"},
 
     # ── 2. 品牌集中度与分布 (10 题) ──
-    {"id": "B11", "q": "浦西大区的美宜佳清单", "exp_min": 37, "type": "brand"},
+    {"id": "B11", "q": "目标子区域B的美宜佳清单", "exp_min": 37, "type": "brand"},
     {"id": "B12", "q": "美宜佳各大区分布", "exp_min": 7, "type": "brand_dist"},
     {"id": "B13", "q": "瑞幸咖啡各大区门店分布", "exp_min": 7, "type": "brand_dist"},
     {"id": "B14", "q": "星巴克各大区分布", "exp_min": 7, "type": "brand_dist"},
     {"id": "B15", "q": "巴比馒头各大区分布", "exp_min": 7, "type": "brand_dist"},
     {"id": "B16", "q": "肯德基和麦当劳各省门店分布", "exp_min": 3, "type": "brand_dist"},
-    {"id": "B17", "q": "上海城区餐饮连锁品牌集中度", "exp_min": 100, "type": "concentration"},
+    {"id": "B17", "q": "目标城区餐饮连锁品牌集中度", "exp_min": 100, "type": "concentration"},
     {"id": "B18", "q": "便利店渠道连锁品牌分布", "exp_min": 20, "type": "brand_dist"},
-    {"id": "B19", "q": "浙江各业态连锁品牌数量", "exp_min": 100, "type": "brand_dist"},
+    {"id": "B19", "q": "目标省份各业态连锁品牌数量", "exp_min": 100, "type": "brand_dist"},
     {"id": "B20", "q": "正新鸡排各大区分布", "exp_min": 7, "type": "brand_dist"},
 
     # ── 3. 渠道业态与商圈空间 (10 题) ──
-    {"id": "B21", "q": "江苏各业态数量", "exp_min": 15, "type": "channel"},
+    {"id": "B21", "q": "目标省份各业态数量", "exp_min": 15, "type": "channel"},
     {"id": "B22", "q": "餐饮街的客户分布", "exp_min": 10, "type": "site"},
     {"id": "B23", "q": "商场业态客户分布", "exp_min": 10, "type": "site"},
     {"id": "B24", "q": "客房>100且非连锁酒店", "exp_min": 500, "type": "hotel"},
     {"id": "B25", "q": "客房数大于200间的大型酒店", "exp_min": 100, "type": "hotel"},
-    {"id": "B26", "q": "上海城区各业态售点数量", "exp_min": 15, "type": "channel"},
-    {"id": "B27", "q": "浦东大区食杂店清单", "exp_min": 1000, "type": "list"},
+    {"id": "B26", "q": "目标城区各业态售点数量", "exp_min": 15, "type": "channel"},
+    {"id": "B27", "q": "目标子区域A食杂店清单", "exp_min": 1000, "type": "list"},
     {"id": "B28", "q": "食杂业态各省分布", "exp_min": 3, "type": "channel"},
     {"id": "B29", "q": "景区周边住宿售点分布", "exp_min": 1, "type": "site"},
     {"id": "B30", "q": "交通枢纽周边便利店与快餐分布", "exp_min": 1, "type": "site"},

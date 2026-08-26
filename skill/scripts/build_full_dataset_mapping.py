@@ -2,16 +2,16 @@
 """
 build_full_dataset_mapping.py
 =============================
-对 152 列物理宽表进行全量逐列本体映射构建，产出 references/dataset_mapping.yaml，
+对 <n_cols> 列物理宽表进行全量逐列本体映射构建，产出 references/dataset_mapping.yaml，
 并生成精确的映射统计报告。
 """
 import pandas as pd
 import yaml
 from pathlib import Path
 
-DATA_PATH = Path("/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.parquet")
+DATA_PATH = Path("/Users/ghb/outlet-insight/data/<data>.parquet")
 if not DATA_PATH.exists():
-    DATA_PATH = Path("/Users/ghb/sh-store-insight/data/SH全量售点洞察1784527757315.csv")
+    DATA_PATH = Path("/Users/ghb/outlet-insight/data/<data>.csv")
 
 if DATA_PATH.suffix == '.parquet':
     df = pd.read_parquet(DATA_PATH)
@@ -199,8 +199,8 @@ MAPPINGS_CONFIG.append({
 output_data = {
     "version": "1.0.0",
     "dataset": {
-        "name": "sh-store-insight-152",
-        "description": "中国华东大区售点洞察全量宽表（152列完整逐列映射）",
+        "name": "outlet-data-profile",
+        "description": "目标大区售点洞察全量宽表（152列完整逐列映射）",
         "total_physical_columns": len(cols),
         "total_mapping_records": len(MAPPINGS_CONFIG),
         "governance_status": "verified_full_column_coverage"
@@ -208,7 +208,7 @@ output_data = {
     "mappings": MAPPINGS_CONFIG
 }
 
-out_yaml = Path("/Users/ghb/sh-store-insight/skill/references/dataset_mapping.yaml")
+out_yaml = Path("/Users/ghb/outlet-insight/skill/references/dataset_mapping.yaml")
 with open(out_yaml, "w", encoding="utf-8") as f:
     yaml.dump(output_data, f, allow_unicode=True, sort_keys=False)
 

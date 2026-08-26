@@ -17,9 +17,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-001"
     scenario: "指定品牌与区域清单"
-    natural_language: "浦西大区的美宜佳清单"
+    natural_language: "目标子区域B的美宜佳清单"
     target_ontology_intent: "prism:intent/PointExtraction"
-    target_entities: ["prism:outlet/Brand:美宜佳", "prism:outlet/Territory:浦西大区"]
+    target_entities: ["prism:outlet/Brand:美宜佳", "prism:outlet/Territory:目标子区域B"]
     semantic_expressibility: "pass"
     data_answerability: "full"
     blocking_reason: null
@@ -30,9 +30,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-002"
     scenario: "区域业态结构分布"
-    natural_language: "江苏省各业态的售点数量分布"
+    natural_language: "目标省份省各业态的售点数量分布"
     target_ontology_intent: "prism:intent/DistributionAnalysis"
-    target_entities: ["prism:outlet/AdministrativeRegion:江苏省", "prism:outlet/ChannelType"]
+    target_entities: ["prism:outlet/AdministrativeRegion:目标省份省", "prism:outlet/ChannelType"]
     semantic_expressibility: "pass"
     data_answerability: "full"
     blocking_reason: null
@@ -43,9 +43,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-003"
     scenario: "业态品牌集中度"
-    natural_language: "上海城区餐饮连锁品牌的集中度与头部排行"
+    natural_language: "目标城区餐饮连锁品牌的集中度与头部排行"
     target_ontology_intent: "prism:intent/ConcentrationAnalysis"
-    target_entities: ["prism:outlet/AdministrativeRegion:上海城区", "prism:outlet/ChannelType:餐饮", "prism:outlet/Brand"]
+    target_entities: ["prism:outlet/AdministrativeRegion:目标城区", "prism:outlet/ChannelType:餐饮", "prism:outlet/Brand"]
     semantic_expressibility: "pass"
     data_answerability: "full"
     blocking_reason: null
@@ -56,9 +56,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-004"
     scenario: "群体同态指标对比"
-    natural_language: "浦东大区与浦西大区在食杂店平均客流上的差异"
+    natural_language: "目标子区域A与目标子区域B在食杂店平均客流上的差异"
     target_ontology_intent: "prism:intent/GroupComparison"
-    target_entities: ["prism:outlet/Territory:浦东大区", "prism:outlet/Territory:浦西大区", "prism:outlet/ChannelType:食杂"]
+    target_entities: ["prism:outlet/Territory:目标子区域A", "prism:outlet/Territory:目标子区域B", "prism:outlet/ChannelType:食杂"]
     semantic_expressibility: "pass"
     data_answerability: "full"
     blocking_reason: null
@@ -108,7 +108,7 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-008"
     scenario: "外部竞品销量份额"
-    natural_language: "饮料品牌 vs 百事可乐在华东食杂店的真实销售箱数份额"
+    natural_language: "对标饮料品牌 vs 百事可乐在目标区域食杂店的真实销售箱数份额"
     target_ontology_intent: "prism:intent/MarketShareAnalysis"
     target_entities: ["prism:outlet/ChannelType:食杂", "prism:outlet/Brand:饮料品牌", "prism:outlet/Brand:百事可乐"]
     semantic_expressibility: "pass"
@@ -121,9 +121,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-009"
     scenario: "统计到明细下钻"
-    natural_language: "看排第一的瑞幸咖啡在上海城区的具体门店清单"
+    natural_language: "看排第一的瑞幸咖啡在目标城区的具体门店清单"
     target_ontology_intent: "prism:intent/DrilldownExtraction"
-    target_entities: ["prism:outlet/Brand:瑞幸咖啡", "prism:outlet/AdministrativeRegion:上海城区"]
+    target_entities: ["prism:outlet/Brand:瑞幸咖啡", "prism:outlet/AdministrativeRegion:目标城区"]
     semantic_expressibility: "pass"
     data_answerability: "full"
     blocking_reason: null
@@ -134,9 +134,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-010"
     scenario: "图表与视觉证据对齐"
-    natural_language: "生成上海市餐饮连锁品牌 TOP20 的门店数与评分双轴图"
+    natural_language: "生成目标城市餐饮连锁品牌 TOP20 的门店数与评分双轴图"
     target_ontology_intent: "prism:intent/VisualEvidenceGeneration"
-    target_entities: ["prism:outlet/AdministrativeRegion:上海城区", "prism:outlet/ChannelType:餐饮"]
+    target_entities: ["prism:outlet/AdministrativeRegion:目标城区", "prism:outlet/ChannelType:餐饮"]
     semantic_expressibility: "pass"
     data_answerability: "full"
     blocking_reason: null

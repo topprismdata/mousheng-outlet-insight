@@ -3,7 +3,7 @@
 **版本**：v1.0.0  
 **生效日期**：2026-08-25  
 **维护方**：棱镜极 TopPrism 架构治理委员会  
-**权威存放路径**：`/Users/ghb/sh-store-insight/docs/ontology-compatibility-matrix.md`
+**权威存放路径**：`/Users/ghb/outlet-insight/docs/ontology-compatibility-matrix.md`
 
 ---
 
@@ -14,7 +14,7 @@
 | 谋圣组件版本 (Component Ver) | 兼容上位本体版本 (Ontology Ver) | 兼容 Profile 版本 (Profile Ver) | 契约 Schema 版本 | 阶段状态 | 关键变更与兼容说明 |
 |---|---|---|---|---|---|
 | **v1.3.0-rc3** *(当前版本)* | `0.1.0` (Git: `9f35d2d`) | `0.1.0-rc2` | `draft-2020-12` | **Phase A/B/P0/P1/P2 全面封板** | 双轨执行引擎 (Vanna+DuckDB+SQL防火墙)、目标配额选点与截断分析、Evidence Semantics v1.2、scipy显著性与Placebo反驳、智能多维研报生成器。 |
-| **v1.0.x** *(历史原型)* | N/A (本地字典) | N/A (未受管) | 自定义 JSON | 已废弃 (Deprecated) | 原技术探索原型 `sh-store-insight`，未接入受管 Profile。 |
+| **v1.0.x** *(历史原型)* | N/A (本地字典) | N/A (未受管) | 自定义 JSON | 已废弃 (Deprecated) | 原技术探索原型 `outlet-insight`，未接入受管 Profile。 |
 
 ---
 

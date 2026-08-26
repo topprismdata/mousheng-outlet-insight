@@ -2,7 +2,7 @@
   "analysis_id": "mousheng-prd-example-001",
   "artifact_type": "InsightPackage",
   "request_context": {
-    "question": "上海市餐饮连锁品牌集中度",
+    "question": "目标城市餐饮连锁品牌集中度",
     "intent": "distribution_comparison",
     "target_entity": "prism:outlet/Brand",
     "scope": {},
@@ -132,7 +132,7 @@
     "insight_component_version": "1.3.0-rc3",
     "insight_generated_at": "2026-08-25T12:00:00Z",
     "evidence_provenance": {
-      "dataset_id": "sh-store-insight-152",
+      "dataset_id": "outlet-data-profile",
       "data_version": "2026.08",
       "ontology_profile_version": "0.1.0-rc2",
       "dataset_mapping_version": null,

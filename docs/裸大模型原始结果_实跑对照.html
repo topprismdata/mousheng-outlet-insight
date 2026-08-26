@@ -38,7 +38,7 @@
 </head>
 <body>
 <h1>直接问大模型 · 原始结果（真实数据实跑对照）</h1>
-<p class="sub">数据集：SH全量售点洞察（629,074 行 × 152 列，117MB）。本页所有"裸大模型代码"均在真实数据上 <b>实际执行</b>，下方输出为真实 stdout / 异常。</p>
+<p class="sub">数据集：<data>,074 行 × <n_cols> 列，117MB）。本页所有"裸大模型代码"均在真实数据上 <b>实际执行</b>，下方输出为真实 stdout / 异常。</p>
 
 <div class="note">
 <b>关于"真实性"的底线说明：</b>当前沙箱环境<b>没有接入任何第三方大模型 API</b>（无 ChatGPT/Claude 调用工具或密钥），因此无法贴出外部模型的逐字 transcript。
@@ -51,7 +51,7 @@
 <div class="schema">
 <b>规划大区</b> | <b>服务状态</b> | <b>连锁品牌名称</b> | <b>渠道组</b> | <b>大众点评餐饮点评评分星级</b> | <b>携程-综合评分</b> | <b>周末均值客流(人)</b>
 <b>月均收入潜力预测(如有协议)</b> | <b>月均收入潜力预测(如有冰柜无协议)</b> | <b>月均收入潜力预测(无协议无冰柜)</b> | <b>经营场所</b>
-（共 152 列；注意：<b>没有</b> "品牌"、"老板年龄"、"大区" 这三列——裸大模型极易凭直觉写出这些名字）
+（共 <n_cols> 列；注意：<b>没有</b> "品牌"、"老板年龄"、"大区" 这三列——裸大模型极易凭直觉写出这些名字）
 含"评分"的列共 5 个：携程-综合评分 / 大众点评餐饮口味评分星级 / 环境 / 服务 / 点评评分星级
 含"潜力"的列共 3 个：如有协议 / 如有冰柜无协议 / 无协议无冰柜
 </div>
@@ -60,7 +60,7 @@
 
 <!-- Q1 -->
 <div class="q">
-  <div class="qhead"><span class="qid">Q1</span><span class="qtitle">浦西大区未服务的美宜佳，按月均收入潜力预测从高到低取前10</span></div>
+  <div class="qhead"><span class="qid">Q1</span><span class="qtitle">目标子区域B未服务的美宜佳，按月均收入潜力预测从高到低取前10</span></div>
   <div class="body">
     <p class="cap">裸大模型常把列名简写成"品牌"（schema 里是"连锁品牌名称"）</p>
     <div class="lbl">裸大模型典型代码</div>
@@ -69,7 +69,7 @@ sub = sub.sort_values('月均收入潜力预测(无协议无冰柜)', ascending=
     <div class="lbl">真实执行结果</div>
 <pre class="res-err">KeyError: '品牌'</pre>
     <span class="verdict v-fail">真实失败 · KeyError</span>
-    <p class="cap" style="margin-top:10px">本 Skill 实测：→ 真实列 <code>连锁品牌名称 contains '美宜佳'</code> + <code>规划大区='浦西大区'</code> + <code>服务状态='未服务'</code>，命中 10 行。差异：裸大模型须猜列名（常错），且 3 个"潜力"列选哪个无依据；Skill 由语义层确定性路由。</p>
+    <p class="cap" style="margin-top:10px">本 Skill 实测：→ 真实列 <code>连锁品牌名称 contains '美宜佳'</code> + <code>规划大区='目标子区域B'</code> + <code>服务状态='未服务'</code>，命中 10 行。差异：裸大模型须猜列名（常错），且 3 个"潜力"列选哪个无依据；Skill 由语义层确定性路由。</p>
   </div>
 </div>
 
@@ -150,13 +150,13 @@ print(sub[['携程-综合评分','大众点评餐饮点评评分星级']].head()
 <pre>sub = df[df['渠道组']=='餐饮'].groupby('规划大区').size().sort_values(ascending=False)</pre>
     <div class="lbl">真实执行结果</div>
 <pre class="res-ok">规划大区
-浦西大区    72596
-无锡大区    51722
-浦东大区    50702
-苏州大区    49224
+目标子区域B    72596
+目标城市5大区    51722
+目标子区域A    50702
+目标城市1大区    49224
 昆太大区    43995
-嘉兴大区    36527
-南通大区    33968</pre>
+目标城市8大区    36527
+目标城市7大区    33968</pre>
     <span class="verdict v-luck">碰巧正确 · 但无护栏</span>
     <p class="cap" style="margin-top:10px">本 Skill 实测：同样 7 组。差异：此处裸大模型碰巧对；但<b>无编译期护栏</b>——若写成 <code>df['大区']</code>（真实不存在的列）会 KeyError；若把"各个大区"误读为过滤值则得 0 行。Skill 编译期拦截非法字段。</p>
   </div>
@@ -177,12 +177,12 @@ print(sub[['携程-综合评分','大众点评餐饮点评评分星级']].head()
 
 <!-- Q8 -->
 <div class="q">
-  <div class="qhead"><span class="qid">Q8</span><span class="qtitle">多步会话第2轮："这些里浦西大区的"</span></div>
+  <div class="qhead"><span class="qid">Q8</span><span class="qtitle">多步会话第2轮："这些里目标子区域B的"</span></div>
   <div class="body">
     <div class="lbl">裸大模型典型代码（无会话态，无法解析"这些"）</div>
-<pre>sub = df[df['规划大区']=='浦西大区']   # 不知道"这些"=上轮美宜佳子集</pre>
+<pre>sub = df[df['规划大区']=='目标子区域B']   # 不知道"这些"=上轮美宜佳子集</pre>
     <div class="lbl">真实执行结果</div>
-<pre class="res-err">裸大模型丢失上下文 → 按'浦西大区'全量过滤 = 138,745 行
+<pre class="res-err">裸大模型丢失上下文 → 按'目标子区域B'全量过滤 = 138,745 行
 （本 Skill 在 37 行的美宜佳子集中继续）</pre>
     <span class="verdict v-fail">真实失败 · 指代丢失上下文</span>
     <p class="cap" style="margin-top:10px">本 Skill 实测：346 → 37 → 在 37 上聚合。差异：裸大模型无工作集/会话态，"这些"指代丢失，第2轮退化为全量大区过滤。</p>
@@ -231,7 +231,7 @@ df[df['渠道组']=='餐饮'].groupby('规划大区').size()</pre>
 <tr><td>9</td><td>引擎选择</td><td class="llm">仅 pandas</td><td>能力缺口</td><td class="skill">DataFusion 可选</td></tr>
 <tr><td>10</td><td>近似画像</td><td class="llm">仅全量精确</td><td>能力缺口</td><td class="skill">KLL 流式近似</td></tr>
 </table>
-<p class="sub" style="margin-top:14px">诚实标注：Q3、Q6 裸大模型<b>碰巧正确</b>（已如实呈现，未编造失败）；其余 8 题经真实执行暴露出失败或能力缺口。所有"真实执行结果"均为在 629,074 行数据上实际运行的输出。</p>
+<p class="sub" style="margin-top:14px">诚实标注：Q3、Q6 裸大模型<b>碰巧正确</b>（已如实呈现，未编造失败）；其余 8 题经真实执行暴露出失败或能力缺口。所有"真实执行结果"均为在 <n_rows> 行数据上实际运行的输出。</p>
 
 </body>
 </html>

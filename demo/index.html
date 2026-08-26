@@ -782,7 +782,7 @@
         <button class="btn-action-sm" id="btnOpenReportDialog" style="background:#ad3324;color:#fff;border-color:#ad3324;padding:4px 10px;font-size:11px;border-radius:4px;" title="智能多维研报生成器">
           📑 智能生成深度研报
         </button>
-        <span class="scope-badge" id="topbarScope">华东全集 629,074 售点 · 上海 236,407 售点</span>
+        <span class="scope-badge" id="topbarScope">目标大区全集 <n_rows> 售点 · 目标城市 <n_city> 售点</span>
         <button class="btn-reset" id="btnResetSession" title="清空会话过滤器，回到全量底表">恢复全量工作集</button>
         <div class="live-status" id="liveStatus">
           <span class="status-dot"></span>
@@ -798,10 +798,10 @@
         <div>
           <div class="rail-section-tag">CURRENT OBJECTIVE</div>
           <div class="card-objective">
-            <h2 id="objectiveTitle">全景认识上海售点空间分布</h2>
-            <p id="objectiveDesc">已加载 629,074 行真实潜客数据。点击区县地图或输入业务问题开始探索。</p>
+            <h2 id="objectiveTitle">全景认识目标城市售点空间分布</h2>
+            <p id="objectiveDesc">已加载 <n_rows> 行真实潜客数据。点击区县地图或输入业务问题开始探索。</p>
             <div class="workset-chip" id="worksetChip">
-              <span>●</span> <span id="worksetText">工作集: 上海市 (236,407 售点)</span>
+              <span>●</span> <span id="worksetText">工作集: 目标城市 (<n_city> 售点)</span>
             </div>
           </div>
         </div>
@@ -813,7 +813,7 @@
               <div class="trace-icon">✓</div>
               <div class="trace-body">
                 <strong>连接物理数据与受管本体</strong>
-                <p>完成 153 列数据映射与 Profile 契约校验</p>
+                <p>完成 <n_cols> 列数据映射与 Profile 契约校验</p>
               </div>
             </div>
           </div>
@@ -832,7 +832,7 @@
         <!-- Map Header Overlay -->
         <div class="map-head-overlay">
           <div class="map-title-card">
-            <strong id="mapDistrictTitle">上海市 · 16区县空间聚合</strong>
+            <strong id="mapDistrictTitle">目标城市 · 16区县空间聚合</strong>
             <span id="mapDistrictSub">颜色深浅代表当前 Agent 工作集在各区县的售点聚集密度（点击区县直接下钻）</span>
           </div>
           <button class="btn-toggle-drawer" id="btnToggleDrawer" type="button">📋 查看当前清单 (<span id="drawerCountBadge">0</span>)</button>
@@ -861,7 +861,7 @@
         <div class="composer-shell">
           <form class="composer-input-row" id="queryForm">
             <div class="agent-avatar">问</div>
-            <input type="text" class="query-text-input" id="queryInput" placeholder="输入业务探索问题（如：浦西大区的美宜佳、选100家优质餐饮、餐饮街夜宵门店...）" autocomplete="off" />
+            <input type="text" class="query-text-input" id="queryInput" placeholder="输入业务探索问题（如：目标子区域B的美宜佳、选100家优质餐饮、餐饮街夜宵门店...）" autocomplete="off" />
             <button type="submit" class="btn-ask" id="btnAsk">让 Agent 探索</button>
           </form>
           <div class="composer-categories-shell" id="exampleCategoriesShell">
@@ -945,7 +945,7 @@
     <div>
       <div class="spinner"></div>
       <strong style="font-family:var(--serif);font-size:17px;">Agent 正在连接真实售点世界</strong>
-      <p style="font-size:11px;color:#9cb2a6;margin:6px 0 0;" id="loadingMessage">正在加载 629,074 行 × 153 列潜客宽表...</p>
+      <p style="font-size:11px;color:#9cb2a6;margin:6px 0 0;" id="loadingMessage">正在加载 <n_rows> 行 × <n_cols> 列潜客宽表...</p>
     </div>
   </div>
 
@@ -985,7 +985,7 @@
       return resp.json();
     }
 
-    // 初始化上海区县 GeoJSON 矢量地图
+    // 初始化目标城市区县 GeoJSON 矢量地图
     async function initMap() {
       try {
         const geoJson = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/310000_full.json').then(r => r.json());
@@ -1072,7 +1072,7 @@
           ${columns.map(c => `<td>${escapeHtml(row[c])}</td>`).join('')}
         </tr>
       `).join('');
-      $('tableSubMeta').textContent = `展示前 ${records.length} 条预览（点击任意行查看 153 列全景档案）`;
+      $('tableSubMeta').textContent = `展示前 ${records.length} 条预览（点击任意行查看 <n_cols> 列全景档案）`;
     }
 
     // 展现单家售点全景档案卡片
@@ -1244,8 +1244,8 @@
         $('loadingCurtain').classList.add('hidden');
         const overview = await fetchApi('/api/overview');
         overview.agent_steps = [
-          { status: 'done', label: '连接真实数据', detail: `已接入华东全集 ${formatNum(overview.full_total)} 个售点` },
-          { status: 'done', label: '构建上海空间基底', detail: `上海市包含 ${formatNum(overview.total)} 售点，覆盖 16 个区县` },
+          { status: 'done', label: '连接真实数据', detail: `已接入目标大区全集 ${formatNum(overview.full_total)} 个售点` },
+          { status: 'done', label: '构建目标城市空间基底', detail: `目标城市包含 ${formatNum(overview.total)} 售点，覆盖 16 个区县` },
           { status: 'done', label: '就绪承接探索', detail: '等待输入业务提问或在地图上点选区县' }
         ];
         renderInsight(overview);
@@ -1366,12 +1366,12 @@
       
       <strong style="font-size:12px;display:block;margin-bottom:8px;">推荐专题研报模板：</strong>
       <div style="display:flex;gap:8px;flex-direction:column;margin-bottom:16px;">
-        <button class="followup-btn" type="button" onclick="quickGenerateReport('请生成上海现磨咖啡竞争格局与未服务潜客开发报告')">
-          <strong>☕ 上海现磨咖啡连锁品牌竞争格局与未服务潜客开发报告</strong>
+        <button class="followup-btn" type="button" onclick="quickGenerateReport('请生成目标城市现磨咖啡竞争格局与未服务潜客开发报告')">
+          <strong>☕ 目标城市现磨咖啡连锁品牌竞争格局与未服务潜客开发报告</strong>
           <span>4章节 · 大盘业态 + HHI/CR4 集中度 + 瑞幸vs星巴克空间对比 + Top50 潜客圈选</span>
         </button>
-        <button class="followup-btn" type="button" onclick="quickGenerateReport('华东食杂便利渠道全景与 200 台冰柜投放开发研报')">
-          <strong>🏪 华东食杂便利渠道全景与 200 台冰柜投放开发研报</strong>
+        <button class="followup-btn" type="button" onclick="quickGenerateReport('目标区域食杂便利渠道全景与 200 台冰柜投放开发研报')">
+          <strong>🏪 目标区域食杂便利渠道全景与 200 台冰柜投放开发研报</strong>
           <span>3章节 · 省域大盘分布 + 便利连锁结构 + 200 家未服务高潜门店截断</span>
         </button>
         <button class="followup-btn" type="button" onclick="quickGenerateReport('都市夜间经济活力售点与夜宵街区专项分析研报')">

@@ -18,9 +18,9 @@ from insight import (
     validate_insight_package
 )
 
-# SKILL_DIR = /Users/ghb/sh-store-insight/skill
+# SKILL_DIR = /Users/ghb/outlet-insight/skill
 SKILL_DIR = Path(__file__).resolve().parent.parent
-# Project ROOT = /Users/ghb/sh-store-insight
+# Project ROOT = /Users/ghb/outlet-insight
 PROJECT_ROOT = SKILL_DIR.parent
 EXAMPLES_DIR = PROJECT_ROOT / "examples"
 REQ_EXAMPLE_PATH = EXAMPLES_DIR / "insight-request.example.json"
