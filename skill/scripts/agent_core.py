@@ -262,14 +262,19 @@ def find_default_data() -> Path:
     env = os.environ.get("OUTLET_DATA")
     if env:
         return Path(env)
-    for base in (Path.home() / "outlet-insight" / "data", Path.home() / "Downloads"):
-        if base.exists():
-            for pat in ("<data>.csv", "*售点洞察*.csv", "*售点*.csv"):
-                hits = sorted(base.glob(pat))
-                if hits:
-                    return hits[-1]
+    # 多项目根兼容: 本仓库 / ~/outlet-insight/data / ~/Downloads
+    script_dir = Path(__file__).resolve().parent.parent
+    candidates = [script_dir / "data", Path.home() / "outlet-insight" / "data", Path.home() / "Downloads"]
+    for base in candidates:
+        if not base.exists():
+            continue
+        # 多模式匹配,兼容本地原始命名 (SH全量售点洞察*.csv) 与脱敏占位符 (<data>.csv)
+        for pat in ("<data>.csv", "*售点洞察*.csv", "*售点*.csv", "*.csv"):
+            hits = sorted(base.glob(pat))
+            if hits:
+                return hits[-1]
     raise FileNotFoundError(
-        "未在 ~/outlet-insight/data 或 ~/Downloads 找到售点数据，"
+        "未在项目 data/ 或 ~/outlet-insight/data 或 ~/Downloads 找到售点数据，"
         "请通过 --data 指定 CSV 路径，或设置环境变量 OUTLET_DATA"
     )
 
