@@ -55,7 +55,7 @@ for idx, col in enumerate(cols, 1):
             "temporal_nature": "immutable_static"
         })
 
-    elif col in ["腾讯售点名称", "腾讯售点地址", "电话", "客资名称", "客资地址", "重要客户名称", "经营场所名称"]:
+    elif col in ["腾讯售点名称", "腾讯售点地址", "电话", "客资名称", "客资地址", "重点客户名称", "经营场所名称"]:
         target_ent = "prism:outlet/CommercialSite" if "经营场所" in col else "prism:outlet/Outlet"
         m.update({
             "field_class": "entity_identity",
@@ -94,7 +94,7 @@ for idx, col in enumerate(cols, 1):
         })
 
     # 3. 品牌与连锁 (Brand)
-    elif col in ["连锁品牌名称", "连锁集团名称", "连锁名称", "客户集团", "KA名称", "KA业态分类名称", "KA客户类型名称", "连锁类型", "连锁范围名称", "连锁品牌信息备注", "连锁来源", "是否连锁"]:
+    elif col in ["连锁品牌名称", "连锁集团名称", "连锁名称", "客户集团", "KA名称", "重点业态分类名称", "重点客户类型名称", "连锁类型", "连锁范围名称", "连锁品牌信息备注", "连锁来源", "是否连锁"]:
         m.update({
             "field_class": "classification_and_role",
             "semantic_pattern": {
@@ -447,7 +447,7 @@ output_yaml_data = {
     "governance_model": "prism-ontology-three-layer",
     "dataset": {
         "name": "sh-store-insight-152",
-        "description": "华东大区售点洞察全量宽表（152列完整七类结构化模式映射）",
+        "description": "中国华东大区售点洞察全量宽表（152列完整七类结构化模式映射）",
         "physical_schema_columns": len(cols),
         "runtime_analysis_frame_columns": 153,
         "total_governance_mapping_records": len(mappings),

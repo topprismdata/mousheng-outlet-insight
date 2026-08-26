@@ -27,7 +27,7 @@
 - **底表**：`~/sh-store-insight/data/SH全量售点洞察1784527757315.csv`（584MB）；同名 `.parquet` 为缓存（122MB，自动生成）
 - **DM 库**：`<data>.dm.sqlite`（数据同目录，`ensure_dm` 按 mtime 自愈重建）；早期实验产物 `~/sh-store-insight/data/sh_dm.sqlite`
 - **Python**：`/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python`（pandas/pyarrow/datafusion 等已装）
-- 数据特征：**100% 服务状态=未服务**（全是潜客）；省份=江苏 51.7% + 上海 37.6% + 浙江 10.7%；**"SH"≠上海**（是华东大区口径）；城市列存 **"上海城区"** 而非"上海市"
+- 数据特征：**100% 服务状态=未服务**（全是潜客）；省份=江苏 51.7% + 上海 37.6% + 浙江 10.7%；**"SH"≠上海**（是中国华东大区口径）；城市列存 **"上海城区"** 而非"上海市"
 
 ## 4. 快速上手（先跑这三条）
 

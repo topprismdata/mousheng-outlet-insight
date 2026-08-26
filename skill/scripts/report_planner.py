@@ -48,7 +48,7 @@ class AnalyticalGoalPlanner:
             "report_title": "上海市现磨咖啡连锁品牌竞争格局与未服务潜客开发研报",
             "executive_theme": "现磨咖啡品类在核心商圈的头部集中度、下沉大区渗透差异与独立潜客拓展",
             "target_industry": "现磨咖啡 / 现制饮品",
-            "target_region": "上海市 / 华东大区",
+            "target_region": "上海市 / 中国华东大区",
             "sections": [
                 {
                     "section_id": "SEC-1",

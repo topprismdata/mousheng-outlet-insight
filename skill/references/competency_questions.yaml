@@ -108,9 +108,9 @@ competency_questions:
   # ----------------------------------------------------------------------------
   - id: "CQ-008"
     scenario: "外部竞品销量份额"
-    natural_language: "某饮料企业 vs 百事可乐在华东食杂店的真实销售箱数份额"
+    natural_language: "饮料品牌 vs 百事可乐在华东食杂店的真实销售箱数份额"
     target_ontology_intent: "prism:intent/MarketShareAnalysis"
-    target_entities: ["prism:outlet/ChannelType:食杂", "prism:outlet/Brand:某饮料企业", "prism:outlet/Brand:百事可乐"]
+    target_entities: ["prism:outlet/ChannelType:食杂", "prism:outlet/Brand:饮料品牌", "prism:outlet/Brand:百事可乐"]
     semantic_expressibility: "pass"
     data_answerability: "none"
     blocking_reason: "当前售点洞察宽表仅含售点自身静态画像，未包含竞品在途销量 POS/开箱数据"

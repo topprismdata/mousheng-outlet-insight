@@ -2,7 +2,7 @@ version: 2.1.0
 governance_model: prism-ontology-three-layer
 dataset:
   name: sh-store-insight-152
-  description: 华东大区售点洞察全量宽表（152列完整七类结构化模式映射）
+  description: 中国华东大区售点洞察全量宽表（152列完整七类结构化模式映射）
   physical_schema_columns: 152
   runtime_analysis_frame_columns: 153
   total_governance_mapping_records: 153
@@ -1863,7 +1863,7 @@ mappings:
   value_transformation:
     type: numeric_clean
 - col_index: 144
-  physical_column: 重要客户名称
+  physical_column: 重点客户名称
   semantic_binding_status: validated
   validation_status: passed
   field_class: entity_identity
@@ -1873,7 +1873,7 @@ mappings:
   mapping_status: mapped
   temporal_nature: low_volatility
 - col_index: 145
-  physical_column: KA客户类型名称
+  physical_column: 重点客户类型名称
   semantic_binding_status: validated
   validation_status: passed
   field_class: classification_and_role
@@ -1881,7 +1881,7 @@ mappings:
     target_entity: prism:outlet/Outlet
     pattern_type: belongsToBrand
     ontology_concept: prism:outlet/Brand
-    brand_property: KA客户类型名称
+    brand_property: 重点客户类型名称
   mapping_status: mapped
   temporal_nature: stable_classification
 - col_index: 146
@@ -1909,7 +1909,7 @@ mappings:
   mapping_status: mapped
   temporal_nature: stable_classification
 - col_index: 148
-  physical_column: KA业态分类名称
+  physical_column: 重点业态分类名称
   semantic_binding_status: validated
   validation_status: passed
   field_class: classification_and_role
@@ -1917,7 +1917,7 @@ mappings:
     target_entity: prism:outlet/Outlet
     pattern_type: belongsToBrand
     ontology_concept: prism:outlet/Brand
-    brand_property: KA业态分类名称
+    brand_property: 重点业态分类名称
   mapping_status: mapped
   temporal_nature: stable_classification
 - col_index: 149

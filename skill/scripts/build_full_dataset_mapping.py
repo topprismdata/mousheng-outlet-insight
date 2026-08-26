@@ -56,7 +56,7 @@ for idx, col in enumerate(cols, 1):
         })
 
     # 3. 售点基本身份 (Outlet Entity)
-    elif col in ["腾讯售点id", "腾讯售点名称", "腾讯售点地址", "电话", "KO_ID", "客资编号", "客资名称", "客资地址", "重要客户名称"]:
+    elif col in ["腾讯售点id", "腾讯售点名称", "腾讯售点地址", "电话", "KO_ID", "客资编号", "客资名称", "客资地址", "重点客户名称"]:
         entry.update({
             "semantic_concept": "prism:outlet/Outlet",
             "attribute": col,
@@ -64,7 +64,7 @@ for idx, col in enumerate(cols, 1):
         })
 
     # 4. 品牌与连锁 (Brand & Chain)
-    elif col in ["是否连锁", "连锁品牌ID", "连锁品牌名称", "连锁集团ID", "连锁集团名称", "连锁品牌信息备注", "连锁来源", "KA名称", "连锁名称", "连锁类型", "客户集团", "连锁范围名称", "KA客户类型名称", "KA业态分类名称"]:
+    elif col in ["是否连锁", "连锁品牌ID", "连锁品牌名称", "连锁集团ID", "连锁集团名称", "连锁品牌信息备注", "连锁来源", "KA名称", "连锁名称", "连锁类型", "客户集团", "连锁范围名称", "重点客户类型名称", "重点业态分类名称"]:
         entry.update({
             "semantic_concept": "prism:outlet/Brand",
             "attribute": col,
@@ -200,7 +200,7 @@ output_data = {
     "version": "1.0.0",
     "dataset": {
         "name": "sh-store-insight-152",
-        "description": "华东大区售点洞察全量宽表（152列完整逐列映射）",
+        "description": "中国华东大区售点洞察全量宽表（152列完整逐列映射）",
         "total_physical_columns": len(cols),
         "total_mapping_records": len(MAPPINGS_CONFIG),
         "governance_status": "verified_full_column_coverage"

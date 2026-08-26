@@ -163,11 +163,11 @@
     "到访偏好": {"type": "text"},
     "职住直线距离": {"type": "numeric"},
 
-    "重要客户名称": {"type": "text"},
-    "KA客户类型名称": {"type": "text"},
+    "重点客户名称": {"type": "text"},
+    "重点客户类型名称": {"type": "text"},
     "客户集团": {"type": "text"},
     "连锁范围名称": {"type": "text"},
-    "KA业态分类名称": {"type": "text"},
+    "重点业态分类名称": {"type": "text"},
     "是否攻坚客户": {"type": "bool", "alias": ["攻坚客户"]},
     "冰柜投放目标客户标签": {"type": "text"},
     "非密集区域乡镇客户(200米)": {"type": "bool"},
@@ -187,7 +187,7 @@
       "GB/T 4754-2017 (国民经济行业分类)",
       "NielsenIQ (NIQ) RMS Channel Taxonomy",
       "CCFA 中国连锁经营协会标准",
-      "某饮料品牌 RED 5P & RTM Operating Manual",
+      "Beverage Brand RED 5P & RTM Operating Manual",
       "Marketing Channels / Sales Force Management 学术专著",
       "Wikidata Open Knowledge Graph",
       "Dianping 大众点评本地生活运营标准"
@@ -221,7 +221,7 @@
     "社区": {"uri": "prism:concept/CommunityResidential", "field": "经营场所", "op": "contains", "value": "社区", "类型": "场所", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI Tag: 社区", "confidence_tier": "INDUSTRY_STANDARD"}},
     "夫妻老婆店": {"uri": "prism:concept/MomAndPopStore", "field": "渠道组", "op": "=", "value": "食杂", "类型": "场所", "composite_rule": "AND 是否连锁 = '否'", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "GB/T 18106-2004 §3.2 食杂店 + 大众点评传统通路口语", "confidence_tier": "STATUTORY"}},
     "洋快餐": {"uri": "prism:concept/WesternFastFoodChinese", "field": "连锁品牌名称", "op": "in", "value": ["肯德基", "麦当劳", "汉堡王", "德克士", "华莱士"], "类型": "品牌", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI 分类 + 国际快餐品牌母集", "confidence_tier": "INDUSTRY_STANDARD"}},
-    "大单体酒店": {"uri": "prism:concept/DaDantiHotel", "field": "渠道组", "op": "=", "value": "住宿", "类型": "场所", "composite_rule": "AND 是否连锁 = '否' AND 携程-房间数 >= 100", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "某饮料企业 RED RTM + 行业住宿分级", "confidence_tier": "ENTERPRISE_PRACTICE"}},
+    "大单体酒店": {"uri": "prism:concept/DaDantiHotel", "field": "渠道组", "op": "=", "value": "住宿", "类型": "场所", "composite_rule": "AND 是否连锁 = '否' AND 携程-房间数 >= 100", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "饮料品牌 RED RTM + 行业住宿分级", "confidence_tier": "ENTERPRISE_PRACTICE"}},
     "夜宵": {"uri": "prism:concept/NightTimeFoodOutlet", "field": "渠道组", "op": "=", "value": "餐饮", "类型": "业态", "composite_rule": "AND 营业时间解析 close_after >= 22:00", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI Tag: 夜间营业", "confidence_tier": "INDUSTRY_STANDARD"}},
     "24小时营业": {"uri": "prism:concept/TwentyFourHourOutlet", "field": "营业时间", "op": "matches", "value": "24小时营业|24小时|通宵", "类型": "业态", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评营业时间字段归一化", "confidence_tier": "INDUSTRY_STANDARD"}}
   },

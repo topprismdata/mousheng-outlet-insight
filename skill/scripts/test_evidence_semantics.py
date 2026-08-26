@@ -60,7 +60,7 @@ def test_explicit_semantics_driven_synthesis():
     req = {
         "request_id": "req-sem-001",
         "analysis_intent": {
-            "question": "华东大区各省份餐饮售点月均收入潜力对比",
+            "question": "中国华东大区各省份餐饮售点月均收入潜力对比",
             "intent": "distribution_comparison",
             "target_entity": "prism:outlet/AdministrativeRegion"
         },

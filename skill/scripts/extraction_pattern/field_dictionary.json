@@ -770,12 +770,12 @@
       "is_filter_dimension": false,
       "semantic": "乡镇地理属性"
     },
-    "重要客户名称": {
+    "重点客户名称": {
       "group": "sales",
       "is_filter_dimension": false,
       "semantic": "销售/协议/冰柜/排面"
     },
-    "KA客户类型名称": {
+    "重点客户类型名称": {
       "group": "chain",
       "is_filter_dimension": false,
       "semantic": "连锁/KA品牌"
@@ -790,7 +790,7 @@
       "is_filter_dimension": false,
       "semantic": "连锁/KA品牌"
     },
-    "KA业态分类名称": {
+    "重点业态分类名称": {
       "group": "chain",
       "is_filter_dimension": false,
       "semantic": "连锁/KA品牌"

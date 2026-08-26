@@ -1,7 +1,7 @@
 # ==============================================================================
 # fmcg_metrics_provenance.yaml
 # 快消品通路精耕与完美门店 (RTM / Perfect Store) 核心度量指标及权威溯源定义
-# 涵盖 NielsenIQ 分销指标体系、某饮料企业 RED 5P 模型与宝洁/联合利华售点分级标准
+# 涵盖 NielsenIQ 分销指标体系、饮料品牌 RED 5P 模型与宝洁/联合利华售点分级标准
 # ==============================================================================
 
 version: "1.0.0"
@@ -19,11 +19,11 @@ standards_authorities:
     confidence_tier: "INDUSTRY_STANDARD"
 
   - id: "AUTH_BEV_BRAND_RED_STANDARD"
-    name: "The 某饮料品牌 Company & a global beverage enterprise"
-    standard_name: "某饮料品牌 RED (Right Execution Daily) & Route-to-Market (RTM) Global Operating Manual"
+    name: "The Beverage Brand Company & a global beverage enterprise"
+    standard_name: "Beverage Brand RED (Right Execution Daily) & Route-to-Market (RTM) Global Operating Manual"
     standard_code: "KO-RED-RTM-2024"
     confidence_tier: "ENTERPRISE_PRACTICE"
-    notes: "某饮料企业全球通路精耕与完美门店执行权威标准"
+    notes: "饮料品牌全球通路精耕与完美门店执行权威标准"
 
   - id: "AUTH_ACADEMIC_RTM_TEXTBOOKS"
     name: "Marketing Channels & Sales Force Management"
@@ -86,7 +86,7 @@ metrics:
       confidence_tier: "ENTERPRISE_PRACTICE"
 
   # ============================================================================
-  # 2. 某饮料企业 RED 完美门店执行度量 (RED Perfect Store Metrics)
+  # 2. 饮料品牌 RED 完美门店执行度量 (RED Perfect Store Metrics)
   # ============================================================================
   - uri: "prism:metric/CoolerPurity"
     code: "COOLER_PURITY"

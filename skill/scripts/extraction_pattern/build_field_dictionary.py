@@ -59,7 +59,7 @@ def assign_group(col: str) -> str:
         return "channel"
     if c in {"是否连锁", "连锁品牌ID", "连锁品牌名称", "连锁集团ID", "连锁集团名称",
              "连锁品牌信息备注", "连锁来源", "KA名称", "连锁名称", "连锁类型",
-             "KA客户类型名称", "客户集团", "连锁范围名称", "KA业态分类名称"}:
+             "重点客户类型名称", "客户集团", "连锁范围名称", "重点业态分类名称"}:
         return "chain"
     if c in {"服务状态", "经营场所", "经营场所名称", "经营场所ID"}:
         return "service"
@@ -67,7 +67,7 @@ def assign_group(col: str) -> str:
             or "居住社区房价" in c or "居住酒店" in c or c.startswith("LINX")
             or "NARTD指数" in c):
         return "potential"
-    if (c.startswith("某饮料企业") or c.startswith("系统乡镇") or c.startswith("据DC")
+    if (c.startswith("示范饮料") or c.startswith("系统乡镇") or c.startswith("据DC")
             or c.startswith("据办事处") or c in {"市场区隔", "乡镇属性", "赶集日",
             "是否红镇，默认否", "到访偏好", "职住直线距离"}
             or c.startswith("非密集区域乡镇客户")):
@@ -77,7 +77,7 @@ def assign_group(col: str) -> str:
             or c in {"居住社区房价等级", "居住酒店档次", "社区居住房价", "居住酒店价格"}):
         return "population"
     if (any(k in c for k in ["协议", "冰柜", "TOP", "排面", "销售收入", "配送",
-            "客户状态码", "攻坚", "闪电仓", "重要客户"]) or c in {"未拿到费用协议客户"}):
+            "客户状态码", "攻坚", "闪电仓", "重点客户"]) or c in {"未拿到费用协议客户"}):
         return "sales"
     if (any(k in c for k in ["拜访", "OU回传", "手机端反馈", "POI上线", "建档", "客资"])
             or c in {"区域线路编码", "区域线路办事处"}):

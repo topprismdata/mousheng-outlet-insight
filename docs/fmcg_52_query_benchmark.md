@@ -132,7 +132,7 @@
 | 编号 | 标准业务提问 | 典型同义与口语变种 (Synonyms & Variations) | 目标实体与意图类型 | 核心考察算子与预期 Insight 结构 |
 |---|---|---|---|---|
 | **Q45** | `乡镇食杂小店大众点评评分分布` | “农村便利店的大众点评得分” / “乡镇小店点评星级情况” | `prism:outlet/Outlet`<br>`[distribution_comparison]` | 覆盖率极低 (<20%)，**置信度强制降级为 Low**，显式输出边界限制，严禁强推结论。 |
-| **Q46** | `查询各便利店百事可乐与某饮料企业的真实出货箱数对比` | “门店竞品真实销量” / “竞品铺货箱数统计” / “各店可乐进货量” | `prism:outlet/Outlet`<br>`[distribution_comparison]` | 声明 `prism:metric/CompetitorSalesVolume` 属于缺失概念，**明确告知无数据不可回答**。 |
+| **Q46** | `查询各便利店百事可乐与饮料品牌的真实出货箱数对比` | “门店竞品真实销量” / “竞品铺货箱数统计” / “各店可乐进货量” | `prism:outlet/Outlet`<br>`[distribution_comparison]` | 声明 `prism:metric/CompetitorSalesVolume` 属于缺失概念，**明确告知无数据不可回答**。 |
 | **Q47** | `筛选是否匹配为是的门店清单` | “看匹配成功的客户” / “是否匹配=是” / “已匹配售点明细” | `prism:outlet/Outlet`<br>`[detail_list]` | 字段处于歧义隔离状态（excluded_from_execution），**编译期直接抛出校验错误拒绝执行**。 |
 | **Q48** | `按待开发客户细分分组统计数量` | “待开发客户分类分布” / “看各细分潜客数量” | `prism:outlet/Outlet`<br>`[distribution_comparison]` | 编译期拦截未受管业务黑话，防范 LLM 幻觉解释。 |
 | **Q49** | `查找客房数>5000间且评分5.0星的酒店清单` | “找超大规模完美酒店” / “极端严苛条件查询” | `prism:outlet/Outlet`<br>`[detail_list]` | 样本量为 0，置信度 Low，生成“建议放宽阈值”与“查看全量画像”追问。 |
