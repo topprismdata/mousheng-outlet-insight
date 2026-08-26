@@ -22,7 +22,7 @@ import pandas as pd
 from agent_core import FieldRegistry, load_store_data, run_query
 from nl_parser import auto_parse
 
-OUT = Path("/tmp/sh_store_insight/results")
+OUT = Path("/tmp/mousheng_outlet_insight/results")
 OUT.mkdir(parents=True, exist_ok=True)
 
 # 截图 1 + 截图 2 的全部示例
@@ -90,7 +90,7 @@ def run_one(df: pd.DataFrame, reg: FieldRegistry, ex: dict) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", help="CSV/parquet 路径（默认自动发现）")
-    ap.add_argument("--out", help="结果目录（默认 /tmp/sh_store_insight/results）")
+    ap.add_argument("--out", help="结果目录（默认 /tmp/mousheng_outlet_insight/results）")
     ap.add_argument("--only", type=int, help="只跑指定 id 的示例")
     args = ap.parse_args()
 
