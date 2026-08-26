@@ -1,0 +1,261 @@
+{
+  "_comment": "字段语义映射表：自然语言别名 → CSV 真实字段。每个 alias 可被 NL 解析器识别。",
+  "fields": {
+    "省份": {"type": "category", "values_sample": ["江苏省", "上海市", "浙江省"]},
+    "城市": {"type": "category"},
+    "区县": {"type": "category"},
+    "规划大区": {"type": "category", "values_sample": ["浦西大区", "浦东大区", "苏州大区", "无锡大区", "昆太大区", "嘉兴大区", "南通大区"]},
+    "规划OU": {"type": "text"},
+    "规划办事处": {"type": "category"},
+    "规划主管": {"type": "text"},
+    "规划线路": {"type": "text"},
+
+    "腾讯售点id": {"type": "id"},
+    "腾讯售点名称": {"type": "text", "alias": ["店名", "售点名称", "门店名称"]},
+    "腾讯售点地址": {"type": "text", "alias": ["地址", "门店地址"]},
+
+    "一级分类": {"type": "category", "values_sample": ["美食", "购物", "休闲娱乐", "酒店宾馆", "运动健身"]},
+    "二级分类": {"type": "category", "alias": ["二级业态"]},
+    "三级分类": {"type": "category", "alias": ["三级业态"]},
+
+    "渠道组": {
+      "type": "category",
+      "alias": ["业态", "业态大类", "行业", "大类"],
+      "values_sample": ["餐饮", "食杂", "娱乐", "住宿", "工矿", "运动场所", "小型超市", "旅游", "教育", "零食店", "便利店", "加油站", "网吧", "电影院", "运输"],
+      "synonyms": {
+        "便利店": ["便利店", "食杂店", "小卖部"],
+        "食杂": ["食杂", "烟酒", "小超市"],
+        "零售店": ["食杂", "小型超市", "便利店", "零食店"],
+        "餐饮": ["餐饮", "餐厅", "饭店", "餐馆"],
+        "住宿": ["住宿", "酒店", "宾馆", "民宿"],
+        "景区": ["旅游", "景点", "景区"],
+        "教育": ["教育", "学校"],
+        "运动健身": ["运动场所", "健身", "运动"],
+        "娱乐": ["娱乐", "休闲娱乐", "KTV"]
+      }
+    },
+    "渠道": {"type": "category"},
+    "子渠道": {"type": "category"},
+    "细分渠道": {"type": "category", "alias": ["细分类别", "细分业态"]},
+    "待开发客户细分": {"type": "category", "isolated": true, "reason": "ambiguous_isolated"},
+    "是否匹配": {"type": "bool", "isolated": true, "reason": "ambiguous_isolated"},
+    "Universe以外数据来源": {"type": "text", "isolated": true, "reason": "ambiguous_isolated"},
+    "是否连锁": {"type": "bool", "alias": ["独立运营", "是否独立", "非连锁"]},
+    "连锁品牌名称": {"type": "text", "alias": ["品牌", "连锁品牌", "门店品牌"]},
+    "连锁集团名称": {"type": "text", "alias": ["集团", "连锁集团"]},
+    "连锁品牌ID": {"type": "id"},
+    "连锁集团ID": {"type": "id"},
+    "连锁来源": {"type": "text"},
+
+    "服务状态": {"type": "category", "values_sample": ["未服务", "已服务"]},
+    "经营场所": {"type": "text", "alias": ["场所类型", "场景"],
+                  "synonyms": {"餐饮街": "餐饮街", "商场": "商场", "社区": "社区",
+                               "乡镇": "乡镇高密度区域", "工矿": "工矿_写字楼",
+                               "写字楼": "工矿_写字楼", "厂区": "工矿_写字楼",
+                               "园区": "工矿_写字楼", "半封闭": "工矿_写字楼"}},
+    "经营场所名称": {"type": "text", "alias": ["场所名", "POI 簇名"]},
+    "经营场所ID": {"type": "id"},
+
+    "是否高德扫街榜/状元榜": {"type": "bool", "values": ["Y", "N"]},
+    "高德扫街榜/状元榜榜单及排名": {"type": "json_text", "alias": ["高德榜单", "扫街榜"]},
+
+    "大学\\高职外50米": {"type": "bool"},
+    "大学\\高职外500米": {"type": "bool"},
+    "中学外50米": {"type": "bool"},
+    "景区外50米": {"type": "bool"},
+    "景区外1公里": {"type": "bool"},
+    "景区外2公里": {"type": "bool"},
+    "工矿外100米": {"type": "bool"},
+    "小区外50米": {"type": "bool"},
+
+    "月均收入潜力预测(如有协议)": {"type": "numeric", "alias": ["潜力(有协议)", "潜力-协议"]},
+    "月均收入潜力预测(如有冰柜无协议)": {"type": "numeric", "alias": ["潜力(冰柜无协议)"]},
+    "月均收入潜力预测(无协议无冰柜)": {"type": "numeric", "alias": ["潜力(无协议)", "潜力"]},
+    "营业面积": {"type": "numeric"},
+    "NIQ-是否实际营业面积": {"type": "bool"},
+    "NIQ-NARTD指数": {"type": "numeric", "alias": ["NARTD指数"]},
+    "LINX MT黄金门店": {"type": "bool", "alias": ["黄金门店", "很嗨门店", "MT黄金门店"]},
+
+    "携程-ID": {"type": "id"},
+    "携程-名称": {"type": "text", "alias": ["酒店名"]},
+    "携程-类型": {"type": "category"},
+    "携程-酒店/民宿分类": {"type": "category"},
+    "携程-品牌": {"type": "text"},
+    "携程-集团": {"type": "text"},
+    "携程-总部所在地": {"type": "text"},
+    "携程-连锁类型": {"type": "text"},
+    "携程-星级": {"type": "numeric", "min": 0, "max": 5, "alias": ["酒店星级", "星级"]},
+    "携程-连锁级别": {"type": "text"},
+    "携程-评论数": {"type": "numeric", "alias": ["评论数", "酒店评论数"]},
+    "携程-综合评分": {"type": "numeric", "min": 0, "max": 5, "alias": ["酒店评分", "住宿评分"]},
+    "携程-开业时间": {"type": "date"},
+    "携程-房间数": {"type": "numeric", "alias": ["房间数", "客房数"]},
+
+    "大众点评ID": {"type": "id"},
+    "大众点评营业时间": {"type": "text"},
+    "大众点评营业状态": {"type": "category", "values_sample": ["正常营业", "暂停营业", "关闭"]},
+    "大众点评菜系": {"type": "category"},
+    "大众点评-必吃榜和黑珍珠": {"type": "category"},
+    "大众点评餐饮用户评论数量": {"type": "numeric", "alias": ["点评评论数", "用户评论数"]},
+    "大众点评餐饮口味评分星级": {"type": "numeric", "min": 0, "max": 5, "alias": ["口味评分"]},
+    "大众点评餐饮环境评分星级": {"type": "numeric", "min": 0, "max": 5, "alias": ["环境评分"]},
+    "大众点评餐饮服务评分星级": {"type": "numeric", "min": 0, "max": 5, "alias": ["服务评分"]},
+    "大众点评餐饮点评评分星级": {"type": "numeric", "min": 0, "max": 5, "alias": ["餐饮评分", "点评评分", "评分"]},
+    "大众点评点评榜单(详细)": {"type": "text", "alias": ["点评榜单", "上榜"]},
+    "大众点评餐饮人均消费": {"type": "numeric", "alias": ["人均消费", "人均"]},
+    "大众点评连锁等级": {"type": "text"},
+    "大众点评连锁范围": {"type": "text"},
+    "大众点评是否有点评信息": {"type": "bool"},
+
+    "是否是O2O门店": {"type": "bool", "alias": ["O2O门店"]},
+    "是否商超O2O": {"type": "bool"},
+    "示范企业乡镇主数据": {"type": "text"},
+    "示范企业乡镇主数据编码": {"type": "id"},
+    "系统乡镇": {"type": "text"},
+    "据DC距离(KM)": {"type": "numeric", "alias": ["DC距离"]},
+    "据办事处距离(KM)": {"type": "numeric"},
+    "市场区隔": {"type": "category"},
+    "乡镇属性": {"type": "category"},
+    "赶集日": {"type": "text"},
+    "是否红镇，默认否": {"type": "bool", "alias": ["红镇"]},
+
+    "客资编号": {"type": "id"},
+    "客资名称": {"type": "text"},
+    "客资地址": {"type": "text"},
+    "KA名称": {"type": "text"},
+    "连锁名称": {"type": "text"},
+    "连锁类型": {"type": "text"},
+    "客户状态码": {"type": "text"},
+    "是否协议客户": {"type": "bool", "alias": ["协议客户"]},
+    "冰柜门数": {"type": "numeric"},
+    "TOP": {"type": "category"},
+    "未拿到费用协议客户": {"type": "bool"},
+    "配送类型": {"type": "category"},
+    "滚动12个月销售收入": {"type": "numeric"},
+    "NARTD排面数": {"type": "numeric"},
+    "SOVI排面占比%": {"type": "numeric", "alias": ["SOVI"]},
+    "NARTD冰冻排面数": {"type": "numeric"},
+    "SOCI冰冻排面占比%": {"type": "numeric", "alias": ["SOCI"]},
+
+    "POI上线时间": {"type": "datetime", "alias": ["开业时间", "上线时间"]},
+    "_derived:开店年限": {
+      "type": "derived_numeric",
+      "formula": "(now_year - year(POI上线时间))",
+      "alias": ["开店年限", "营业年限", "开业年限"],
+      "_comment": "派生字段，运行期计算"
+    },
+
+    "居住人口(人)": {"type": "numeric", "alias": ["居住人口"]},
+    "办公人口(人)": {"type": "numeric", "alias": ["办公人口"]},
+    "平日均值客流(人)": {"type": "numeric", "alias": ["平日客流", "平日人流"]},
+    "周末均值客流(人)": {"type": "numeric", "alias": ["周末客流", "周末人流", "周末人流量"]},
+    "日均客流": {"type": "numeric", "alias": ["日均人流", "日均人流量"]},
+    "消费水平": {"type": "category", "values_sample": ["高", "次高", "中", "次低", "低"]},
+    "餐饮消费水平": {"type": "category"},
+    "居住社区房价等级": {"type": "category"},
+    "居住酒店档次": {"type": "category"},
+    "女性人口占比%": {"type": "numeric"},
+    "18-60岁人口占比%": {"type": "numeric"},
+    "18-40岁人口占比%": {"type": "numeric"},
+    "大专学历以上人口占比%": {"type": "numeric"},
+    "社区居住房价": {"type": "numeric"},
+    "居住酒店价格": {"type": "numeric"},
+    "到访偏好": {"type": "text"},
+    "职住直线距离": {"type": "numeric"},
+
+    "重要客户名称": {"type": "text"},
+    "KA客户类型名称": {"type": "text"},
+    "客户集团": {"type": "text"},
+    "连锁范围名称": {"type": "text"},
+    "KA业态分类名称": {"type": "text"},
+    "是否攻坚客户": {"type": "bool", "alias": ["攻坚客户"]},
+    "冰柜投放目标客户标签": {"type": "text"},
+    "非密集区域乡镇客户(200米)": {"type": "bool"},
+    "非密集区域乡镇客户(400米)": {"type": "bool"}
+  },
+
+  "semantic_layer_version": "1.2.0",
+  "_comment_semantic_v120": "v1.2.0 升级: 引入 FMCG 受管领域知识库 (fmcg_*_provenance.yaml) 的 W3C PROV-O 溯源, 为 domain_entities 每一个条目补充权威出处与置信等级; 同时注入 cognitive_concepts 业务黑话映射链与 brand_uri 实体链接, 彻底告别'裸字段裸字典'状态。详见 scripts/fmcg_knowledge_engine.py (CI Gate 强制 100% 实体带 source)。",
+  "_fmcg_kb_meta": {
+    "kb_root": "skill/references/fmcg_knowledge_base.yaml",
+    "engine": "skill/scripts/fmcg_knowledge_engine.py",
+    "engine_entrypoint": "python -m fmcg_knowledge_engine ci",
+    "ci_gate_policy": "PROV-O + ISO-11179: 100% entities must carry (uri, prefLabel, definition, provenance.authority_ref, provenance.confidence_tier)",
+    "forbidden_confidence_tiers": ["UNVERIFIED", "LLM_GENERATED_NO_SOURCE"],
+    "provenance_authorities": [
+      "GB/T 18106-2021 (零售业态分类)",
+      "GB/T 4754-2017 (国民经济行业分类)",
+      "NielsenIQ (NIQ) RMS Channel Taxonomy",
+      "CCFA 中国连锁经营协会标准",
+      "某饮料品牌 RED 5P & RTM Operating Manual",
+      "Marketing Channels / Sales Force Management 学术专著",
+      "Wikidata Open Knowledge Graph",
+      "Dianping 大众点评本地生活运营标准"
+    ]
+  },
+
+  "_comment_measures": "业务度量（measures）：把'未在物理 Schema 显式编码的业务语义'显式定义。这是论文强调的语义层核心价值——例如'餐饮高评分'不是裸字段，而是'点评评分星级>=3.8'的业务口径。解析层与校验层都认这些名字，模型无法再凭概率猜测。",
+  "measures": {
+    "开店年限": {"field": "_derived:开店年限", "type": "numeric", "口径说明": "由 POI上线时间 推算至当前年的经营年限（年），运行期计算"},
+    "高德上榜": {"field": "是否高德扫街榜/状元榜", "op": "=", "value": "Y", "type": "bool", "口径说明": "是否登上高德扫街榜/状元榜（景区/优质POI标识）"},
+    "MT黄金门店": {"field": "LINX MT黄金门店", "op": "=", "value": "Y", "type": "bool", "口径说明": "是否为 LINX MT 黄金门店（零售很嗨门店）"},
+    "有餐饮点评": {"field": "大众点评是否有点评信息", "op": "=", "value": "Y", "type": "bool", "口径说明": "是否有大众点评餐饮点评信息"},
+    "餐饮高评分": {"field": "大众点评餐饮点评评分星级", "op": ">=", "value": 3.8, "type": "bool", "口径说明": "餐饮点评评分星级 ≥ 3.8（业务定义的高评分门槛）"},
+    "潜力无协议": {"field": "月均收入潜力预测(无协议无冰柜)", "type": "numeric", "口径说明": "无协议无冰柜场景下的月均收入潜力预测（元/月）"},
+    "客房100+": {"field": "携程-房间数", "op": ">", "value": 100, "type": "bool", "口径说明": "酒店客房数大于 100 间"},
+    "星级4+": {"field": "携程-星级", "op": ">=", "value": 4, "type": "bool", "口径说明": "携程酒店星级 ≥ 4 星"}
+  },
+
+  "_comment_entities": "私有实体字典（domain_entities）：v1.2.0 起每个实体均附 W3C PROV-O 溯源 + brand_uri/concept_uri 实体链接，权威性可被 CI Gate 与运行时自动反向追溯到 fmcg_knowledge_base.yaml。",
+  "domain_entities": {
+    "美宜佳": {"uri": "prism:brand/Meiyijia", "field": "连锁品牌名称", "op": "contains", "value": "美宜佳", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "Wikidata + 企业公开披露", "confidence_tier": "OPEN_KNOWLEDGE"}},
+    "瑞幸": {"uri": "prism:brand/LuckinCoffee", "field": "连锁品牌名称", "op": "contains", "value": "瑞幸", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "Wikidata Q60884576 + 企业年报", "confidence_tier": "OPEN_KNOWLEDGE"}},
+    "肯德基": {"uri": "prism:brand/KFC", "field": "连锁品牌名称", "op": "contains", "value": "肯德基", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "Wikidata Q524757 + Yum! Brands 年报", "confidence_tier": "OPEN_KNOWLEDGE"}},
+    "星巴克": {"uri": "prism:brand/Starbucks", "field": "连锁品牌名称", "op": "contains", "value": "星巴克", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "Wikidata Q37158 + Starbucks 年报", "confidence_tier": "OPEN_KNOWLEDGE"}},
+    "蜜雪冰城": {"uri": "prism:brand/MixueIceCream", "field": "连锁品牌名称", "op": "contains", "value": "蜜雪冰城", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "Wikidata Q111506096 + 蜜雪冰城年报", "confidence_tier": "OPEN_KNOWLEDGE"}},
+    "巴比馒头": {"uri": "prism:brand/BarbieMantou", "field": "连锁品牌名称", "op": "contains", "value": "巴比馒头", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "中饮巴比食品(605338.SH)招股书与年报", "confidence_tier": "ENTERPRISE_PRACTICE"}},
+    "零食很嗨": {"uri": "prism:brand/LingshiHenhai", "field": "连锁品牌名称", "op": "contains", "value": "零食很嗨", "类型": "品牌", "provenance": {"authority": "TopPrism Brand KB", "source": "戴永红商贸官网披露 + LINX MT 黄金门店口径", "confidence_tier": "ENTERPRISE_PRACTICE"}},
+    "火锅": {"uri": "prism:concept/HotPotCuisine", "field": "大众点评菜系", "op": "contains", "value": "火锅", "类型": "菜系", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评菜系分级 + GB/T 4754-2017 餐饮业", "confidence_tier": "INDUSTRY_STANDARD"}},
+    "餐饮街": {"uri": "prism:concept/RestaurantStreet", "field": "经营场所", "op": "contains", "value": "餐饮街", "类型": "场所", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI Tag: 餐饮街", "confidence_tier": "INDUSTRY_STANDARD"}},
+    "景区周边": {"uri": "prism:concept/TouristScenic", "field": "景区外50米", "op": "=", "value": "是", "类型": "场所", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI Tag: 景区 + NIQ Special Trade", "confidence_tier": "INDUSTRY_STANDARD"}},
+    "社区": {"uri": "prism:concept/CommunityResidential", "field": "经营场所", "op": "contains", "value": "社区", "类型": "场所", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI Tag: 社区", "confidence_tier": "INDUSTRY_STANDARD"}},
+    "夫妻老婆店": {"uri": "prism:concept/MomAndPopStore", "field": "渠道组", "op": "=", "value": "食杂", "类型": "场所", "composite_rule": "AND 是否连锁 = '否'", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "GB/T 18106-2004 §3.2 食杂店 + 大众点评传统通路口语", "confidence_tier": "STATUTORY"}},
+    "洋快餐": {"uri": "prism:concept/WesternFastFoodChinese", "field": "连锁品牌名称", "op": "in", "value": ["肯德基", "麦当劳", "汉堡王", "德克士", "华莱士"], "类型": "品牌", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI 分类 + 国际快餐品牌母集", "confidence_tier": "INDUSTRY_STANDARD"}},
+    "大单体酒店": {"uri": "prism:concept/DaDantiHotel", "field": "渠道组", "op": "=", "value": "住宿", "类型": "场所", "composite_rule": "AND 是否连锁 = '否' AND 携程-房间数 >= 100", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "某饮料企业 RED RTM + 行业住宿分级", "confidence_tier": "ENTERPRISE_PRACTICE"}},
+    "夜宵": {"uri": "prism:concept/NightTimeFoodOutlet", "field": "渠道组", "op": "=", "value": "餐饮", "类型": "业态", "composite_rule": "AND 营业时间解析 close_after >= 22:00", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评 POI Tag: 夜间营业", "confidence_tier": "INDUSTRY_STANDARD"}},
+    "24小时营业": {"uri": "prism:concept/TwentyFourHourOutlet", "field": "营业时间", "op": "matches", "value": "24小时营业|24小时|通宵", "类型": "业态", "provenance": {"authority": "TopPrism Cognitive Concept KB", "source": "大众点评营业时间字段归一化", "confidence_tier": "INDUSTRY_STANDARD"}}
+  },
+  "_fmcg_kb_linkage": "每个 domain_entities 条目的 uri 字段严格对齐 fmcg_brand_registry.yaml 与 cognitive_concepts_provenance.yaml 的 uri 命名空间。运行时由 fmcg_knowledge_engine.diagnose_text() 自动反向归因, 在 AnalysisIntent 中打印该实体权威出处与置信等级, 让业务人员随时可查验 '我的理解来自哪里'.",
+
+  "geo_normalization": {
+    "上海市": "上海城区",
+    "上海": "上海城区",
+    "江苏": "江苏省",
+    "浙江": "浙江省"
+  },
+  "_scenarios": {
+    "A_明确查询": {
+      "examples": [
+        "浦西大区的美宜佳清单",
+        "未服务的潜力TOP20的客户",
+        "xx省内所有零售很嗨门店清单",
+        "经营场所为餐饮街的客户",
+        "客房数大于100间的非连锁酒店",
+        "5A国营，独立运营，联合管理，半封闭，客流TOP50的主题乐园",
+        "xx大区所有大学、专科、初高中学校，需要有人数"
+      ]
+    },
+    "B_分布探索": {
+      "examples": [
+        "餐饮街的客户分布",
+        "各业态在江苏的数量",
+        "美宜佳在各个大区的分布"
+      ]
+    },
+    "C_规则排行": {
+      "examples": [
+        "街道餐饮客户不低于20家；周末人流按大小排序；评分3.8+占比50%以上为高；开业3年+占比50%以上为高；按综合优先级排序"
+      ]
+    }
+  }
+}

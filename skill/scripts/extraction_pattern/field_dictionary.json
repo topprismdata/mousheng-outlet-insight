@@ -1,0 +1,819 @@
+{
+  "meta": {
+    "source": "/Users/ghb/Downloads/Downloads/售点洞察1784601676919.csv",
+    "total_columns": 152,
+    "group_legend": {
+      "identity": "售点身份标识",
+      "org_location": "组织与地理(省/大区/OU/线路)",
+      "channel": "渠道与业态分类",
+      "chain": "连锁/KA品牌",
+      "service": "服务状态与经营场所",
+      "tourism": "携程旅游住宿",
+      "dianping": "大众点评(餐饮评测)",
+      "potential": "收入潜力与消费水平",
+      "population": "人口/客流/周边 proximity",
+      "geo": "乡镇地理属性",
+      "sales": "销售/协议/冰柜/排面",
+      "visit": "拜访/回传/建档/客资",
+      "o2o": "O2O 业态",
+      "other": "其他/备注"
+    },
+    "group_field_count": {
+      "org_location": 10,
+      "identity": 4,
+      "channel": 8,
+      "other": 7,
+      "chain": 14,
+      "service": 4,
+      "population": 20,
+      "potential": 11,
+      "tourism": 14,
+      "dianping": 15,
+      "o2o": 2,
+      "geo": 13,
+      "visit": 16,
+      "sales": 14
+    },
+    "filter_dimensions": [
+      "KA名称",
+      "区县",
+      "城市",
+      "市场区隔",
+      "携程-星级",
+      "携程-类型",
+      "携程-酒店/民宿分类",
+      "是否连锁",
+      "服务状态",
+      "渠道组",
+      "省份",
+      "细分渠道",
+      "经营场所",
+      "经营场所类型",
+      "规划大区",
+      "连锁品牌名称"
+    ],
+    "note": "L2 字段语义字典: 由规则+手工校订生成, 可随业务扩展。扫描脚本用它解码'哪些语义组被深拉(填充率>=50%)'以客观识别导出结构模式。"
+  },
+  "fields": {
+    "省份": {
+      "group": "org_location",
+      "is_filter_dimension": true,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "城市": {
+      "group": "org_location",
+      "is_filter_dimension": true,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "区县": {
+      "group": "org_location",
+      "is_filter_dimension": true,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "RTMID": {
+      "group": "org_location",
+      "is_filter_dimension": false,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "规划OU": {
+      "group": "org_location",
+      "is_filter_dimension": false,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "规划大区": {
+      "group": "org_location",
+      "is_filter_dimension": true,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "规划办事处": {
+      "group": "org_location",
+      "is_filter_dimension": false,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "规划主管": {
+      "group": "org_location",
+      "is_filter_dimension": false,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "规划线路": {
+      "group": "org_location",
+      "is_filter_dimension": false,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "KO_ID": {
+      "group": "org_location",
+      "is_filter_dimension": false,
+      "semantic": "组织与地理(省/大区/OU/线路)"
+    },
+    "腾讯售点id": {
+      "group": "identity",
+      "is_filter_dimension": false,
+      "semantic": "售点身份标识"
+    },
+    "腾讯售点名称": {
+      "group": "identity",
+      "is_filter_dimension": false,
+      "semantic": "售点身份标识"
+    },
+    "腾讯售点地址": {
+      "group": "identity",
+      "is_filter_dimension": false,
+      "semantic": "售点身份标识"
+    },
+    "电话": {
+      "group": "identity",
+      "is_filter_dimension": false,
+      "semantic": "售点身份标识"
+    },
+    "一级分类": {
+      "group": "channel",
+      "is_filter_dimension": false,
+      "semantic": "渠道与业态分类"
+    },
+    "二级分类": {
+      "group": "channel",
+      "is_filter_dimension": false,
+      "semantic": "渠道与业态分类"
+    },
+    "三级分类": {
+      "group": "channel",
+      "is_filter_dimension": false,
+      "semantic": "渠道与业态分类"
+    },
+    "渠道组": {
+      "group": "channel",
+      "is_filter_dimension": true,
+      "semantic": "渠道与业态分类"
+    },
+    "渠道": {
+      "group": "channel",
+      "is_filter_dimension": false,
+      "semantic": "渠道与业态分类"
+    },
+    "子渠道": {
+      "group": "channel",
+      "is_filter_dimension": false,
+      "semantic": "渠道与业态分类"
+    },
+    "细分渠道": {
+      "group": "channel",
+      "is_filter_dimension": true,
+      "semantic": "渠道与业态分类"
+    },
+    "待开发客户细分": {
+      "group": "channel",
+      "is_filter_dimension": false,
+      "semantic": "渠道与业态分类"
+    },
+    "是否高德扫街榜/状元榜": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "高德扫街榜/状元榜榜单及排名": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "是否匹配": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "是否连锁": {
+      "group": "chain",
+      "is_filter_dimension": true,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁品牌ID": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁品牌名称": {
+      "group": "chain",
+      "is_filter_dimension": true,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁集团ID": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁集团名称": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁品牌信息备注": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁来源": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "服务状态": {
+      "group": "service",
+      "is_filter_dimension": true,
+      "semantic": "服务状态与经营场所"
+    },
+    "经营场所": {
+      "group": "service",
+      "is_filter_dimension": true,
+      "semantic": "服务状态与经营场所"
+    },
+    "经营场所名称": {
+      "group": "service",
+      "is_filter_dimension": false,
+      "semantic": "服务状态与经营场所"
+    },
+    "经营场所ID": {
+      "group": "service",
+      "is_filter_dimension": false,
+      "semantic": "服务状态与经营场所"
+    },
+    "大学\\高职外50米": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "大学\\高职外500米": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "中学外50米": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "景区外50米": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "景区外1公里": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "景区外2公里": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "工矿外100米": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "小区外50米": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "月均收入潜力预测(如有协议)": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "月均收入潜力预测(如有冰柜无协议)": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "月均收入潜力预测(无协议无冰柜)": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "营业面积": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "NIQ-是否实际营业面积": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "NIQ-NARTD指数": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "LINX MT黄金门店": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "携程-ID": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-名称": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-类型": {
+      "group": "tourism",
+      "is_filter_dimension": true,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-酒店/民宿分类": {
+      "group": "tourism",
+      "is_filter_dimension": true,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-品牌": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-集团": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-总部所在地": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-连锁类型": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-星级": {
+      "group": "tourism",
+      "is_filter_dimension": true,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-连锁级别": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-评论数": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-综合评分": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-开业时间": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "携程-房间数": {
+      "group": "tourism",
+      "is_filter_dimension": false,
+      "semantic": "携程旅游住宿"
+    },
+    "大众点评ID": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评营业时间": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评营业状态": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评菜系": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评-必吃榜和黑珍珠": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评餐饮用户评论数量": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评餐饮口味评分星级": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评餐饮环境评分星级": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评餐饮服务评分星级": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评餐饮点评评分星级": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评点评榜单(详细)": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评餐饮人均消费": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评连锁等级": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评连锁范围": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "大众点评是否有点评信息": {
+      "group": "dianping",
+      "is_filter_dimension": false,
+      "semantic": "大众点评(餐饮评测)"
+    },
+    "是否是O2O门店": {
+      "group": "o2o",
+      "is_filter_dimension": false,
+      "semantic": "O2O 业态"
+    },
+    "是否商超O2O": {
+      "group": "o2o",
+      "is_filter_dimension": false,
+      "semantic": "O2O 业态"
+    },
+    "示范企业乡镇主数据": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "示范企业乡镇主数据编码": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "系统乡镇": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "据DC距离(KM)": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "据办事处距离(KM)": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "市场区隔": {
+      "group": "geo",
+      "is_filter_dimension": true,
+      "semantic": "乡镇地理属性"
+    },
+    "乡镇属性": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "赶集日": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "是否红镇，默认否": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "客资编号": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "客资名称": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "客资地址": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "KA名称": {
+      "group": "chain",
+      "is_filter_dimension": true,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁名称": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁类型": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "客户状态码": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "是否协议客户": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "冰柜门数": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "TOP": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "未拿到费用协议客户": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "配送类型": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "滚动12个月销售收入": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "NARTD排面数": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "SOVI排面占比%": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "NARTD冰冻排面数": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "SOCI冰冻排面占比%": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "拜访日": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "拜访就近客户编码": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "OU回传数据_是否存在": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "OU回传数据_是否过滤": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "备注": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "POI上线时间": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "客资地址质量": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "客资标杆位置与地址解析位置之间的距离（米）": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "客资标杆位置与匹配腾讯POI位置之间的距离（米）": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "建档时间": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "区域线路编码": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "区域线路办事处": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "手机端反馈售点是否存在": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "手机端反馈渠道是否正确": {
+      "group": "visit",
+      "is_filter_dimension": false,
+      "semantic": "拜访/回传/建档/客资"
+    },
+    "是否闪电仓客户": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "闪电仓系统": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "Universe以外数据来源": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "是否移动端推荐客户": {
+      "group": "other",
+      "is_filter_dimension": false,
+      "semantic": "其他/备注"
+    },
+    "居住人口(人)": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "办公人口(人)": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "平日均值客流(人)": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "周末均值客流(人)": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "日均客流": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "消费水平": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "餐饮消费水平": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "居住社区房价等级": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "居住酒店档次": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "女性人口占比%": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "18-60岁人口占比%": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "18-40岁人口占比%": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "大专学历以上人口占比%": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "社区居住房价": {
+      "group": "population",
+      "is_filter_dimension": false,
+      "semantic": "人口/客流/周边 proximity"
+    },
+    "居住酒店价格": {
+      "group": "potential",
+      "is_filter_dimension": false,
+      "semantic": "收入潜力与消费水平"
+    },
+    "到访偏好": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "职住直线距离": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "重要客户名称": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "KA客户类型名称": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "客户集团": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "连锁范围名称": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "KA业态分类名称": {
+      "group": "chain",
+      "is_filter_dimension": false,
+      "semantic": "连锁/KA品牌"
+    },
+    "是否攻坚客户": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "冰柜投放目标客户标签": {
+      "group": "sales",
+      "is_filter_dimension": false,
+      "semantic": "销售/协议/冰柜/排面"
+    },
+    "非密集区域乡镇客户(200米)": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    },
+    "非密集区域乡镇客户(400米)": {
+      "group": "geo",
+      "is_filter_dimension": false,
+      "semantic": "乡镇地理属性"
+    }
+  }
+}

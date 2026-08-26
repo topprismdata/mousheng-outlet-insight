@@ -1,0 +1,143 @@
+{
+  "analysis_id": "mousheng-prd-example-001",
+  "artifact_type": "InsightPackage",
+  "request_context": {
+    "question": "上海市餐饮连锁品牌集中度",
+    "intent": "distribution_comparison",
+    "target_entity": "prism:outlet/Brand",
+    "scope": {},
+    "entities": [],
+    "metrics": [],
+    "rules": [],
+    "ambiguities": [],
+    "requested_outputs": [
+      "insight",
+      "table"
+    ]
+  },
+  "conclusion": {
+    "summary": "连锁品牌名称 维度共 4 组，TOP1 为「瑞幸咖啡」（1,822 家，占 39.0%）；长尾末位为「肯德基」（600 家）。",
+    "confidence_level": "high",
+    "verdict": "连锁品牌名称 维度呈现「瑞幸咖啡」主导的头部聚集特征与长尾分布差异（粒度: brand）"
+  },
+  "evidence": {
+    "sample_size": 4000,
+    "effective_sample_size": 4000,
+    "table_preview": [
+      {
+        "连锁品牌名称": "瑞幸咖啡",
+        "门店数": 1822
+      },
+      {
+        "连锁品牌名称": "星巴克",
+        "门店数": 1192
+      },
+      {
+        "连锁品牌名称": "巴比馒头",
+        "门店数": 1056
+      },
+      {
+        "连锁品牌名称": "肯德基",
+        "门店数": 600
+      }
+    ],
+    "drilldown_keys": [
+      {
+        "连锁品牌名称": "瑞幸咖啡"
+      }
+    ],
+    "out_csv_path": null,
+    "chart_spec_ref": null
+  },
+  "structure": {
+    "concentration_metrics": {
+      "hhi": 2850.1,
+      "cr4": 1.0,
+      "cr8": 1.0,
+      "gini": 0.204,
+      "category": "high_concentration"
+    },
+    "distributions": [
+      {
+        "dimension": "连锁品牌名称",
+        "top_segments": [
+          {
+            "name": "瑞幸咖啡",
+            "count": 1822
+          },
+          {
+            "name": "星巴克",
+            "count": 1192
+          },
+          {
+            "name": "巴比馒头",
+            "count": 1056
+          },
+          {
+            "name": "肯德基",
+            "count": 600
+          }
+        ],
+        "long_tail_ratio": 0.0
+      }
+    ]
+  },
+  "differences": {
+    "compared_groups": [
+      "瑞幸咖啡",
+      "肯德基"
+    ],
+    "metric_contrasts": [
+      {
+        "metric": "门店数",
+        "group_a_val": 1822.0,
+        "group_b_val": 600.0,
+        "absolute_diff": 1222.0,
+        "relative_diff_pct": 26.2,
+        "significance_note": "样本分布与显著性检验（Mann-Whitney U + Cohen's d + Placebo 反驳）详见 quality_layer.py 增强模式（P2 阶段可选挂载）"
+      }
+    ]
+  },
+  "anomalies": {
+    "baseline_method": "Tukey's Fences IQR",
+    "detected_outliers": []
+  },
+  "quality_and_limits": {
+    "completeness_score": 1.0,
+    "field_coverage": {
+      "连锁品牌名称": 1.0,
+      "门店数": 1.0
+    },
+    "applicable_dimensions": [
+      "连锁品牌名称",
+      "门店数"
+    ],
+    "warnings": [],
+    "limitations": [
+      "仅反映当前在册售点在各分组间的数量分布，不代表全市场全品牌份额"
+    ]
+  },
+  "followups": [
+    {
+      "suggested_question": "下钻分析 TOP1「瑞幸咖啡」内部的细分业态与品牌构成",
+      "analytical_intent": "主导分组下钻"
+    },
+    {
+      "suggested_question": "对比各 连锁品牌名称 的平均客流与评分，分析群体结构均衡性",
+      "analytical_intent": "多指标交叉对比"
+    }
+  ],
+  "provenance": {
+    "request_id": "req-001",
+    "insight_component_version": "1.3.0-rc3",
+    "insight_generated_at": "2026-08-25T12:00:00Z",
+    "evidence_provenance": {
+      "dataset_id": "sh-store-insight-152",
+      "data_version": "2026.08",
+      "ontology_profile_version": "0.1.0-rc2",
+      "dataset_mapping_version": null,
+      "engine_run_id": null,
+      "generated_at": "2026-08-25T12:00:00Z"
+    }
+  }
+}

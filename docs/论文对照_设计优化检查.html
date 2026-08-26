@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>论文对照 · 售点洞察 Agent 设计优化检查</title>
+<style>
+  :root{ --bg:#0f1115; --card:#1a1d24; --line:#2a2f3a; --ok:#3fb950; --bad:#f85149; --warn:#d29922; --txt:#e6edf3; --mut:#8b949e; --mono:#a5d6ff; }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--txt);font:14px/1.65 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:0;padding:28px}
+  h1{font-size:21px;margin:0 0 6px}
+  h2{font-size:16px;color:var(--mono);border-left:3px solid var(--mono);padding-left:10px;margin:26px 0 12px}
+  .sub{color:var(--mut);margin:0 0 16px}
+  .note{background:#1c2128;border:1px solid var(--line);border-radius:8px;padding:12px 16px;color:var(--mut);font-size:13px;margin:12px 0}
+  .note b{color:var(--warn)}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#20242c;color:var(--mono)}
+  .ok{color:var(--ok);font-weight:700}
+  .warn{color:var(--warn);font-weight:700}
+  .bad{color:var(--bad);font-weight:700}
+  .done{background:rgba(63,185,80,.12);color:var(--ok);border:1px solid var(--ok);border-radius:6px;padding:1px 7px;font-size:12px;font-weight:700}
+  .todo{background:rgba(210,153,34,.12);color:var(--warn);border:1px solid var(--warn);border-radius:6px;padding:1px 7px;font-size:12px;font-weight:700}
+  .paper{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .paper h3{margin:0 0 4px;font-size:15px;color:#fff}
+  .paper .meta{color:var(--mut);font-size:12px;margin-bottom:8px}
+  .paper .find{color:#c9d1d9}
+  .paper .gap{color:var(--bad)}
+  code{background:#0b0e13;padding:1px 6px;border-radius:4px;color:var(--mono);font:12px monospace}
+  .road{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+  .col{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .col h4{margin:0 0 8px;font-size:14px}
+  .col.p0{border-color:var(--bad)} .col.p1{border-color:var(--warn)} .col.p2{border-color:var(--mut)}
+  .col ul{margin:6px 0;padding-left:18px} .col li{margin:5px 0}
+  .tag{font-size:11px;padding:1px 6px;border-radius:4px;margin-right:4px}
+  .t-done{background:rgba(63,185,80,.15);color:var(--ok)}
+  .t-todo{background:rgba(210,153,34,.15);color:var(--warn)}
+</style>
+</head>
+<body>
+<h1>论文对照 · 售点洞察 Agent 设计优化检查</h1>
+<p class="sub">检查日期 2026-07-25 ｜ 对照 5 篇已联网核实的真实论文 ｜ 对象：<code>sh-store-insight</code> Skill（当前 7 块能力）</p>
+
+<div class="note">
+<b>方法说明：</b>以下论文均于 2026-07-25 通过 WebSearch 核实真实存在（含 arXiv 编号、作者、发表信息），关键结论直接引自原文摘要/正文，非凭记忆。每行"当前覆盖"基于实读 <code>SKILL.md</code> 与源码；"差距/优化"给出可落地的工程动作。
+</div>
+
+<h2>1 · 逐论文核对总表</h2>
+<table>
+<tr><th>论文（已核实）</th><th>核心结论</th><th>当前覆盖</th><th>差距 / 可优化点</th><th>优先级</th></tr>
+
+<tr>
+<td><b>Tang et al. 2025</b><br><span class="meta">LLM/Agent-as-Data-Analyst: A Survey<br>arXiv:2509.23988</span></td>
+<td>数据分析智能体 5 大设计目标：<b>语义感知</b>、模态融合、<b>自主管线</b>、工具增强、<b>开放世界</b>。</td>
+<td class="ok">语义感知 ✓（语义层+route_metric）<br>工具增强 △（MCP 4 tool）<br>自主管线 △（被动多步会话）</td>
+<td class="warn">管线是"用户提问→答"的<b>被动</b>模式，缺"给定模糊目标自主分解执行"；开放世界/多模态超出垂直场景（可接受）。</td>
+<td><span class="todo">P1</span></td>
+</tr>
+
+<tr>
+<td><b>Abedjan/Golab/Naumann 2015</b><br><span class="meta">Profiling Relational Data: A Survey<br>VLDB Journal 24(4):557–581</span></td>
+<td>画像分类：单列统计 / 多列依赖（UCC·FD·IND）/ <b>条件属性（CFD）</b>；第三大挑战是"结果需领域专家解读"。</td>
+<td class="ok">单列 ✓<br>多列 △（按业态覆盖率）<br>条件属性 △（手写 by_业态）</td>
+<td class="warn">未自动发现 FD/CFD/UCC；"按业态路由"靠手写候选集，可改为<b>数据驱动自动发现</b>。</td>
+<td><span class="todo">P1</span></td>
+</tr>
+
+<tr>
+<td><b>Sahu et al. 2024</b><br><span class="meta">InsightBench<br>arXiv:2407.06423</span></td>
+<td>评判智能体要看<b>端到端洞察生成</b>（主动设问→解读→产出可执行建议），非单条查询；AgentPoirot 靠此胜过 Pandas Agent。</td>
+<td class="bad">此前缺口：跑到"结果+体检"即止，不归纳洞察、不提下一步。</td>
+<td class="ok"><b>本回合已落地：洞察综合层（§7）</b>——确定性合成 摘要/动作/下一步，零 LLM。</td>
+<td><span class="done">已做</span></td>
+</tr>
+
+<tr>
+<td><b>Zhu et al. 2025 / AAAI 2026</b><br><span class="meta">Why Do Open-Source LLMs Struggle with Data Analysis?<br>arXiv:2506.19794</span></td>
+<td>拆为数据理解/代码生成/<b>策略规划</b>三力；<b>策略规划是首要决定因素</b>；表结构信息对理解力仅边际提升。</td>
+<td class="warn">重金投入"语义层/画像"（理解力），论文称其增益边际；<b>规划力弱</b>（无自主分解）。</td>
+<td class="bad">最大杠杆在<b>策略规划</b>：给模糊目标时自主规划多步并落地，而非只答单问。</td>
+<td><span class="todo">P0</span></td>
+</tr>
+
+<tr>
+<td><b>Fan et al. 2009 / 2011</b><br><span class="meta">Discovering Conditional Functional Dependencies<br>ICDE 2009 / TKDE 23(4):683</span></td>
+<td>CFD = FD + 语义常量模式，用于数据清洗；<b>CFDMiner</b> 发现常量 CFD 极快。可用于"IF 业态=X THEN 字段=Y"。</td>
+<td class="ok">route_metric 已用 by_业态 覆盖率选列（已是 CFD 式）</td>
+<td class="warn">候选集手写；可换为<b>自动发现 CFD</b> 同时服务"路由"与"体检数据质量规则"。</td>
+<td><span class="todo">P1</span></td>
+</tr>
+</table>
+
+<h2>2 · 优先级路线图（已做 / 待做）</h2>
+<div class="road">
+  <div class="col p0">
+    <h4 style="color:var(--bad)">P0 · 最高杠杆</h4>
+    <ul>
+      <li><b>策略规划层</b>（Zhu 2025 首要结论）<br><span class="tag t-todo">待做</span> 给定模糊目标（"看上海餐饮派单机会"）自主分解为 画像→分段→排行→对比 并落地，而非被动答单问。</li>
+    </ul>
+  </div>
+  <div class="col p1">
+    <h4 style="color:var(--warn)">P1 · 高价值</h4>
+    <ul>
+      <li><b>端到端洞察综合</b><br><span class="tag t-done">已做</span> insight.py（§7），35/35 回归通过。</li>
+      <li><b>自动 CFD/依赖发现</b>（Abedjan+Fan）<br><span class="tag t-todo">待做</span> 用 CFDMiner 式采样发现"业态→字段"规则，自动建路由表 + 体检清洗规则，替代手写候选集。</li>
+      <li><b>自主管线</b>（Tang 2025）<br><span class="tag t-todo">待做</span> 在多步会话上叠加"主动提议下一步"钩子（洞察层的 followups 已是雏形）。</li>
+    </ul>
+  </div>
+  <div class="col p2">
+    <h4 style="color:var(--mut)">P2 · 增强</h4>
+    <ul>
+      <li><b>洞察质量评测</b>（InsightBench 式 judge）<br><span class="tag t-todo">待做</span> 用 LLM-as-judge 给洞察"可行动性"打分，纳入回归。</li>
+      <li><b>LLM 自然语言润色</b><br><span class="tag t-todo">待做</span> 可选钩子润色 summary，不改变结构。</li>
+      <li><b>开放世界/多模态</b><br><span class="tag t-todo">范围外</span> 垂直 ISV 场景，标记为已知边界。</li>
+    </ul>
+  </div>
+</div>
+
+<h2>3 · 本回合已落地：洞察综合层（InsightBench 驱动）</h2>
+<div class="paper">
+  <h3>新增 <code>scripts/insight.py</code> + 接线</h3>
+  <div class="meta">论文：Sahu et al. 2024 InsightBench (arXiv:2407.06423)</div>
+  <div class="find">
+  <p><b>做什么：</b><code>synthesize(dsl, result_df, audit, reg)</code> 按查询类型确定性合成三件套：</p>
+  <ul>
+    <li><code>summary</code>：一句话洞察（C→候选等级分布+头部；B→TOP1 维度占比+长尾；A→命中行+主集中大区）。</li>
+    <li><code>action</code>：可执行动作（来自体检 flags，如"派单前先补采…"或"可优先在 X 投放"）。</li>
+    <li><code>followups</code>：2~3 个建议的下一步分析问法，形成分析飞轮钩子。</li>
+  </ul>
+  <p><b>为什么稳：</b>① <b>零 LLM 依赖</b>——规则只吃"结果形状+体检"，保住本 Skill 无 LLM 也能跑的特性；② 空结果自动降级；③ 接线覆盖 CLI 单查、<code>--json</code>(新增 <code>insight</code> 字段)、会话 <code>ask</code>/<code>:fix</code> 三处。</p>
+  <p><b>验证：</b>新增测试 <code>T35</code>，全量回归 <b>35/35 通过</b>；真实 C 类查询实拍正确输出"共 50 个候选…头部候选…可执行动作…建议下一步"。</p>
+  </div>
+</div>
+
+<h2>4 · 一个诚实的再发现</h2>
+<div class="note">
+重读源码确认：<code>route_metric</code> <b>已经是 coverage 驱动</b>的（取候选字段里该业态覆盖率最高者），即"按业态路由"本质上是手写候选集 + 数据驱动的 CFD 式选择。因此本回合<b>没有重复造轮子</b>去"重写路由"，而是把优化预算投向论文指出的最大缺口——<b>端到端洞察（InsightBench）</b>与后续<b>策略规划（Zhu 2025）</b>。这也呼应 Zhu 论文的反直觉结论：继续加码"理解层"边际收益递减，真正该投的是"规划与主动向前走一步"。
+</div>
+
+</body>
+</html>

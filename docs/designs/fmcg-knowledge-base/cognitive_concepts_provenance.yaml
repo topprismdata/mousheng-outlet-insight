@@ -1,0 +1,157 @@
+# ==============================================================================
+# cognitive_concepts_provenance.yaml
+# 售点业务黑话与认知概念网 (AliCoCo-style Cognitive Concept Net)
+# 每个高频业务口语表达 → 底层受管 DSL 规则的确定性映射, 并附溯源出处
+# ==============================================================================
+
+version: "1.0.0"
+governance:
+  steward: "TopPrism Cognitive Concept Engineering Team"
+  last_updated: "2026-08-26"
+  profile: "prism://ontology/profiles/outlet-insight"
+
+standards_authorities:
+  - id: "AUTH_ALIBABA_ALICOCO"
+    name: "Alibaba AliCoCo (Cognitive Concept Net)"
+    standard_name: "AliCoCo: Alibaba E-commerce Cognitive Concept Net (SIGMOD 2020)"
+    standard_code: "SIGMOD-2020-AliCoCo"
+    official_uri: "https://dl.acm.org/doi/10.1145/3318464.3386130"
+    confidence_tier: "ACADEMIC_AUTHORITY"
+    notes: "阿里提出的原子概念+认知概念两层结构, 借鉴用于本地认知概念网建模"
+
+  - id: "AUTH_DIANPING_OPS"
+    name: "大众点评本地生活运营标准"
+    standard_name: "大众点评POI分类体系与商户标签规则"
+    confidence_tier: "INDUSTRY_STANDARD"
+
+concepts:
+  # ============================================================================
+  # 1. 传统通路黑话概念 (Traditional Trade Slang)
+  # ============================================================================
+  - uri: "prism:concept/MomAndPopStore"
+    prefLabel: "夫妻老婆店"
+    altLabels:
+      ["夫妻老婆店", "杂货铺", "小卖部", "便民店", "烟酒小店", "街边小店", "夫妻店", "老小店"]
+    definition: "由一对或多对夫妻以家庭为主要劳动力独立经营、面积通常 < 50 平方米、无统一品牌标识、以烟酒饮料和零食日用品为核心的传统零售终端。"
+    mapped_logical_rule: "渠道组 = '食杂' AND 是否连锁 = '否'"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      section: "传统通路口语概念映射"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:concept/WesternFastFoodChinese"
+    prefLabel: "洋快餐"
+    altLabels:
+      ["洋快餐", "西餐快餐", "炸鸡汉堡店", "汉堡快餐", "西式连锁快餐"]
+    definition: "源自欧美饮食文化的连锁快餐店，主打汉堡、炸鸡、薯条等品类。"
+    mapped_logical_rule: "连锁品牌名称 IN ('肯德基', '麦当劳', '汉堡王', '德克士', '华莱士')"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:concept/DaDantiHotel"
+    prefLabel: "大单体酒店"
+    altLabels:
+      ["大单体酒店", "独立大酒店", "单体大酒店", "单体高客房酒店"]
+    definition: "客房数 >= 100 间、且不属于全国性连锁集团的独立经营住宿场所。"
+    mapped_logical_rule: "渠道组 = '住宿' AND 是否连锁 = '否' AND 携程-房间数 >= 100"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "Industry Slang: Large Independent Hotel Definition"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  # ============================================================================
+  # 2. 时段营业行为概念 (Temporal Business Concept)
+  # ============================================================================
+  - uri: "prism:concept/MorningMarketOutlet"
+    prefLabel: "早市网点"
+    altLabels:
+      ["早市网点", "早餐网点", "早点铺", "早高峰门店"]
+    definition: "营业开始时间 <= 06:00, 或主营包子、烧饼、油条、豆浆等中式早点的零售/餐饮网点。"
+    mapped_logical_rule: "open_after <= 6:00 OR 细分渠道 IN ('包子早点', '早餐店', '包子', '面馆')"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      section: "Dianping POI Tag: 早市"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:concept/NightTimeFoodOutlet"
+    prefLabel: "夜宵/深夜食堂"
+    altLabels:
+      ["夜宵", "深夜食堂", "夜间经济店", "夜排档", "凌晨营业店"]
+    definition: "营业结束时间 >= 22:00, 且渠道组为餐饮或含烧烤/火锅/大排档业态, 服务于夜间消费场景。"
+    mapped_logical_rule: "close_after >= 22 AND 渠道组 = '餐饮' AND (细分渠道 IN ('烧烤', '火锅', '大排档', '夜宵') OR 营业时间匹配夜间)"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      section: "Dianping POI Tag: 夜间营业"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:concept/TwentyFourHourOutlet"
+    prefLabel: "24小时营业网点"
+    altLabels:
+      ["24小时", "通宵店", "24h便利店", "全天候营业"]
+    definition: "营业时间覆盖全天24小时或营业起始时间 <= 1:00 且营业结束时间 >= 22:00 的网点。"
+    mapped_logical_rule: "大众点评营业时间 MATCHES '24小时' OR (open_after <= 1:00 AND close_after >= 22)"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  # ============================================================================
+  # 3. 商圈与地理围栏概念 (Trade Area Concepts)
+  # ============================================================================
+  - uri: "prism:concept/RestaurantStreet"
+    prefLabel: "餐饮街"
+    altLabels:
+      ["餐饮街", "美食街", "小吃街", "夜市餐饮聚集区"]
+    definition: "由多家餐饮门店聚集而成的商业街区，通常呈现客流集中、营业时间长、即饮消费场景丰富等特征。"
+    mapped_logical_rule: "经营场所 = '餐饮街' OR (经营场所 LIKE '%街%' AND 渠道组 = '餐饮' AND 周边餐饮密度 >= 阈值)"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      section: "Dianping POI Tag: 餐饮街"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:concept/TouristScenic"
+    prefLabel: "景区周边"
+    altLabels:
+      ["景区周边", "景点周边", "旅游商业", "风景区网点", "景区辐射区"]
+    definition: "位于 4A 级及以上旅游景区出入口周边辐射半径内的售点。"
+    mapped_logical_rule: "景区外50米 = '是' OR 景区外1公里 = '是'"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      section: "Dianping POI Tag: 景区"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:concept/OfficeWorkerArea"
+    prefLabel: "办公园区与写字楼商圈"
+    altLabels:
+      ["办公园区", "写字楼商圈", "白领商圈", "商务区", "园区", "工矿"]
+    definition: "服务于写字楼、产业园办公人群，营业客流高峰集中在工作日早午晚餐时段。"
+    mapped_logical_rule: "经营场所 IN ('写字楼', '工矿', '园区', '工矿_写字楼')"
+    provenance:
+      authority_ref: "AUTH_DIANPING_OPS"
+      section: "Dianping POI Tag: 写字楼/商务区"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  # ============================================================================
+  # 4. 业态共生与场景组合概念 (Agglomeration & Co-occurrence)
+  # ============================================================================
+  - uri: "prism:concept/MealDrinkScene"
+    prefLabel: "就餐配饮场景"
+    altLabels:
+      ["就餐配饮", "配餐饮料", "餐中即饮", "餐饮伴饮"]
+    definition: "餐饮门店就餐时段内对饮料的需求(如某饮料企业、啤酒、现磨咖啡等)，主要爆发在中午(11:30-14:00)与晚上(17:30-21:00)用餐高峰。"
+    mapped_logical_rule: "渠道组 = '餐饮' AND 营业场所 IN ('餐饮街', '商场') AND 大众点评营业时间中午11:30~14:00不间断"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "Agglomeration Theory: Meal Companion Occasion"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  - uri: "prism:concept/TransitImpulseBuy"
+    prefLabel: "交通枢纽冲动消费场景"
+    altLabels:
+      ["冲动消费", "即时性消费", "差旅即饮", "枢纽即饮"]
+    definition: "处于交通枢纽的零售/饮品门店，受差旅与通勤客群驱动的高单价即饮即食消费场景。"
+    mapped_logical_rule: "经营场所 LIKE '%交通枢纽%' OR 经营场所 LIKE '%高铁%' OR 经营场所 LIKE '%机场%'"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "RED ST Occasion: Transit On-the-Go"
+      confidence_tier: "ENTERPRISE_PRACTICE"

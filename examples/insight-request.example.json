@@ -1,0 +1,56 @@
+{
+  "request_id": "req-001",
+  "analysis_intent": {
+    "question": "上海市餐饮连锁品牌集中度",
+    "intent": "distribution_comparison",
+    "target_entity": "prism:outlet/Brand"
+  },
+  "evidence_set": {
+    "sample_size": 4000,
+    "effective_sample_size": 4000,
+    "primary_dimension": "连锁品牌名称",
+    "dimensions": [
+      {
+        "name": "连锁品牌名称",
+        "uri": "prism:outlet/Brand",
+        "type": "category",
+        "cardinality": 4
+      }
+    ],
+    "measures": [
+      {
+        "name": "门店数",
+        "uri": "prism:metric/OutletCount",
+        "unit": "家",
+        "aggregation": "count",
+        "data_type": "integer",
+        "description": "品牌在册售点总数"
+      }
+    ],
+    "grain": "brand",
+    "time_window": {
+      "start": "2026-08-01",
+      "end": "2026-08-25",
+      "period_type": "snapshot",
+      "as_of_date": "2026-08-25"
+    },
+    "records": [
+      {"连锁品牌名称": "瑞幸咖啡", "门店数": 1822},
+      {"连锁品牌名称": "星巴克", "门店数": 1192},
+      {"连锁品牌名称": "巴比馒头", "门店数": 1056},
+      {"连锁品牌名称": "肯德基", "门店数": 600}
+    ],
+    "drilldown_keys": [{"连锁品牌名称": "瑞幸咖啡"}],
+    "evidence_provenance": {
+      "dataset_id": "sh-store-insight-152",
+      "data_version": "2026.08",
+      "ontology_profile_version": "0.1.0-rc2",
+      "generated_at": "2026-08-25T12:00:00Z"
+    }
+  },
+  "quality_context": {
+    "completeness_score": 1.0,
+    "field_coverage": {"连锁品牌名称": 1.0, "门店数": 1.0},
+    "applicable_dimensions": ["连锁品牌名称", "门店数"]
+  }
+}

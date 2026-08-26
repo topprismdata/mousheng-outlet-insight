@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "prism://schemas/mousheng-outlet-insight/insight-request.schema.json",
+  "title": "MoushengOutletInsightRequest",
+  "description": "谋圣·售点洞察标准三元输入契约定义（v1.2 增强版：AnalysisIntent + 具备显式语义维度的 EvidenceSet + QualityContext + EvidenceProvenance）",
+  "type": "object",
+  "required": [
+    "request_id",
+    "analysis_intent",
+    "evidence_set",
+    "quality_context"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "请求全局唯一追踪标识"
+    },
+    "analysis_intent": {
+      "type": "object",
+      "description": "输入元 1：第一棱镜展开的业务分析意图",
+      "required": ["question", "intent", "target_entity"],
+      "additionalProperties": false,
+      "properties": {
+        "question": { "type": "string", "minLength": 1, "description": "用户原始业务提问" },
+        "intent": {
+          "type": "string",
+          "enum": ["detail_list", "distribution_comparison", "rule_ranking", "concentration_analysis", "anomaly_detection"],
+          "description": "分析类型"
+        },
+        "target_entity": { "type": "string", "minLength": 1, "description": "目标实体概念 URI" },
+        "scope": { "type": "object", "description": "空间与业务范围约束（动态业务载荷，有意开放）" },
+        "entities": { "type": "array", "items": { "type": "string" } },
+        "metrics": { "type": "array", "items": { "type": "string" } },
+        "rules": { "type": "array", "items": { "type": "object" }, "description": "规则列表（动态业务载荷，有意开放）" },
+        "target_quota": { "type": ["integer", "null"], "minimum": 1, "description": "业务目标配额容量" },
+        "priority_funnel": {
+          "type": "array",
+          "items": { "type": "object" },
+          "description": "业务优先级排序与漏斗阶梯"
+        },
+        "ambiguities": { "type": "array", "items": { "type": "string" } },
+        "requested_outputs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evidence_set": {
+      "type": "object",
+      "description": "输入元 2：上游计算引擎产出的结构化数据证据（含显式度量语义与数据粒度）",
+      "required": ["sample_size", "effective_sample_size", "records", "evidence_provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "sample_size": { "type": "integer", "minimum": 0, "description": "总样本量" },
+        "effective_sample_size": { "type": "integer", "minimum": 0, "description": "去除空值后的有效样本量" },
+        "primary_dimension": { "type": ["string", "null"], "description": "主聚合维度或候选字段名 (兼容字段)" },
+        "metric_columns": { "type": "array", "items": { "type": "string" }, "description": "包含的度量指标列名 (兼容字段)" },
+        "dimensions": {
+          "type": "array",
+          "description": "显式声明的维度语义列表 (v1.2 增强)",
+          "items": {
+            "type": "object",
+            "required": ["name", "uri"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "description": "字段名称" },
+              "uri": { "type": "string", "description": "本体概念或属性 URI" },
+              "type": { "type": "string", "enum": ["category", "spatial", "temporal", "identifier"] },
+              "cardinality": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "measures": {
+          "type": "array",
+          "description": "显式声明的度量语义列表 (v1.2 增强)",
+          "items": {
+            "type": "object",
+            "required": ["name", "uri", "unit", "aggregation"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "description": "指标字段名" },
+              "uri": { "type": "string", "description": "本体度量 URI (prism:metric/* 或 prism:estimate/*)" },
+              "unit": { "type": "string", "description": "度量单位 (如 家, 人/天, %, 元/月)" },
+              "aggregation": { "type": "string", "enum": ["count", "sum", "mean", "min", "max", "ratio", "score", "derived"] },
+              "data_type": { "type": "string", "enum": ["integer", "float", "percentage", "currency"] },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "grain": {
+          "type": "string",
+          "enum": ["outlet", "brand", "commercial_site", "administrative_region", "territory", "channel_type", "unspecified"],
+          "default": "unspecified",
+          "description": "数据记录的物理实体粒度 (v1.2 增强)"
+        },
+        "time_window": {
+          "type": "object",
+          "description": "时间窗口与数据快照范围 (v1.2 增强)",
+          "additionalProperties": false,
+          "properties": {
+            "start": { "type": "string" },
+            "end": { "type": "string" },
+            "period_type": { "type": "string", "enum": ["snapshot", "daily", "monthly", "quarterly", "annual"] },
+            "as_of_date": { "type": "string" }
+          }
+        },
+        "comparison_baseline": {
+          "type": "object",
+          "description": "比较基准上下文 (v1.2 增强)",
+          "additionalProperties": false,
+          "properties": {
+            "type": { "type": "string", "enum": ["peer_group_mean", "historical_period", "target_benchmark", "custom"] },
+            "baseline_value": { "type": "number" },
+            "baseline_dimension": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "quota_evaluation": {
+          "type": "object",
+          "description": "目标配额与优先级阶梯评估结果 (v1.2 增强)",
+          "additionalProperties": false,
+          "properties": {
+            "target_quota": { "type": "integer", "minimum": 1 },
+            "pool_size": { "type": "integer", "minimum": 0 },
+            "selected_size": { "type": "integer", "minimum": 0 },
+            "fulfillment_rate": { "type": "number", "minimum": 0.0 },
+            "fulfillment_status": { "type": "string", "enum": ["fulfilled", "gap_detected"] },
+            "gap_count": { "type": "integer", "minimum": 0 },
+            "cutoff_thresholds": { "type": "object", "description": "入围最后一名的关键指标门槛截断值" }
+          }
+        },
+        "records": {
+          "type": "array",
+          "items": { "type": "object" },
+          "description": "结构化数据记录列表（动态业务记录载荷，有意开放）"
+        },
+        "drilldown_keys": {
+          "type": "array",
+          "items": { "type": "object" },
+          "description": "预提取的下钻过滤键"
+        },
+        "out_csv_path": { "type": ["string", "null"] },
+        "chart_spec_ref": { "type": ["string", "null"] },
+        "evidence_provenance": {
+          "type": "object",
+          "description": "证据来源治理信封（杜绝硬编码伪造）",
+          "required": ["dataset_id", "data_version", "ontology_profile_version", "generated_at"],
+          "additionalProperties": false,
+          "properties": {
+            "dataset_id": { "type": "string", "minLength": 1 },
+            "data_version": { "type": "string", "minLength": 1 },
+            "ontology_profile_version": { "type": "string", "minLength": 1 },
+            "dataset_mapping_version": { "type": ["string", "null"] },
+            "engine_run_id": { "type": ["string", "null"] },
+            "generated_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    },
+    "quality_context": {
+      "type": "object",
+      "description": "输入元 3：数据质量与适用性审计上下文",
+      "required": ["field_coverage"],
+      "additionalProperties": false,
+      "properties": {
+        "completeness_score": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "数据完整度评分 (0~1)" },
+        "field_coverage": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+          "description": "各关键字段的非空覆盖率 (0~1)"
+        },
+        "applicable_dimensions": { "type": "array", "items": { "type": "string" } },
+        "quality_flags": { "type": "array", "items": { "type": "string" } },
+        "quality_notice": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

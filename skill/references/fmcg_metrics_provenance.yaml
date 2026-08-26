@@ -1,0 +1,149 @@
+# ==============================================================================
+# fmcg_metrics_provenance.yaml
+# 快消品通路精耕与完美门店 (RTM / Perfect Store) 核心度量指标及权威溯源定义
+# 涵盖 NielsenIQ 分销指标体系、某饮料企业 RED 5P 模型与宝洁/联合利华售点分级标准
+# ==============================================================================
+
+version: "1.0.0"
+governance:
+  steward: "TopPrism Trade Marketing & Metrology Group"
+  last_updated: "2026-08-26"
+  profile: "prism://ontology/profiles/outlet-insight"
+
+standards_authorities:
+  - id: "AUTH_NIQ_RMS_METRICS"
+    name: "NielsenIQ (NIQ)"
+    standard_name: "NielsenIQ Retail Measurement Service (RMS) Core KPI Standards"
+    standard_code: "NIQ-KPI-2023"
+    official_uri: "https://nielseniq.com/global/en/landing-page/retail-measurement-service-glossary/"
+    confidence_tier: "INDUSTRY_STANDARD"
+
+  - id: "AUTH_BEV_BRAND_RED_STANDARD"
+    name: "The 某饮料品牌 Company & a global beverage enterprise"
+    standard_name: "某饮料品牌 RED (Right Execution Daily) & Route-to-Market (RTM) Global Operating Manual"
+    standard_code: "KO-RED-RTM-2024"
+    confidence_tier: "ENTERPRISE_PRACTICE"
+    notes: "某饮料企业全球通路精耕与完美门店执行权威标准"
+
+  - id: "AUTH_ACADEMIC_RTM_TEXTBOOKS"
+    name: "Marketing Channels & Sales Force Management"
+    standard_name: "《Marketing Channels》(Erin Anderson / Louis W. Stern) & 《Sales Force Management》(Mark W. Johnston)"
+    standard_code: "ISBN-978-0132161275"
+    confidence_tier: "ACADEMIC_AUTHORITY"
+
+metrics:
+  # ============================================================================
+  # 1. 基础分销覆盖度量 (Distribution Coverage Metrics)
+  # ============================================================================
+  - uri: "prism:metric/NumericDistribution"
+    code: "ND"
+    prefLabel: "数值铺市率"
+    altLabels: ["ND", "数值铺货率", "售点覆盖率", "店铺渗透率"]
+    unit: "%"
+    definition: "报告期内在售某品类或品牌的零售终端数量占该区域该品类全部目标零售终端总数的百分比。"
+    formula: "ND = (有该品牌在售的售点数 / 区域全部目标售点总数) * 100%"
+    provenance:
+      authority_ref: "AUTH_NIQ_RMS_METRICS"
+      section: "Section 3.1: Numeric Distribution (ND)"
+      confidence_tier: "INDUSTRY_STANDARD"
+    business_meaning: "衡量销售团队在线下终端的物理覆盖广度（铺得广不广）。"
+
+  - uri: "prism:metric/WeightedDistribution"
+    code: "WD"
+    prefLabel: "加权铺市率"
+    altLabels: ["WD", "加权铺货率", "销量加权覆盖率", "价值铺市率"]
+    unit: "%"
+    definition: "有该品牌在售的零售终端所实现的该品类全渠道销售额，占该区域全渠道该品类销售总额的百分比。"
+    formula: "WD = (有在售网点的该品类销售总额 / 区域全部网点的该品类销售总额) * 100%"
+    provenance:
+      authority_ref: "AUTH_NIQ_RMS_METRICS"
+      section: "Section 3.2: Weighted Distribution (WD)"
+      confidence_tier: "INDUSTRY_STANDARD"
+    business_meaning: "衡量品牌在高产出、高价值黄金终端中的占有质量（大店/高销量店进去了没有）。若 WD >> ND 说明以优质大店为主；若 WD << ND 说明主要铺在长尾低效小店。"
+
+  - uri: "prism:metric/RateOfSale"
+    code: "ROS"
+    prefLabel: "铺货店单店产出率"
+    altLabels: ["ROS", "单店动销率", "店均销售速度", "单店周转"]
+    unit: "箱/店/周 或 元/店/月"
+    definition: "在已经进店铺货的零售终端中，平均每家门店在单位时间内的商品实际出货/销售速度。"
+    formula: "ROS = 品牌总销售量 / 有销售记录的有效门店数"
+    provenance:
+      authority_ref: "AUTH_NIQ_RMS_METRICS"
+      section: "Section 3.5: Rate of Sale / Velocity"
+      confidence_tier: "INDUSTRY_STANDARD"
+
+  - uri: "prism:metric/ShareOfShelf"
+    code: "SOS"
+    prefLabel: "货架排面份额"
+    altLabels: ["SOS", "排面占比", "陈列面占比", "货架占有率"]
+    unit: "%"
+    definition: "自有品牌在零售终端主货架或冷柜上所占据的商品陈列排面数（Facings），占同品类全部陈列排面总数的百分比。"
+    formula: "SOS = (自有品牌陈列排面数 / 同品类总陈列排面数) * 100%"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "RED 5P Standard: Placement -> Shelf Facings"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  # ============================================================================
+  # 2. 某饮料企业 RED 完美门店执行度量 (RED Perfect Store Metrics)
+  # ============================================================================
+  - uri: "prism:metric/CoolerPurity"
+    code: "COOLER_PURITY"
+    prefLabel: "专用冷柜纯度"
+    altLabels: ["冰柜纯度", "专柜排他率", "冷柜排面纯度"]
+    unit: "%"
+    definition: "由快消品牌方投入的专属展示冷柜中，摆放本品牌及授权合作品牌 SKU 的陈列排面占冷柜总排面的百分比。"
+    formula: "CoolerPurity = (冷柜内本品陈列数 / 冷柜总容量陈列数) * 100%"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "Asset Governance: Cold Drink Equipment (CDE) Pure Execution Standard"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    thresholds:
+      gold_tier: ">= 80%"
+      compliance_pass: ">= 70%"
+      warning_level: "< 50% (存在严重竞品侵占/杂牌侵占风险)"
+
+  - uri: "prism:metric/FivePCompliance"
+    code: "RED_5P"
+    prefLabel: "RED 5P 综合执行得分"
+    altLabels: ["5P执行得分", "完美门店达标率", "RED得分"]
+    unit: "分 (0~100)"
+    definition: "基于 Product(核心SKU必铺)、Price(价格签合规)、Placement(黄金位置与纯度)、Promotion(促销物料)、POP(宣传展架) 5 大维度的加权综合合规指数。"
+    formula: "RED_Score = 0.25*Product + 0.15*Price + 0.30*Placement + 0.15*Promotion + 0.15*POP"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "Section 1: 5P Measurement Framework"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  # ============================================================================
+  # 3. 通路精耕与售点潜力估算度量 (RTM Potential & Tiering)
+  # ============================================================================
+  - uri: "prism:metric/LookalikeRevenuePotential"
+    code: "REVENUE_POTENTIAL"
+    prefLabel: "售点月均收入潜力预测"
+    altLabels: ["潜力", "收入潜力预测", "月均潜力", "潜客潜力评估"]
+    unit: "元/月"
+    definition: "基于售点所在商圈类别、主营业态渠道、营业面积及周边客流，通过同类成熟成熟售点（Lookalike Reference Class）历史销量均值推导出的月均消费潜力期望值。"
+    provenance:
+      authority_ref: "AUTH_ACADEMIC_RTM_TEXTBOOKS"
+      section: "Chapter 7: Territory Design & Outlet Potential Modeling"
+      confidence_tier: "ACADEMIC_AUTHORITY"
+    physical_fields:
+      - "月均收入潜力预测(如有协议)"
+      - "月均收入潜力预测(如有冰柜无协议)"
+      - "月均收入潜力预测(无协议无冰柜)"
+
+  - uri: "prism:metric/OutletTier"
+    code: "OUTLET_TIER"
+    prefLabel: "售点价值分级 (Gold/Silver/Bronze)"
+    altLabels: ["客户分级", "售点等级", "金银铜分层", "Tier分层"]
+    definition: "根据售点实际销售产出或预估销量潜力，将售点划分为 Tier 1 (Gold/核心大客户), Tier 2 (Silver/腰部主力店), Tier 3 (Bronze/长尾小店) 的分级运营体系。"
+    provenance:
+      authority_ref: "AUTH_BEV_BRAND_RED_STANDARD"
+      section: "RTM Channel Playbook: Outlet Segmentation & Call Frequency"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    tier_rules:
+      gold: "月均潜力 >= 50,000 元 或 核心商圈 Top 10% 门店 -> 每周拜访 1~2 次 (F1/F2)"
+      silver: "月均潜力 15,000 ~ 50,000 元 -> 每两周拜访 1 次 (F4)"
+      bronze: "月均潜力 < 15,000 元 -> 每四周拜访 1 次或批发商二批覆盖 (F8)"

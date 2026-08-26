@@ -1,0 +1,63 @@
+# ==============================================================================
+# fmcg_knowledge_base.yaml
+# 谋圣·售点洞察 受管 FMCG 领域知识库索引与元数据
+# ==============================================================================
+version: "1.0.0"
+profile: "prism://ontology/profiles/outlet-insight"
+schema: "https://prism.top/topprism/schema/fmcg-knowledge-base/v1"
+
+metadata:
+  name: "谋圣·售点洞察 受管 FMCG 行业知识库"
+  description: "基于国际/国家法定标准、全球快消测量巨头(NielsenIQ/Kantar)、快消巨头分销操作手册(某饮料企业RED/宝洁PJP)、学术界权威综述与开放知识图谱(Wikidata)构建的高可信 FMCG 实体与溯源知识母体。"
+  governance_authority: "TopPrism Ontology Engineering Committee"
+  release_date: "2026-08-26"
+  confidence_tier_governance:
+    STATUTORY: "国家法定标准(GB/T, GB/Z), 不得更改, 随国标版本号演进而升级"
+    INDUSTRY_STANDARD: "国际或国家级行业协会标准(NIQ, CCFA, GS1), 跟随标准机构发布周期"
+    ENTERPRISE_PRACTICE: "快消巨头公开操作手册(RED, PJP)或经典管理学专著, 拥有商业辩护力"
+    ACADEMIC_AUTHORITY: "SIGMOD/KDD/ISWC 等顶级会议文献或公认教材"
+    OPEN_KNOWLEDGE: "Wikidata 等开放图谱, 需定期校对"
+    EMPIRICAL: "由底表数据或本地经验统计归纳, 需注明样本量与置信度"
+
+# 受管子资产
+managed_artifacts:
+  channel_taxonomy:
+    path: "skill/references/fmcg_channel_taxonomy.yaml"
+    entity_count: 13
+    covers: "4 大通路 (MT/TT/AFH/ST) 13 个受管子业态, GB/T 18106 + NIQ + CCFA 三方权威溯源"
+  metrics:
+    path: "skill/references/fmcg_metrics_provenance.yaml"
+    entity_count: 8
+    covers: "ND/WD/ROS/SOS/Cooler Purity/5P/Tier/Potential 8 项快消分销与完美门店核心度量"
+  brand_registry:
+    path: "skill/references/fmcg_brand_registry.yaml"
+    entity_count: 22
+    covers: "覆盖现代通路(便利店/零食折扣)、餐饮(西式快餐/咖啡/茶饮/正餐/中式快餐)、住宿(连锁酒店) 22 个核心品牌, 含 Wikidata QID 与企业公开披露溯源"
+  cognitive_concepts:
+    path: "skill/references/cognitive_concepts_provenance.yaml"
+    entity_count: 12
+    covers: "12 个高频业务黑话与认知概念(夫妻老婆店/洋快餐/大单体酒店/早市/夜宵/24小时/餐饮街/景区周边/办公园区/就餐配饮/枢纽即饮), 全部 AliCoCo-style 概念对齐"
+
+# 受管本体与上游对齐
+upstream_compatibility:
+  - upstream: "prism://ontology/profiles/outlet-insight"
+    version_constraint: "^0.1.0"
+    role: "上层概念类别 URI 命名空间 (prism:outlet/...)"
+  - upstream: "W3C PROV-O"
+    official_uri: "https://www.w3.org/TR/prov-o/"
+    role: "实体溯源属性 (prov:wasDerivedFrom, prov:wasAttributedTo)"
+
+# 完整性断言(由 CI Gate 自动校验)
+ci_compliance:
+  required_attributes_per_entity:
+    - "uri"
+    - "prefLabel"
+    - "definition"
+    - "provenance.authority_ref"
+    - "provenance.confidence_tier"
+  forbidden_confidence_tiers: ["UNVERIFIED", "LLM_GENERATED_NO_SOURCE"]
+  uniqueness_rules:
+    - "uri must be globally unique"
+    - "prefLabel must be unique within entity category"
+
+# 编译器与基线门禁由 skill/scripts/fmcg_knowledge_engine.py 实施

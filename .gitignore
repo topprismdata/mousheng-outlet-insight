@@ -1,0 +1,85 @@
+# ==============================================================================
+# .gitignore — 谋圣·售点洞察 (mousheng-outlet-insight)
+# 精细化策略: 仅忽略大型数据文件 / 缓存 / 运行环境产物
+# ==============================================================================
+
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+.tox/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+
+# ---- 虚拟环境 ----
+.venv/
+venv/
+env/
+ENV/
+
+# ---- macOS / IDE ----
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---- 数据与缓存 (大文件, 远程获取, 见 README "数据获取" 章节) ----
+# 底表与缓存 (SH全量售点洞察 584MB CSV / 122MB parquet)
+data/*.csv
+data/*.parquet
+data/*.sqlite
+data/*.sqlite3
+data/*.dm.sqlite
+data/*.profile.json
+data/*.profile.lock
+data/*.parquet.lock
+
+# 业务导出样例 (89 份散落 CSV)
+data/exports_*/
+!data/exports_*/.gitkeep
+data/sh_dm.sqlite
+
+# 输出报告与运行产物
+output/reports/
+output/rep-*.html
+output/*.html
+output/*.csv
+output/*.json
+output/*.md
+output/sh_query_tests/
+output/adhoc/
+output/blind_test/
+output/extraction_pattern/
+
+# RAG 向量与黄金查询记忆 (含 embedding 二进制)
+references/query_memory_emb.npz
+references/query_memory.jsonl
+
+# 智能多维研报运行时缓存
+demo/server/report_storage/
+demo/server/.cache/
+demo/.cache/
+
+# ---- 临时与测试产物 ----
+/tmp/
+*.log
+*.tmp
+*.bak
+*.pid
+
+# ---- 可选: 本地密钥与配置 (绝对不推) ----
+.env
+.env.local
+config.local.yaml
+*.secret
+
+# ---- 保留: docs/ 与 skill/ 与 scripts/ 下源码、配置、契约示例 ----
+# (这些默认提交, 无需在此忽略)

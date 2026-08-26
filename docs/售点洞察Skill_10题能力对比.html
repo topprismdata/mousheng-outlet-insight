@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>售点洞察 Skill · 10 题能力对比（vs 直接用大模型）</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2024; --mut:#5f6b76; --line:#e5e8ec;
+    --red:#a32d2d; --redbg:#fcebeb; --grn:#0f6e56; --grnbg:#e1f5ee;
+    --blu:#185fa5; --blubg:#e6f1fb; --amb:#854f0b; --ambbg:#faeeda; --code:#f1efe8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
+    line-height:1.65;font-size:14px}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px}
+  h1{font-size:23px;font-weight:600;margin:0 0 6px}
+  .sub{color:var(--mut);font-size:13px;margin-bottom:22px}
+  .lead{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:24px}
+  .lead b{color:var(--grn)}
+  .fix{background:var(--ambbg);border:1px solid #ecd9b0;border-radius:10px;padding:14px 16px;margin-bottom:24px;font-size:13px}
+  .fix .tag{display:inline-block;background:var(--amb);color:#fff;border-radius:5px;padding:1px 8px;font-size:12px;margin-right:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px}
+  .qh{display:flex;align-items:flex-start;gap:12px;margin-bottom:4px}
+  .num{flex:none;width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px}
+  .qt{font-size:16px;font-weight:600;margin:2px 0 0}
+  .cap{color:var(--mut);font-size:12.5px;margin:2px 0 14px 42px}
+  .q{background:var(--blubg);border-left:3px solid var(--blu);border-radius:0 8px 8px 0;
+    padding:9px 13px;margin:0 0 14px;font-size:13.5px}
+  .q .lbl{color:var(--blu);font-weight:600;margin-right:6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.grid{grid-template-columns:1fr}}
+  .col{border-radius:10px;padding:13px 15px;font-size:13px}
+  .col.skill{background:var(--grnbg);border:1px solid #b8e2d3}
+  .col.llm{background:var(--redbg);border:1px solid #f2cccc}
+  .col .ct{font-weight:600;margin-bottom:8px;font-size:13px}
+  .col.skill .ct{color:var(--grn)}
+  .col.llm .ct{color:var(--red)}
+  .col ul{margin:0;padding-left:18px}
+  .col li{margin-bottom:5px}
+  code{background:var(--code);border-radius:4px;padding:1px 5px;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12px;color:#3a3a36}
+  .mono{display:block;background:#1c2024;color:#d6dbe0;border-radius:8px;padding:10px 13px;margin:8px 0 0;
+    font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+  .mono .k{color:#8fd0a0}.mono .a{color:#e6b877}.mono .m{color:#7fb0e0}
+  .foot{color:var(--mut);font-size:12.5px;margin-top:26px;text-align:center}
+  .badge{display:inline-block;border-radius:5px;padding:1px 7px;font-size:11.5px;margin-left:6px;vertical-align:middle}
+  .b-new{background:var(--grn);color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>售点洞察 Skill · 10 题能力对比</h1>
+  <div class="sub">全部题目均在真实数据（629,074 行 × 153 列）上实跑，左列为本 Skill 实测输出，右列为"把 Schema 直接丢给大模型"的典型失效点 · 2026-07-24</div>
+
+  <div class="lead">
+    核心区别一句话：本 Skill 把<b>客户业务黑话 + 数据真实形状</b>沉淀成确定性语义层，让任何解析器（含大模型）都只能在护栏内跑——<b>查得准</b>（实体/度量对齐）、<b>错不了</b>（编译期拦截幻觉）、<b>还能给决策建议</b>（派单体检），规模上有<b>逃生舱</b>（DataFusion / DataSketches）。以下 10 题逐条印证。
+  </div>
+
+  <div class="fix">
+    <span class="tag">本次顺带修复</span>做这份对比时实测发现一个真 bug：<code>route_metric</code> 从未接收进程内画像、且业态参数写死为 <code>None</code>，导致"住宿按评分排序"错误路由到餐饮的点评评分列。已修复（画像回退 + 从渠道组推断业态），并通过 <b>34/34</b> 全量回归。第 2、3 题即此能力的实证。
+  </div>
+
+  <!-- Q1 -->
+  <div class="card">
+    <div class="qh"><div class="num">1</div><div class="qt">私有实体 + 区域 + 潜力字段消歧（A 类复合）</div></div>
+    <div class="cap">考察：把内部黑话"美宜佳""潜力"对齐到确定的物理列，并链式过滤 + 排序</div>
+    <div class="q"><span class="lbl">问</span>浦西大区未服务的美宜佳，按月均收入潜力预测从高到低取前 10</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>"美宜佳" → <code>连锁品牌名称 contains 美宜佳</code>（实体字典确定性展开）</li>
+          <li>"潜力" → <code>月均收入潜力预测(无协议无冰柜)</code>（3 个潜力列里选对口径）</li>
+          <li>链式：浦西 138,745 → 美宜佳 346 → <b>命中 37 行</b>，输出 TOP10</li>
+        </ul>
+        <span class="mono"><span class="k">filters</span>: 规划大区=浦西大区, 服务状态=未服务,
+        连锁品牌名称 contains 美宜佳
+<span class="k">order_by</span>: 月均收入潜力预测(无协议无冰柜) desc</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>"美宜佳"在 Schema 里没有——不知它是 <code>连锁品牌名称</code> 的一个值，容易漏查或去猜别的列</li>
+          <li>"潜力"对应 3 个几乎同名的列（如有协议/如有冰柜/无协议无冰柜），大模型无从判断口径，选错则结果全变</li>
+          <li>无法保证过滤链顺序与 155 个列名逐字正确</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card">
+    <div class="qh"><div class="num">2</div><div class="qt">模糊度量"评分"按业态路由 · 住宿<span class="badge b-new">本次修复</span></div></div>
+    <div class="cap">考察：同一个"评分"，在住宿业态下必须指向携程综合评分</div>
+    <div class="q"><span class="lbl">问</span>住宿客户按评分从高到低排序取前 10</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>"评分" 按业态覆盖率路由 → <code>携程-综合评分</code></li>
+          <li>体检自动切到住宿维度：审计<b>房间数 / 携程星级</b>，不误报点评</li>
+        </ul>
+        <span class="mono"><span class="k">order_by</span>: [携程-综合评分 desc]</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>数据里并存"携程-综合评分""大众点评餐饮点评评分星级"等多个评分列</li>
+          <li>大模型极易把住宿的"评分"错套成餐饮点评列（正是本次修复前的表现）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card">
+    <div class="qh"><div class="num">3</div><div class="qt">模糊度量"评分"按业态路由 · 餐饮（与第 2 题对照）</div></div>
+    <div class="cap">考察：同样一句话换业态，路由到不同物理列——这是语义层的价值点</div>
+    <div class="q"><span class="lbl">问</span>餐饮客户按评分从高到低排序取前 10</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>"评分" → <code>大众点评餐饮点评评分星级</code>（与住宿题指向不同列）</li>
+          <li>体检切到餐饮维度：审计<b>点评评分 / 客流 / 开业年限</b></li>
+        </ul>
+        <span class="mono"><span class="k">order_by</span>: [大众点评餐饮点评评分星级 desc]</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>不具备"业态→字段"的动态映射，只能靠猜或每次让人明确指定列名</li>
+          <li>同一 prompt 换个业态就要重新纠正，无法沉淀为稳定能力</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="card">
+    <div class="qh"><div class="num">4</div><div class="qt">业务度量口径确定性展开（measure）</div></div>
+    <div class="cap">考察：模糊阈值词"高评分"应展开为受管口径，而非模型猜阈值</div>
+    <div class="q"><span class="lbl">问</span>餐饮高评分的客户清单取前 10</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>"餐饮高评分" 命中语义层度量 → <code>大众点评餐饮点评评分星级 >= 3.8</code></li>
+          <li>命中 <b>131,457 行</b>；阈值由业务定义写死，人人一致</li>
+        </ul>
+        <span class="mono"><span class="k">filters</span>: [大众点评餐饮点评评分星级 &gt;= 3.8]</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>"高评分"到底是 ≥4.0 还是 ≥4.5？大模型每次可能给不同阈值，结果不可复现</li>
+          <li>业务口径无处沉淀，换个人问就是另一套标准</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="card">
+    <div class="qh"><div class="num">5</div><div class="qt">自定义多规则排行 + 派单体检（C 类）</div></div>
+    <div class="cap">考察：把一段复杂业务规则编译成"基数 + 排序 + 达标占比"的可执行打分，并给决策建议</div>
+    <div class="q"><span class="lbl">问</span>商场里餐饮客户不低于 20 家为达标，周末客流从高到低排序，点评评分 3.8 分以上占比 50% 以上为高，开业 3 年以上占比 50% 以上为高</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>自动识别为 C 类，候选维度 <code>经营场所名称</code>，编译出 3 条规则：</li>
+          <li>① 餐饮基数 ≥20（count）② 评分3.8占比≥50%（ratio）③ 开业3年占比≥50%（ratio）</li>
+          <li>输出候选打分 + 高/中/低等级 + <b>「数据完整度%」列</b></li>
+          <li>体检结论："全部候选数据完整度达标，可优先派单"</li>
+        </ul>
+        <span class="mono">经营场所名称,餐饮基数,评分高占比,开业年限达标占比,达标率,等级,完整度%
+润通欧尚中心城, 27, 0.52, 0.52, 1.0, <span class="k">高</span>, 98.3
+港城新天地一期, 21, 0.76, 0.57, 1.0, <span class="k">高</span>, 95.4</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>这类"分组算达标占比再打分"逻辑，大模型直接生成代码极易在分母/空值/口径上出错，且无从校验</li>
+          <li>更没有"能不能派单"的数据完整度体检——查完不知道结果可不可信</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="card">
+    <div class="qh"><div class="num">6</div><div class="qt">分布探索 + 幻觉短语防护（B 类）</div></div>
+    <div class="cap">考察："各个大区"是分组意图，不能被误当成某个大区的过滤值</div>
+    <div class="q"><span class="lbl">问</span>各个大区的餐饮客户分布</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>正确识别为 B 类：<code>渠道组=餐饮</code> + <code>group_by 规划大区</code></li>
+          <li>输出 <b>7 个大区</b>的客户数分布（曾修复过"各个大区"被贪婪正则误当过滤值的 bug）</li>
+        </ul>
+        <span class="mono"><span class="k">group_by</span>: [规划大区]  <span class="k">metrics</span>: count → 7 个分组</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>易把"各个大区"当字面值去 <code>规划大区 = '各个大区'</code>，返回 0 行还看不出错</li>
+          <li>意图（分组 vs 过滤）判断不稳定，措辞稍变就翻车</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="card">
+    <div class="qh"><div class="num">7</div><div class="qt">编译期护栏：拦截幻觉字段与非法算子（负向）</div></div>
+    <div class="cap">考察：宁可在编译期明确报错，也绝不在运行期静默产出错误数据</div>
+    <div class="q"><span class="lbl">问</span>（模拟解析器/大模型吐出的非法 DSL）按"老板年龄">40 筛选 · 对类别字段"渠道组"用 > 算子</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>幻觉字段：<code>老板年龄</code> 不在语义层 → <b>编译期拒绝</b></li>
+          <li>类型不兼容：类别字段 <code>渠道组</code> 不支持 <code>&gt;</code> → 拒绝并列出允许算子</li>
+          <li>合法查询照常通过（对照组 ok=True）</li>
+        </ul>
+        <span class="mono">✗ 字段「老板年龄」不在语义层（疑似幻觉，编译期拒绝）
+✗ 字段「渠道组」(category) 不支持算子 &gt;</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>生成不存在的列名照样能跑出"看似合理"的结果，错误静默发生、难以察觉</li>
+          <li>类别字段用数值比较通常返回空集，被误读为"没有符合条件的客户"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="card">
+    <div class="qh"><div class="num">8</div><div class="qt">多步会话 · 工作集在追问间收缩</div></div>
+    <div class="cap">考察：连续追问时状态化传递结果集，而不是每次从全量重查</div>
+    <div class="q"><span class="lbl">问</span>① 美宜佳清单 → ② 这些里浦西大区的 → ③ 看它们的经营场所分布</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>① 美宜佳 → 工作集 <b>346 行</b></li>
+          <li>② "这些里" 自动 scope=current，在 346 上再筛 → <b>37 行</b></li>
+          <li>③ "它们的" 在 37 行上聚合 → 20 个经营场所分组（工作集不变）</li>
+        </ul>
+        <span class="mono">346 →(这些里浦西)→ 37 →(它们的分布)→ 20 组</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>无持久工作集，"这些/它们"指代靠拼历史文本，长对话极易丢失或指错上下文</li>
+          <li>每轮都得把前一步条件重述，否则回到全量算错</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="card">
+    <div class="qh"><div class="num">9</div><div class="qt">可选 DataFusion 计算后端 · 与 pandas 逐值等价</div></div>
+    <div class="cap">考察：同一语义查询可切换到向量化 SQL 引擎，结果不变——为超内存/高并发留逃生舱</div>
+    <div class="q"><span class="lbl">问</span>各个大区的餐饮客户分布（分别用 <code>--engine pandas</code> 与 <code>--engine datafusion</code>）</div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>pandas → 7 组；DataFusion → 7 组，<b>结果一致</b></li>
+          <li>DataFusion 自动把 DSL 编译成 SQL（下方），护栏两条路径共用</li>
+          <li>翻译不了的算子/C 类自动回退 pandas，默认仍是 pandas 零回归</li>
+        </ul>
+        <span class="mono"><span class="k">SELECT</span> "规划大区", <span class="m">COUNT(*)</span> <span class="k">AS</span> "客户数"
+<span class="k">FROM</span> sh <span class="k">WHERE</span> "渠道组" = '餐饮'
+<span class="k">GROUP BY</span> "规划大区" <span class="k">ORDER BY</span> "客户数" <span class="k">DESC</span></span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>换引擎意味着换一套代码，难保证与原逻辑逐值一致</li>
+          <li>数据超内存时直接 pandas 全量 load 会 OOM，没有平滑的规模退路</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="card">
+    <div class="qh"><div class="num">10</div><div class="qt">DataSketches 近似画像 · 单遍流式估分位数</div></div>
+    <div class="cap">考察：超大数据首扫时用流式 sketch 近似统计，精度足够、成本大降</div>
+    <div class="q"><span class="lbl">问</span>字段"周末均值客流(人)"的画像：精确 vs <code>--approx</code></div>
+    <div class="grid">
+      <div class="col skill">
+        <div class="ct">✓ 本 Skill 实测</div>
+        <ul>
+          <li>中位数：精确 <b>4740</b> vs 近似 <b>4755</b>（误差 0.3%）</li>
+          <li>中心分位 p25：2128 vs 2141 · p75：10272 vs 10290（&lt;1%，KLL 设计对中心准）</li>
+          <li>低尾 p1：精确 <b>159</b> vs 近似 <b>198</b>（误差约 24%，KLL 对极端尾部误差偏大，属预期）</li>
+          <li>近似模式不读写精确缓存，两者严格隔离；sketch 数值因内部随机略有浮动（每次 ±&lt;1%）</li>
+        </ul>
+        <span class="mono">精确  median=4740  p1=159  p25=2128  p75=10272
+近似  median=4755  p1=198  p25=2141  p75=10290  (KLL)</span>
+      </div>
+      <div class="col llm">
+        <div class="ct">✗ 直接问大模型</div>
+        <ul>
+          <li>大模型不做实际计算，"分位数"只能靠生成代码全量算，超大数据慢且耗内存</li>
+          <li>没有"用可控误差换速度"的流式近似能力</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    全部 10 题基于 SH 全量售点洞察真实数据实跑 · 本 Skill 现有 6 块进阶能力，34/34 回归测试通过<br>
+    路由 bug 修复：<code>profiler.route_metric</code> + <code>nl_parser</code>（业态推断）· 2026-07-24
+  </div>
+</div>
+</body>
+</html>

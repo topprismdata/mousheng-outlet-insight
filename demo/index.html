@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>谋圣 · 售点洞察 | Mousheng Outlet Insight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+  <style>
+    :root {
+      --ink: #17201d;
+      --muted: #62706a;
+      --paper: #f6f6f2;
+      --card: #ffffff;
+      --line: #d8dcd6;
+      --line-dark: #303d37;
+      --dark: #141b18;
+      --dark-surface: #1d2622;
+      --red: #ad3324;
+      --red-soft: #faebe8;
+      --green: #235c4b;
+      --green-soft: #e2ede8;
+      --amber: #a3651b;
+      --amber-soft: #faefdc;
+      --blue: #28557a;
+      --blue-soft: #e5edf5;
+      --sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      --serif: "Noto Serif SC", "Songti SC", serif;
+      --mono: "JetBrains Mono", Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background: var(--dark);
+      color: var(--ink);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; color: inherit; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
+
+    /* App Shell */
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 54px minmax(0, 1fr);
+      background: var(--paper);
+    }
+
+    /* Top Bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: var(--dark);
+      color: #f0f3ee;
+      border-bottom: 1px solid var(--line-dark);
+      z-index: 30;
+    }
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .seal-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--red);
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 2px 6px rgba(173,51,36,.4);
+    }
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-title strong {
+      font-family: var(--serif);
+      font-size: 15px;
+      letter-spacing: .05em;
+      color: #ffffff;
+    }
+    .brand-title small {
+      font-size: 8.5px;
+      color: #8c9c94;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .scope-badge {
+      font-size: 10px;
+      background: var(--dark-surface);
+      border: 1px solid #3b4c44;
+      color: #b5c4bc;
+      padding: 4px 9px;
+      border-radius: 4px;
+      font-family: var(--mono);
+    }
+    .btn-reset {
+      background: transparent;
+      border: 1px solid #4a5c53;
+      color: #c4d4cc;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-reset:hover {
+      background: #25332c;
+      color: #fff;
+      border-color: #6a8276;
+    }
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: #a4b5ad;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #e8a838;
+      animation: pulse 1.6s infinite;
+    }
+    .live-status.ready .status-dot {
+      background: #38bdf8;
+      animation: none;
+    }
+
+    /* 3-Column Layout (Collapsible Left Rail) */
+    .workspace-shell {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 280px minmax(460px, 1fr) 370px;
+      position: relative;
+      transition: grid-template-columns .25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .workspace-shell.rail-collapsed {
+      grid-template-columns: 0px minmax(460px, 1fr) 370px;
+    }
+    .rail-left {
+      background: var(--dark);
+      color: #e2e8e4;
+      border-right: 1px solid var(--line-dark);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      gap: 16px;
+      transition: padding .2s ease, opacity .15s ease;
+      white-space: normal;
+    }
+    .workspace-shell.rail-collapsed .rail-left {
+      padding: 0;
+      border-right: 0;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .btn-toggle-rail {
+      background: var(--dark-surface);
+      border: 1px solid #3b4c44;
+      color: #b8c8c0;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .2s;
+    }
+    .btn-toggle-rail:hover {
+      background: #25332c;
+      color: #fff;
+      border-color: #6a8276;
+    }
+    .btn-toggle-rail.active {
+      background: #24352d;
+      color: #7ee2b3;
+      border-color: #3b6b55;
+    }
+    .rail-section-tag {
+      font-family: var(--mono);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: #798a82;
+      margin-bottom: 8px;
+    }
+    .card-objective {
+      background: var(--dark-surface);
+      border: 1px solid var(--line-dark);
+      padding: 12px 14px;
+      border-radius: 6px;
+    }
+    .card-objective h2 {
+      font-family: var(--serif);
+      font-size: 15px;
+      line-height: 1.45;
+      margin: 0 0 6px;
+      color: #f4f7f4;
+      font-weight: 600;
+    }
+    .card-objective p {
+      font-size: 11px;
+      color: #9cb0a6;
+      margin: 0;
+      line-height: 1.55;
+    }
+    .workset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #27362f;
+      border: 1px solid #3c4f45;
+      color: #7be0ad;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-family: var(--mono);
+    }
+    .trace-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .trace-step {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 8px;
+      position: relative;
+    }
+    .trace-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 20px;
+      bottom: -6px;
+      width: 1px;
+      background: #314239;
+    }
+    .trace-icon {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #283730;
+      border: 1px solid #43594e;
+      display: grid;
+      place-items: center;
+      font-size: 9px;
+      color: #8fa69a;
+      z-index: 2;
+    }
+    .trace-step.done .trace-icon {
+      background: var(--green);
+      border-color: #3ca382;
+      color: #fff;
+    }
+    .trace-step.blocked .trace-icon {
+      background: var(--red);
+      border-color: #d15647;
+      color: #fff;
+    }
+    .trace-body strong {
+      font-size: 11.5px;
+      color: #e5eee8;
+      display: block;
+    }
+    .trace-body p {
+      font-size: 10px;
+      color: #8c9e94;
+      margin: 2px 0 0;
+      line-height: 1.45;
+    }
+    .rail-boundary-notice {
+      margin-top: auto;
+      background: #19211d;
+      border: 1px dashed #3f5247;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 10px;
+      color: #899c92;
+      line-height: 1.5;
+    }
+    .rail-boundary-notice strong {
+      color: #cdd9d2;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Center Stage: Map & Exploration */
+    .stage-center {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      background: #e7ece7;
+      overflow: hidden;
+    }
+    .map-canvas {
+      position: absolute;
+      inset: 0;
+    }
+    .map-head-overlay {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .map-title-card {
+      background: rgba(247,247,243,.92);
+      border: 1px solid rgba(198,206,198,.9);
+      padding: 8px 12px;
+      border-radius: 6px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 14px rgba(23,32,29,.06);
+      pointer-events: auto;
+    }
+    .map-title-card strong {
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--ink);
+      display: block;
+    }
+    .map-title-card span {
+      font-size: 9.5px;
+      color: var(--muted);
+    }
+    .map-kpi-bar {
+      position: absolute;
+      top: 68px;
+      left: 16px;
+      display: flex;
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 16px rgba(23,32,29,.05);
+      z-index: 10;
+    }
+    .kpi-cell {
+      padding: 7px 14px;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+    }
+    .kpi-cell:last-child { border-right: 0; }
+    .kpi-cell span {
+      font-size: 8.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+    .kpi-cell strong {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Floating Composer */
+    .composer-shell {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      width: min(780px, calc(100% - 32px));
+      background: var(--card);
+      border: 1px solid #b8c4bc;
+      border-radius: 8px;
+      box-shadow: 0 16px 40px rgba(18,28,24,.18);
+      z-index: 20;
+      overflow: hidden;
+    }
+    .composer-input-row {
+      display: flex;
+      align-items: center;
+      padding: 6px 10px;
+      gap: 8px;
+    }
+    .composer-categories-shell {
+      background: #f8faf8;
+      border-top: 1px solid #eaeeea;
+      max-height: 168px;
+      overflow-y: auto;
+      padding: 6px 10px 8px;
+    }
+    .composer-category-tag {
+      font-size: 9px;
+      font-family: var(--mono);
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin: 4px 0 4px 2px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .pill-example .pill-desc {
+      display: block;
+      font-size: 8.5px;
+      color: var(--muted);
+      margin-top: 1px;
+      max-width: 210px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .pill-example:hover .pill-desc {
+      color: var(--green);
+      opacity: .8;
+    }
+    .pill-example:hover {
+      background: var(--green-soft);
+      border-color: #8db5a2;
+      color: var(--green);
+    }
+
+    /* Right Rail: Insight & Proposes Next */
+    .rail-right {
+      background: var(--paper);
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 16px;
+      gap: 14px;
+    }
+    .insight-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(23,32,29,.03);
+    }
+    .insight-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .insight-card-header strong {
+      font-family: var(--serif);
+      font-size: 13.5px;
+      color: var(--ink);
+    }
+    .confidence-badge {
+      font-size: 8.5px;
+      font-family: var(--mono);
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      border: 1px solid #94b8a5;
+      color: var(--green);
+      background: var(--green-soft);
+    }
+    .confidence-badge.medium {
+      border-color: #d6b88b;
+      color: var(--amber);
+      background: var(--amber-soft);
+    }
+    .confidence-badge.low {
+      border-color: #e09f94;
+      color: var(--red);
+      background: var(--red-soft);
+    }
+    .summary-text {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #2c3833;
+      margin: 0 0 8px;
+    }
+    .verdict-tag {
+      font-size: 11px;
+      background: #eef3ee;
+      border-left: 3px solid var(--green);
+      padding: 6px 9px;
+      color: #27473a;
+      border-radius: 0 4px 4px 0;
+      line-height: 1.45;
+    }
+
+    /* Quota Badge */
+    .quota-box {
+      background: #fbf8f2;
+      border: 1px solid #e2d3be;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    .quota-box strong {
+      font-size: 11px;
+      color: #8c5311;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .quota-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      font-size: 10px;
+      color: #4f4639;
+    }
+
+    /* Concentration Bar */
+    .concentration-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f2f6f3;
+      border: 1px solid #c8d8ce;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      margin-top: 8px;
+      font-family: var(--mono);
+    }
+
+    /* Followups List */
+    .followup-btn {
+      width: 100%;
+      text-align: left;
+      background: #f7faf7;
+      border: 1px solid #d4ded7;
+      padding: 8px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 6px;
+      transition: all .15s;
+    }
+    .followup-btn:hover {
+      background: #eaf3ed;
+      border-color: #92bfa6;
+    }
+    .followup-btn strong {
+      font-size: 11px;
+      color: #1f362b;
+      display: block;
+    }
+    .followup-btn span {
+      font-size: 9.5px;
+      color: #728c7f;
+    }
+
+    /* Table Drawer */
+    .table-drawer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -8px 30px rgba(23,32,29,.16);
+      transition: height .25s cubic-bezier(0.16, 1, 0.3, 1), opacity .2s;
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .table-drawer.open {
+      height: 320px;
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .stage-center.drawer-active .composer-shell {
+      bottom: 332px;
+    }
+    .btn-toggle-drawer {
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(23,32,29,.06);
+      transition: all .15s;
+      pointer-events: auto;
+    }
+    .btn-toggle-drawer:hover {
+      background: #ffffff;
+      border-color: #8fa69a;
+      color: var(--green);
+    }
+    .drawer-header {
+      height: 38px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8faf8;
+      border-bottom: 1px solid var(--line);
+    }
+    .drawer-header strong {
+      font-size: 11.5px;
+      color: var(--ink);
+    }
+    .drawer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-action-sm {
+      background: #fff;
+      border: 1px solid #c8d2cc;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .table-scroll-area {
+      flex: 1;
+      overflow: auto;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+    .data-table th {
+      position: sticky;
+      top: 0;
+      background: #edf2ee;
+      padding: 6px 10px;
+      text-align: left;
+      color: #55665e;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #eef1ed;
+      white-space: nowrap;
+      color: #27362f;
+    }
+    .data-table tr:hover td {
+      background: #f2f7f3;
+      cursor: pointer;
+    }
+
+    /* Modal Dialogs */
+    dialog {
+      width: min(840px, calc(100% - 30px));
+      max-height: 82vh;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 0;
+      box-shadow: 0 20px 60px rgba(10,18,14,.35);
+    }
+    dialog::backdrop {
+      background: rgba(15,22,19,.75);
+      backdrop-filter: blur(3px);
+    }
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--dark);
+      color: #fff;
+    }
+    .dialog-body {
+      padding: 16px;
+      overflow-y: auto;
+      max-height: calc(82vh - 54px);
+    }
+    pre.json-view {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: #111714;
+      color: #8be9fd;
+      padding: 14px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    /* Detail Grid */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .profile-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+    .profile-item span {
+      font-size: 8.5px;
+      color: var(--muted);
+      display: block;
+    }
+    .profile-item strong {
+      font-size: 11px;
+      color: var(--ink);
+    }
+
+    /* Loading Screen */
+    .loading-curtain {
+      position: absolute;
+      inset: 0;
+      background: rgba(18,25,22,.92);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      z-index: 100;
+      text-align: center;
+      transition: opacity .3s;
+    }
+    .loading-curtain.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #3d4f45;
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 50% { opacity: .4; transform: scale(.85); } }
+
+    @media (max-width: 1120px) {
+      .workspace-shell {
+        grid-template-columns: 240px minmax(360px, 1fr) 320px;
+      }
+      .table-drawer { left: 240px; right: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="brand-cluster">
+        <div class="seal-mark">谋</div>
+        <div class="brand-title">
+          <strong>谋圣 · 售点洞察</strong>
+          <small>MOUSHENG OUTLET INSIGHT · DOUBLE-PRISM</small>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-toggle-rail" id="btnToggleRail" title="折叠/展开左侧执行轨迹">
+          <span id="railToggleIcon">◨</span> <span id="railToggleText">展开执行轨迹</span>
+        </button>
+        <button class="btn-action-sm" id="btnOpenReportDialog" style="background:#ad3324;color:#fff;border-color:#ad3324;padding:4px 10px;font-size:11px;border-radius:4px;" title="智能多维研报生成器">
+          📑 智能生成深度研报
+        </button>
+        <span class="scope-badge" id="topbarScope">华东全集 629,074 售点 · 上海 236,407 售点</span>
+        <button class="btn-reset" id="btnResetSession" title="清空会话过滤器，回到全量底表">恢复全量工作集</button>
+        <div class="live-status" id="liveStatus">
+          <span class="status-dot"></span>
+          <span id="statusMessage">连接数据底座中...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3-Column Workspace -->
+    <main class="workspace-shell rail-collapsed" id="workspaceShell">
+      <!-- Left Rail: Trace & Objective -->
+      <aside class="rail-left">
+        <div>
+          <div class="rail-section-tag">CURRENT OBJECTIVE</div>
+          <div class="card-objective">
+            <h2 id="objectiveTitle">全景认识上海售点空间分布</h2>
+            <p id="objectiveDesc">已加载 629,074 行真实潜客数据。点击区县地图或输入业务问题开始探索。</p>
+            <div class="workset-chip" id="worksetChip">
+              <span>●</span> <span id="worksetText">工作集: 上海市 (236,407 售点)</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="rail-section-tag">AGENT EXECUTION TRACE</div>
+          <div class="trace-list" id="traceList">
+            <div class="trace-step done">
+              <div class="trace-icon">✓</div>
+              <div class="trace-body">
+                <strong>连接物理数据与受管本体</strong>
+                <p>完成 153 列数据映射与 Profile 契约校验</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rail-boundary-notice">
+          <strong>独立认识组件边界</strong>
+          只负责看懂并说清楚（提取事实、结构、差异、异常与限制）；不派单、不排程、不修改业务世界状态。
+        </div>
+      </aside>
+
+      <!-- Center Stage: Map & Query Composer -->
+      <section class="stage-center">
+        <div class="map-canvas" id="mapContainer"></div>
+
+        <!-- Map Header Overlay -->
+        <div class="map-head-overlay">
+          <div class="map-title-card">
+            <strong id="mapDistrictTitle">上海市 · 16区县空间聚合</strong>
+            <span id="mapDistrictSub">颜色深浅代表当前 Agent 工作集在各区县的售点聚集密度（点击区县直接下钻）</span>
+          </div>
+          <button class="btn-toggle-drawer" id="btnToggleDrawer" type="button">📋 查看当前清单 (<span id="drawerCountBadge">0</span>)</button>
+        </div>
+
+        <!-- KPI Overlays -->
+        <div class="map-kpi-bar">
+          <div class="kpi-cell">
+            <span>当前工作集</span>
+            <strong id="kpiTotal">—</strong>
+          </div>
+          <div class="kpi-cell">
+            <span>覆盖区县</span>
+            <strong id="kpiDistricts">16</strong>
+          </div>
+          <div class="kpi-cell">
+            <span>返回清单</span>
+            <strong id="kpiRows">—</strong>
+          </div>
+          <div class="kpi-cell">
+            <span>分析耗时</span>
+            <strong id="kpiTime">—</strong>
+          </div>
+        </div>
+        <!-- Floating Query Composer -->
+        <div class="composer-shell">
+          <form class="composer-input-row" id="queryForm">
+            <div class="agent-avatar">问</div>
+            <input type="text" class="query-text-input" id="queryInput" placeholder="输入业务探索问题（如：浦西大区的美宜佳、选100家优质餐饮、餐饮街夜宵门店...）" autocomplete="off" />
+            <button type="submit" class="btn-ask" id="btnAsk">让 Agent 探索</button>
+          </form>
+          <div class="composer-categories-shell" id="exampleCategoriesShell">
+            <!-- 动态注入分类与基准场景 -->
+          </div>
+        </div>
+
+        <!-- Table Drawer -->
+        <div class="table-drawer" id="tableDrawer">
+          <div class="drawer-header">
+            <div>
+              <strong>当前工作集真实售点清单</strong>
+              <span style="font-size:10px;color:#6b7c74;margin-left:8px;" id="tableSubMeta"></span>
+            </div>
+            <div class="drawer-actions">
+              <button class="btn-action-sm" id="btnExportCsv">导出当前 CSV</button>
+              <button class="btn-action-sm" id="btnCloseDrawer">收起清单 ✕</button>
+            </div>
+          </div>
+          <div class="table-scroll-area">
+            <table class="data-table">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Rail: Insight & Next Proposes -->
+      <aside class="rail-right">
+        <!-- Main Insight Card -->
+        <div class="insight-card">
+          <div class="insight-card-header">
+            <strong>Agent 的当前认识</strong>
+            <span class="confidence-badge" id="confidenceBadge">HIGH</span>
+          </div>
+          <p class="summary-text" id="insightSummary">正在准备全景认识...</p>
+          <div class="verdict-tag" id="insightVerdict">定性判断准备中</div>
+
+          <!-- Quota Box -->
+          <div class="quota-box" id="quotaBox" style="display:none;">
+            <strong>🎯 目标配额达成与门槛截断评估</strong>
+            <div class="quota-metrics" id="quotaMetrics"></div>
+          </div>
+
+          <!-- Concentration Box -->
+          <div class="concentration-box" id="concentrationBox" style="display:none;">
+            <span>市场集中度:</span>
+            <strong id="hhiMetric">HHI: — | CR4: —</strong>
+          </div>
+        </div>
+
+        <!-- Quality & Limitations Card -->
+        <div class="insight-card">
+          <div class="rail-section-tag" style="margin-bottom:4px;">QUALITY & LIMITATIONS</div>
+          <p style="font-size:11px;color:#55665e;margin:0;line-height:1.55;" id="limitsText">
+            当前物理数据无经纬度，地图表达行政区真实聚合，不伪造精确点位。
+          </p>
+        </div>
+
+        <!-- Proposes Next -->
+        <div class="insight-card">
+          <div class="rail-section-tag" style="margin-bottom:8px;">AGENT PROPOSES NEXT</div>
+          <div id="followupsList">
+            <p style="font-size:11px;color:#7a8c83;margin:0;">完成当前探索后生成下一步建议...</p>
+          </div>
+        </div>
+
+        <!-- Contract View Action -->
+        <div style="margin-top:auto;">
+          <button class="btn-action-sm" style="width:100%;padding:8px;font-size:11px;" id="btnViewPackage">
+            查看标准 InsightPackage (11 顶级字段 JSON)
+          </button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Loading Curtain -->
+  <div class="loading-curtain" id="loadingCurtain">
+    <div>
+      <div class="spinner"></div>
+      <strong style="font-family:var(--serif);font-size:17px;">Agent 正在连接真实售点世界</strong>
+      <p style="font-size:11px;color:#9cb2a6;margin:6px 0 0;" id="loadingMessage">正在加载 629,074 行 × 153 列潜客宽表...</p>
+    </div>
+  </div>
+
+  <!-- Outlet Detail Profile Modal -->
+  <dialog id="outletDialog">
+    <div class="dialog-header">
+      <strong id="outletDialogTitle">售点全景档案</strong>
+      <button class="btn-action-sm" id="btnCloseOutletDialog">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="profile-grid" id="outletProfileGrid"></div>
+    </div>
+  </dialog>
+
+  <!-- InsightPackage JSON Dialog -->
+  <dialog id="packageDialog">
+    <div class="dialog-header">
+      <strong>标准 InsightPackage 交付物 (严格契约)</strong>
+      <button class="btn-action-sm" id="btnClosePackageDialog">✕</button>
+    </div>
+    <div class="dialog-body">
+      <pre class="json-view" id="packageJsonText"></pre>
+    </div>
+  </dialog>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let chartInstance = null;
+    let currentDataPayload = null;
+    let lastResultRows = [];
+
+    const formatNum = n => Number(n || 0).toLocaleString('zh-CN');
+    const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    async function fetchApi(url, opts) {
+      const resp = await fetch(url, opts);
+      return resp.json();
+    }
+
+    // 初始化上海区县 GeoJSON 矢量地图
+    async function initMap() {
+      try {
+        const geoJson = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/310000_full.json').then(r => r.json());
+        echarts.registerMap('shanghai', geoJson);
+        chartInstance = echarts.init($('mapContainer'));
+        chartInstance.on('click', e => {
+          if (e.name) exploreDistrict(e.name);
+        });
+        window.addEventListener('resize', () => chartInstance && chartInstance.resize());
+      } catch (err) {
+        console.error('地图底图加载失败:', err);
+      }
+    }
+
+    // 渲染区县分级着色地图
+    function updateMapData(districts = []) {
+      if (!chartInstance) return;
+      const maxVal = Math.max(1, ...districts.map(d => d.value || 0));
+      chartInstance.setOption({
+        animationDurationUpdate: 600,
+        tooltip: {
+          trigger: 'item',
+          formatter: p => `
+            <div style="font-size:12px;font-weight:600;margin-bottom:2px;">${p.name}</div>
+            <div style="font-size:11px;color:#333;">售点数量: <b>${formatNum(p.value || 0)}</b> 家</div>
+            <div style="font-size:9.5px;color:#777;margin-top:2px;">点击让 Agent 下钻该区县清单</div>
+          `
+        },
+        visualMap: {
+          show: false,
+          min: 0,
+          max: maxVal,
+          inRange: { color: ['#e4ebe5', '#8bb49f', '#235c4b'] }
+        },
+        series: [{
+          type: 'map',
+          map: 'shanghai',
+          roam: true,
+          scaleLimit: { min: 0.9, max: 4.5 },
+          layoutCenter: ['50%', '52%'],
+          layoutSize: '95%',
+          itemStyle: {
+            areaColor: '#e0e7e1',
+            borderColor: '#ffffff',
+            borderWidth: 1.2
+          },
+          emphasis: {
+            label: { show: true, color: '#141b18', fontWeight: 600 },
+            itemStyle: { areaColor: '#d69e8e' }
+          },
+          label: { show: true, fontSize: 9.5, color: '#43544c' },
+          data: districts
+        }]
+      });
+    }
+
+    // 渲染追踪步骤
+    function renderTraceSteps(steps = []) {
+      $('traceList').innerHTML = steps.map(s => `
+        <div class="trace-step ${s.status === 'done' ? 'done' : (s.status === 'blocked' ? 'blocked' : '')}">
+          <div class="trace-icon">${s.status === 'blocked' ? '!' : (s.status === 'done' ? '✓' : '···')}</div>
+          <div class="trace-body">
+            <strong>${escapeHtml(s.label)}</strong>
+            <p>${escapeHtml(s.detail)}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 渲染结果表格
+    function renderTable(records = []) {
+      lastResultRows = records;
+      if (!records || records.length === 0) {
+        $('tableHead').innerHTML = '<tr><th>暂无明细记录</th></tr>';
+        $('tableBody').innerHTML = '<tr><td style="text-align:center;color:#999;padding:20px;">当前工作集无返回记录</td></tr>';
+        $('tableSubMeta').textContent = '共 0 条';
+        return;
+      }
+
+      const columns = Object.keys(records[0]);
+      $('tableHead').innerHTML = `<tr>${columns.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr>`;
+      $('tableBody').innerHTML = records.map((row, idx) => `
+        <tr onclick="showOutletDetail(${idx})">
+          ${columns.map(c => `<td>${escapeHtml(row[c])}</td>`).join('')}
+        </tr>
+      `).join('');
+      $('tableSubMeta').textContent = `展示前 ${records.length} 条预览（点击任意行查看 153 列全景档案）`;
+    }
+
+    // 展现单家售点全景档案卡片
+    function showOutletDetail(rowIndex) {
+      const row = lastResultRows[rowIndex];
+      if (!row) return;
+      const title = row['腾讯售点名称'] || row['连锁品牌名称'] || `售点 #${rowIndex+1}`;
+      $('outletDialogTitle').textContent = `售点全景档案: ${title}`;
+      
+      const grid = Object.entries(row).map(([k, v]) => `
+        <div class="profile-item">
+          <span>${escapeHtml(k)}</span>
+          <strong>${escapeHtml(v ?? '—')}</strong>
+        </div>
+      `).join('');
+      $('outletProfileGrid').innerHTML = grid;
+      $('outletDialog').showModal();
+    }
+
+    // 渲染 Agent 认识与洞察
+    function renderInsight(data) {
+      currentDataPayload = data;
+
+      // 1. KPI
+      $('kpiTotal').textContent = formatNum(data.map_total || data.rows || 0);
+      $('kpiRows').textContent = formatNum(data.rows || 0);
+      $('kpiTime').textContent = `${data.time_s || 0.05}s`;
+
+      // 2. 认识结论
+      $('objectiveTitle').textContent = data.question || '空间探索';
+      $('worksetText').textContent = `工作集: ${data.scope || '全量数据'} (${formatNum(data.rows || data.map_total || 0)} 售点)`;
+      $('insightSummary').textContent = data.summary || data.error || '已完成探索。';
+      $('insightVerdict').textContent = data.verdict || '已提取当前工作集事实';
+
+      // 3. 置信度
+      const conf = (data.confidence || 'high').toLowerCase();
+      $('confidenceBadge').textContent = conf.toUpperCase();
+      $('confidenceBadge').className = `confidence-badge ${conf}`;
+
+      // 4. 配额与截断分析
+      const qe = data.quota_evaluation;
+      if (qe && qe.target_quota) {
+        $('quotaBox').style.display = 'block';
+        const thresholds = Object.entries(qe.cutoff_thresholds || {}).map(([k, v]) => `<div>${k}: <b>${v}</b></div>`).join('');
+        $('quotaMetrics').innerHTML = `
+          <div>目标容量: <b>${qe.target_quota} 家</b></div>
+          <div>达成状态: <b style="color:${qe.fulfillment_status==='fulfilled'?'#235c4b':'#ad3324'};">${qe.fulfillment_status==='fulfilled'?'100% 达成':'存在缺口 '+qe.gap_count+' 家'}</b></div>
+          <div>全量池: <b>${formatNum(qe.pool_size)} 家</b></div>
+          <div>截断底线: <b>第 ${qe.selected_size} 名</b></div>
+          <div style="grid-column:span 2;margin-top:2px;">${thresholds}</div>
+        `;
+      } else {
+        $('quotaBox').style.display = 'none';
+      }
+
+      // 5. 集中度
+      const cm = data.concentration_metrics;
+      if (cm && cm.hhi > 0) {
+        $('concentrationBox').style.display = 'flex';
+        $('hhiMetric').textContent = `HHI: ${cm.hhi} | CR4: ${(cm.cr4*100).toFixed(1)}% | Gini: ${cm.gini}`;
+      } else {
+        $('concentrationBox').style.display = 'none';
+      }
+
+      // 6. 质量限制
+      const limits = [...(data.limitations || []), ...(data.warnings || [])];
+      $('limitsText').textContent = limits.join('；') || '数据完整度良好，无额外限制。';
+
+      // 7. 追问建议
+      if (data.followups && data.followups.length > 0) {
+        $('followupsList').innerHTML = data.followups.map(f => `
+          <button class="followup-btn" onclick="runQuery('${escapeHtml(f.suggested_question)}')">
+            <strong>${escapeHtml(f.suggested_question)}</strong>
+            <span>${escapeHtml(f.analytical_intent || '下一步分析')}</span>
+          </button>
+        `).join('');
+      } else {
+        $('followupsList').innerHTML = '<p style="font-size:11px;color:#7a8c83;margin:0;">探索已就绪。</p>';
+      }
+
+      // 8. 步骤与表格与地图
+      if (data.agent_steps) renderTraceSteps(data.agent_steps);
+      if (data.preview) renderTable(data.preview);
+      if (data.districts) updateMapData(data.districts);
+    }
+
+    // 执行自然语言查询
+    async function runQuery(question) {
+      if (!question || !question.trim()) return;
+      $('queryInput').value = question;
+      $('btnAsk').disabled = true;
+      $('btnAsk').textContent = 'Agent 分析中...';
+
+      renderTraceSteps([
+        { status: 'done', label: '接收探索目标', detail: question },
+        { status: 'active', label: '编译语义计划', detail: '识别空间范围、目标实体、度量与优先级排序' },
+        { status: 'active', label: '查询真实数据', detail: '等待 62.9 万行底表执行与质量校验' }
+      ]);
+
+      try {
+        const res = await fetchApi('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: question.trim() })
+        });
+        renderInsight(res);
+        if (res.ok && res.preview && res.preview.length > 0) openDrawer();
+      } catch (err) {
+        renderInsight({
+          ok: false,
+          question,
+          error: `请求执行失败: ${err.message}`,
+          agent_steps: [{ status: 'blocked', label: '连接失败', detail: err.message }]
+        });
+      } finally {
+        $('btnAsk').disabled = false;
+        $('btnAsk').textContent = '让 Agent 探索';
+      }
+    }
+
+    // 点击地图区县下钻
+    async function exploreDistrict(districtName) {
+      $('btnAsk').disabled = true;
+      $('btnAsk').textContent = '下钻中...';
+      try {
+        const res = await fetchApi(`/api/district?name=${encodeURIComponent(districtName)}`);
+        renderInsight(res);
+        if (res.ok && res.preview && res.preview.length > 0) openDrawer();
+      } catch (err) {
+        console.error('区县下钻失败:', err);
+      } finally {
+        $('btnAsk').disabled = false;
+        $('btnAsk').textContent = '让 Agent 探索';
+      }
+    }
+
+    // 初始化基准问题与数据状态
+    async function init() {
+      await initMap();
+
+      // 注入推荐问题
+      try {
+        const exRes = await fetchApi('/api/examples');
+        const categories = exRes.categories || [];
+        const html = categories.map(cat => `
+          <div class="composer-category-tag">${escapeHtml(cat.theme)}</div>
+          <div class="composer-pills-row">
+            ${cat.queries.map(q => `
+              <button class="pill-example" type="button" onclick="runQuery('${escapeHtml(q.question).replace(/'/g, "&#39;")}')" title="${escapeHtml(q.desc)}">
+                <strong>${escapeHtml(q.question)}</strong>
+                <span class="pill-desc">${escapeHtml(q.desc)}</span>
+              </button>
+            `).join('')}
+          </div>
+        `).join('');
+        $('exampleCategoriesShell').innerHTML = html;
+      } catch (e) {
+        console.warn('基准问题加载失败:', e);
+      }
+      // 轮询服务状态
+      pollServerStatus();
+    }
+
+    async function pollServerStatus() {
+      const statusRes = await fetchApi('/api/status');
+      $('statusMessage').textContent = statusRes.message;
+      if (statusRes.status === 'ready') {
+        $('liveStatus').classList.add('ready');
+        $('loadingCurtain').classList.add('hidden');
+        const overview = await fetchApi('/api/overview');
+        overview.agent_steps = [
+          { status: 'done', label: '连接真实数据', detail: `已接入华东全集 ${formatNum(overview.full_total)} 个售点` },
+          { status: 'done', label: '构建上海空间基底', detail: `上海市包含 ${formatNum(overview.total)} 售点，覆盖 16 个区县` },
+          { status: 'done', label: '就绪承接探索', detail: '等待输入业务提问或在地图上点选区县' }
+        ];
+        renderInsight(overview);
+      } else if (statusRes.status === 'error') {
+        $('loadingMessage').textContent = `数据连接失败: ${statusRes.error}`;
+      } else {
+        setTimeout(pollServerStatus, 800);
+      }
+    }
+
+    // 事件绑定
+    $('queryForm').addEventListener('submit', e => {
+      e.preventDefault();
+      runQuery($('queryInput').value);
+    });
+
+    $('btnToggleRail').addEventListener('click', () => {
+      const isCollapsed = $('workspaceShell').classList.toggle('rail-collapsed');
+      $('btnToggleRail').classList.toggle('active', !isCollapsed);
+      $('railToggleText').textContent = isCollapsed ? '展开执行轨迹' : '收起执行轨迹';
+      $('railToggleIcon').textContent = isCollapsed ? '◨' : '◧';
+      setTimeout(() => chartInstance && chartInstance.resize(), 260);
+    });
+    function openDrawer() {
+      $('tableDrawer').classList.add('open');
+      document.querySelector('.stage-center').classList.add('drawer-active');
+      $('btnToggleDrawer').innerHTML = `✕ 收起清单 (${lastResultRows.length})`;
+    }
+    function closeDrawer() {
+      $('tableDrawer').classList.remove('open');
+      document.querySelector('.stage-center').classList.remove('drawer-active');
+      $('btnToggleDrawer').innerHTML = `📋 查看当前清单 (<span id="drawerCountBadge">${lastResultRows.length}</span>)`;
+    }
+    $('btnToggleDrawer').addEventListener('click', () => {
+      if ($('tableDrawer').classList.contains('open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+    $('btnCloseDrawer').addEventListener('click', closeDrawer);
+    $('btnExportCsv').addEventListener('click', () => {
+      if (!lastResultRows || lastResultRows.length === 0) {
+        alert('当前没有可导出的数据');
+        return;
+      }
+      const headers = Object.keys(lastResultRows[0]);
+      const csvRows = [headers.join(',')];
+      for (const row of lastResultRows) {
+        const values = headers.map(h => `"${String(row[h] ?? '').replace(/"/g, '""')}"`);
+        csvRows.push(values.join(','));
+      }
+      const blob = new Blob(['\ufeff' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `售点洞察_${currentDataPayload ? currentDataPayload.question : 'export'}_${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+    $('btnCloseOutletDialog').addEventListener('click', () => $('outletDialog').close());
+    $('outletDialog').addEventListener('click', e => { if (e.target === $('outletDialog')) $('outletDialog').close(); });
+    $('btnViewPackage').addEventListener('click', () => {
+      if (currentDataPayload && currentDataPayload.package) {
+        $('packageJsonText').textContent = JSON.stringify(currentDataPayload.package, null, 2);
+        $('packageDialog').showModal();
+      } else {
+        alert('当前尚未生成 InsightPackage');
+      }
+    });
+    $('btnClosePackageDialog').addEventListener('click', () => $('packageDialog').close());
+    $('packageDialog').addEventListener('click', e => { if (e.target === $('packageDialog')) $('packageDialog').close(); });
+
+    // 智能研报弹窗与生成事件
+    $('btnOpenReportDialog').onclick = () => $('reportDialog').showModal();
+    $('btnCloseReportDialog').onclick = () => $('reportDialog').close();
+    $('reportDialog').onclick = e => { if (e.target === $('reportDialog')) $('reportDialog').close(); };
+
+    async function quickGenerateReport(goal) {
+      $('reportGenStatus').style.display = 'block';
+      $('reportGenStatus').textContent = `⏳ 正在为「${goal}」规划并执行多维子查询与图表合成...`;
+      try {
+        const res = await fetchApi('/api/generate_report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ goal })
+        });
+        $('reportGenStatus').style.display = 'none';
+        $('reportDialog').close();
+        if (res.view_url) {
+          window.open(res.view_url, '_blank');
+        } else {
+          alert('研报生成完成！');
+        }
+      } catch (err) {
+        $('reportGenStatus').textContent = `生成失败: ${err.message}`;
+      }
+    }
+    $('btnRunCustomReport').onclick = () => {
+      const g = $('customReportInput').value.trim();
+      if (g) quickGenerateReport(g);
+    };
+
+    // 启动初始化
+    init();
+  </script>
+
+  <!-- Executive Report Generator Modal -->
+  <dialog id="reportDialog">
+    <div class="dialog-header">
+      <strong>📑 智能多维分析研报生成器 (Data Storyboarding)</strong>
+      <button class="btn-action-sm" id="btnCloseReportDialog">✕</button>
+    </div>
+    <div class="dialog-body" style="padding:20px;">
+      <p style="font-size:12px;color:#55665e;margin:0 0 14px;line-height:1.5;">
+        Agent 将自动把宏观分析诉求拆解为 3~5 组多维子查询，并发执行、绑定 ECharts 交互图表，并收束生成一份图文并茂的 Executive HTML 分析研报。
+      </p>
+      
+      <strong style="font-size:12px;display:block;margin-bottom:8px;">推荐专题研报模板：</strong>
+      <div style="display:flex;gap:8px;flex-direction:column;margin-bottom:16px;">
+        <button class="followup-btn" type="button" onclick="quickGenerateReport('请生成上海现磨咖啡竞争格局与未服务潜客开发报告')">
+          <strong>☕ 上海现磨咖啡连锁品牌竞争格局与未服务潜客开发报告</strong>
+          <span>4章节 · 大盘业态 + HHI/CR4 集中度 + 瑞幸vs星巴克空间对比 + Top50 潜客圈选</span>
+        </button>
+        <button class="followup-btn" type="button" onclick="quickGenerateReport('华东食杂便利渠道全景与 200 台冰柜投放开发研报')">
+          <strong>🏪 华东食杂便利渠道全景与 200 台冰柜投放开发研报</strong>
+          <span>3章节 · 省域大盘分布 + 便利连锁结构 + 200 家未服务高潜门店截断</span>
+        </button>
+        <button class="followup-btn" type="button" onclick="quickGenerateReport('都市夜间经济活力售点与夜宵街区专项分析研报')">
+          <strong>🌙 都市夜间经济活力售点与夜宵街区专项分析研报</strong>
+          <span>3章节 · 晚10点后营业分布 + 凌晨客流潮汐差 + 标杆餐饮街综合排行</span>
+        </button>
+      </div>
+
+      <strong style="font-size:12px;display:block;margin-bottom:6px;">或输入自定义分析目标：</strong>
+      <div style="display:flex;gap:8px;">
+        <input type="text" class="query-text-input" id="customReportInput" placeholder="输入自定义宏观分析主题..." style="border:1px solid #c8d8ce;border-radius:4px;padding:8px 10px;flex:1;" />
+        <button class="btn-ask" type="button" id="btnRunCustomReport">立即生成研报</button>
+      </div>
+      <div id="reportGenStatus" style="font-size:11px;color:#ad3324;margin-top:10px;display:none;">
+        ⏳ Agent 正在规划并执行多维子查询合成研报，耗时约 1~2 秒...
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

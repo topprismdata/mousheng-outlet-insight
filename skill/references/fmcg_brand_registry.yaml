@@ -1,0 +1,325 @@
+# ==============================================================================
+# fmcg_brand_registry.yaml
+# 顶级连锁品牌标准知识库 - 涵盖华东快消/餐饮/住宿关键连锁品牌
+# 每个品牌均带权威溯源(Wikidata QID, 母公司, 商标注册, 主营品类)
+# ==============================================================================
+
+version: "1.0.0"
+governance:
+  steward: "TopPrism Brand Knowledge Working Group"
+  last_updated: "2026-08-26"
+  profile: "prism://ontology/profiles/outlet-insight"
+
+standards_authorities:
+  - id: "AUTH_WIKIDATA_FMCG"
+    name: "Wikidata - Open FMCG Corporate Graph"
+    standard_name: "Wikidata Public Knowledge Graph for FMCG Corporate Hierarchy & Brand Trademarks"
+    standard_code: "WD-QID"
+    official_uri: "https://www.wikidata.org/wiki/Q20051"
+    confidence_tier: "OPEN_KNOWLEDGE"
+
+  - id: "AUTH_CNIPA"
+    name: "国家知识产权局商标局"
+    standard_name: "中国商标注册证 (中国商标网 / 国家知识产权局商标局)"
+    standard_code: "CN-Trademark-Registration"
+    official_uri: "https://sbj.cnipa.gov.cn/"
+    confidence_tier: "STATUTORY"
+
+  - id: "AUTH_ENTERPRISE_DISCLOSURE"
+    name: "企业公开年报与官网披露"
+    standard_name: "公司年报、官方网站、连锁加盟白皮书"
+    confidence_tier: "ENTERPRISE_PRACTICE"
+
+brands:
+  # ============================================================================
+  # 现代通路 · 连锁便利店 (Modern Trade - CVS)
+  # ============================================================================
+  - uri: "prism:brand/Meiyijia"
+    prefLabel: "美宜佳"
+    definition: "中国本土门店数量最大的连锁便利店品牌,由东莞市糖酒集团美宜佳便利店有限公司运营,广泛分布于全国社区与下沉市场。"
+    altLabels: ["美宜佳便利店", "MYJ", "MeiYiJia"]
+    category: "ConvenienceStore"
+    parent_company: "东莞市糖酒集团美宜佳便利店有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      official_uri: "https://www.meiyijia.com.cn/"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    geographic_reach: "全国 23 省 200+ 城市, 门店数 33,000+"
+    avg_store_revenue_tier: "Bronze"
+
+  - uri: "prism:brand/FamilyMart"
+    prefLabel: "全家便利店"
+    definition: "源自日本的全家便利店(FamilyMart),由顶新国际集团引入中国,在华东、华南与华北主要城市运营,主营鲜食、关东煮与日韩进口快消品。"
+    altLabels: ["FamilyMart", "全家", "Famima"]
+    category: "ConvenienceStore"
+    parent_company: "顶新国际集团 (Ting Hsin International Group)"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q1194746"
+      official_uri: "https://www.wikidata.org/wiki/Q1194746"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    geographic_reach: "华东、华南、华北"
+    avg_store_revenue_tier: "Silver"
+
+  - uri: "prism:brand/Lawson"
+    prefLabel: "罗森"
+    definition: "源自日本 Lawson 株式会社的连锁便利店,在华东(上海/南京/杭州)与华北(北京/大连)拥有高密度门店网络,以日式鲜食盒饭与自有品牌甜品著称。"
+    altLabels: ["Lawson", "罗森便利店", "Lawson CVS"]
+    category: "ConvenienceStore"
+    parent_company: "罗森株式会社 (Lawson, Inc., Japan)"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q1471944"
+      official_uri: "https://www.wikidata.org/wiki/Q1471944"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    avg_store_revenue_tier: "Silver"
+
+  - uri: "prism:brand/SevenEleven"
+    prefLabel: "7-Eleven"
+    definition: "全球最大的连锁便利店,源于美国德州,现由日本 Seven & i Holdings 运营,在中国主要分布于华南(广东)与华北(北京/天津)地区,以24小时营业与鲜食即食为主营。"
+    altLabels: ["7-11", "7-Eleven便利店", "Seven-Eleven"]
+    category: "ConvenienceStore"
+    parent_company: "Seven & i Holdings Co., Ltd. (Japan)"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q259340"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    avg_store_revenue_tier: "Gold"
+
+  # ============================================================================
+  # 现代通路 · 零食折扣量贩店 (Snack Discount Store)
+  # ============================================================================
+  - uri: "prism:brand/LingshiHenhai"
+    prefLabel: "零食很嗨"
+    definition: "由戴永红商贸有限公司创建的零食量贩连锁品牌,起源于湖南,以社区加盟模式迅速扩张,主营品牌直采零食与折扣饮料。"
+    altLabels: ["零食很嗨", "LINX", "LINX MT"]
+    category: "SnackDiscountStore"
+    parent_company: "戴永红商贸有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      official_uri: "https://www.linx-cc.com/"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    geographic_reach: "华东、华中 5,000+ 门店"
+
+  - uri: "prism:brand/Haoxianglai"
+    prefLabel: "好想来"
+    definition: "好想来(浙江)品牌管理有限公司旗下的零食量贩集合店品牌,主打散装零食、饮品折扣与社区高频复购场景,加盟扩张迅速。"
+    altLabels: ["好想来零食", "Haoxianglai Snack"]
+    category: "SnackDiscountStore"
+    parent_company: "好想来(浙江)品牌管理有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    geographic_reach: "全国加盟扩张中"
+
+  - uri: "prism:brand/ZhaoYiming"
+    prefLabel: "赵一鸣零食"
+    definition: "赵一鸣零食品牌管理有限公司旗下的零食量贩连锁品牌,深耕华中与华东下沉市场,以折扣零食+饮料组合为核心品类。"
+    altLabels: ["赵一鸣零食", "ZhaoYiMing Snack"]
+    category: "SnackDiscountStore"
+    parent_company: "赵一鸣零食品牌管理有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  # ============================================================================
+  # 餐饮 · 西式快餐与现制咖啡 (QSR & Cafe/Tea)
+  # ============================================================================
+  - uri: "prism:brand/KFC"
+    prefLabel: "肯德基"
+    definition: "全球最大快餐连锁 Yum! Brands 旗下核心品牌(KFC),1987 年进入中国大陆,以炸鸡、汉堡与可乐套餐为核心品类。"
+    altLabels: ["KFC", "肯爷", "开封菜", "肯德基快餐"]
+    category: "QuickServiceRestaurant"
+    parent_company: "Yum! Brands Inc."
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q524757"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    avg_store_revenue_tier: "Gold"
+
+  - uri: "prism:brand/McDonalds"
+    prefLabel: "麦当劳"
+    definition: "源自美国的全球快餐连锁巨头(McDonald's),由 Golden Arches China 运营中国大陆门店,以巨无霸、麦辣鸡腿堡与开心乐园餐闻名。"
+    altLabels: ["McDonald's", "麦当劳快餐", "M记"]
+    category: "QuickServiceRestaurant"
+    parent_company: "McDonald's Corporation"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q38076"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    avg_store_revenue_tier: "Gold"
+
+  - uri: "prism:brand/Hualishi"
+    prefLabel: "华莱士"
+    definition: "由福建省华莱士食品股份有限公司运营的本土平价汉堡连锁,门店数全国第一,主打 10~15 元平价汉堡套餐,以下沉市场为主。"
+    altLabels: ["华莱士", "Wallace", "Wallace Chinese Burger"]
+    category: "QuickServiceRestaurant"
+    parent_company: "福建省华莱士食品股份有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    geographic_reach: "全国 20,000+ 门店 (中式平价汉堡领导者)"
+
+  - uri: "prism:brand/Starbucks"
+    prefLabel: "星巴克"
+    definition: "源自美国西雅图的全球最大现制咖啡连锁(Starbucks),在中国由星巴克中国运营,以第三空间体验与现磨拿铁/星冰乐为核心。"
+    altLabels: ["Starbucks", "星巴克咖啡", "SBUX"]
+    category: "BeverageAndCafe"
+    parent_company: "Starbucks Corporation"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q37158"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    avg_store_revenue_tier: "Gold"
+
+  - uri: "prism:brand/LuckinCoffee"
+    prefLabel: "瑞幸咖啡"
+    definition: "中国本土现制咖啡连锁,门店数已突破 20,000+,由瑞幸咖啡(中国)有限公司运营,以小店+App 订单+9.9 元平价拿铁模式主导中国市场。"
+    altLabels: ["瑞幸", "luckin", "瑞幸咖啡店"]
+    category: "BeverageAndCafe"
+    parent_company: "瑞幸咖啡(中国)有限公司"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q60884576"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    geographic_reach: "中国现制咖啡市场占有率第一 (门店 20,000+)"
+
+  - uri: "prism:brand/KudiCoffee"
+    prefLabel: "库迪咖啡"
+    definition: "由陆正耀团队创办的平价现磨咖啡连锁,主打 8.8~9.9 元价格带,与瑞幸咖啡形成贴身竞争。"
+    altLabels: ["库迪", "Kudi Coffee"]
+    category: "BeverageAndCafe"
+    parent_company: "库迪咖啡(中国)有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  - uri: "prism:brand/MixueIceCream"
+    prefLabel: "蜜雪冰城"
+    definition: "源自郑州的中国平价茶饮与冰淇淋连锁,门店数突破 36,000+,以 4~6 元柠檬水与 2 元冰淇淋蛋筒为核心爆款,IP 雪王深入人心。"
+    altLabels: ["蜜雪冰城", "Mixue", "雪王"]
+    category: "BeverageAndCafe"
+    parent_company: "蜜雪冰城股份有限公司"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q111506096"
+      confidence_tier: "OPEN_KNOWLEDGE"
+    geographic_reach: "全球门店 36,000+ (中国平价茶饮第一)"
+
+  - uri: "prism:brand/HappyTea"
+    prefLabel: "喜茶"
+    definition: "深圳美西西餐饮管理有限公司旗下高端新式茶饮品牌,以芝士奶盖茶与真果茶系列开创新茶饮赛道。"
+    altLabels: ["喜茶", "HEYTEA"]
+    category: "BeverageAndCafe"
+    parent_company: "深圳美西西餐饮管理有限公司"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      confidence_tier: "OPEN_KNOWLEDGE"
+
+  - uri: "prism:brand/Nayuki"
+    prefLabel: "奈雪的茶"
+    definition: "深圳市品道餐饮管理有限公司旗下高端新式茶饮品牌,以茶饮+软欧包双品类店型与直营模式为主。"
+    altLabels: ["奈雪", "Nayuki", "奈雪茶"]
+    category: "BeverageAndCafe"
+    parent_company: "深圳市品道餐饮管理有限公司"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      confidence_tier: "OPEN_KNOWLEDGE"
+
+  - uri: "prism:brand/ChaBaidao"
+    prefLabel: "茶百道"
+    definition: "四川百茶百道实业股份有限公司运营的全国性新式茶饮连锁品牌,主打鲜果茶与平价奶茶,2024 年于香港主板上市。"
+    altLabels: ["茶百道", "ChaBaiDao"]
+    category: "BeverageAndCafe"
+    parent_company: "四川百茶百道实业股份有限公司"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      confidence_tier: "OPEN_KNOWLEDGE"
+
+  # ============================================================================
+  # 餐饮 · 正餐与中式快餐 (FSR & Chinese QSR)
+  # ============================================================================
+  - uri: "prism:brand/Haidilao"
+    prefLabel: "海底捞"
+    definition: "海底捞国际控股有限公司旗下直营连锁火锅品牌,以极致服务与标准化运营闻名,门店覆盖全国一二线城市核心商圈。"
+    altLabels: ["海底捞", "Haidilao", "火锅之王"]
+    category: "FullServiceRestaurant"
+    parent_company: "海底捞国际控股有限公司"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      wikidata_qid: "Q1652787"
+      confidence_tier: "OPEN_KNOWLEDGE"
+
+  - uri: "prism:brand/Xibei"
+    prefLabel: "西贝莜面村"
+    definition: "西贝餐饮集团旗下中式正餐连锁品牌,主打西北莜面与家常菜,以明档明厨与亲子场景见长。"
+    altLabels: ["西贝", "Xibei Noodle Village"]
+    category: "FullServiceRestaurant"
+    parent_company: "西贝餐饮集团"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  - uri: "prism:brand/TaiErSuancaiYu"
+    prefLabel: "太二酸菜鱼"
+    definition: "九毛九国际控股有限公司旗下主打老坛子酸菜鱼的正餐连锁品牌,以单品类爆款+年轻化品牌策略著称。"
+    altLabels: ["太二", "太二酸菜鱼", "Tai-Er"]
+    parent_company: "九毛九国际控股有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  - uri: "prism:brand/BarbieMantou"
+    prefLabel: "巴比馒头"
+    definition: "中饮巴比食品股份有限公司(巴比馒头)运营的华东早市包点连锁龙头,主营包子、馒头与豆浆早餐外卖配送。"
+    altLabels: ["巴比", "巴比包子", "Babi Mantou"]
+    category: "QuickServiceRestaurant"
+    parent_company: "中饮巴比食品股份有限公司"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    geographic_reach: "华东早市包点连锁龙头 (门店 5,000+)"
+
+  - uri: "prism:brand/ZhengxinJipai"
+    prefLabel: "正新鸡排"
+    definition: "正新集团(上海正新食品有限公司)旗下全国小吃鸡排连锁品牌,门店数 20,000+,以 15 元大鸡排单品类爆品为标志性品类。"
+    altLabels: ["正新鸡排", "Zhengxin Chicken", "ZX-Group"]
+    category: "QuickServiceRestaurant"
+    parent_company: "正新集团(上海正新食品有限公司)"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+    geographic_reach: "全国 20,000+ 门店 (小吃鸡排品类第一)"
+
+  # ============================================================================
+  # 住宿与客房 (Hotel & Lodging)
+  # ============================================================================
+  - uri: "prism:brand/HantingHotel"
+    prefLabel: "汉庭酒店"
+    definition: "华住集团旗下定位平价商旅的连锁酒店品牌,在全国一二三线城市拥有高密度门店。"
+    altLabels: ["汉庭", "Hanting Hotel"]
+    category: "HotelAndLodging"
+    parent_company: "华住集团 (Huazhu Group)"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      confidence_tier: "OPEN_KNOWLEDGE"
+
+  - uri: "prism:brand/JiHotel"
+    prefLabel: "全季酒店"
+    definition: "华住集团旗下定位中端商旅的全季酒店,以东方美学设计风格与高复购会员体系著称。"
+    altLabels: ["全季", "Ji Hotel"]
+    category: "HotelAndLodging"
+    parent_company: "华住集团 (Huazhu Group)"
+    provenance:
+      authority_ref: "AUTH_ENTERPRISE_DISCLOSURE"
+      confidence_tier: "ENTERPRISE_PRACTICE"
+
+  - uri: "prism:brand/AtourHotel"
+    prefLabel: "亚朵酒店"
+    definition: "亚朵集团旗下中高端连锁酒店品牌,以摄影主题大堂、属地化服务与高品质客房体验为差异化卖点。"
+    altLabels: ["亚朵", "Atour Hotel"]
+    category: "HotelAndLodging"
+    parent_company: "亚朵集团 (Atour Lifestyle Group)"
+    provenance:
+      authority_ref: "AUTH_WIKIDATA_FMCG"
+      confidence_tier: "OPEN_KNOWLEDGE"

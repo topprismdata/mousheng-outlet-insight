@@ -1,0 +1,251 @@
+# ==============================================================================
+# fmcg_channel_taxonomy.yaml
+# 快消品与线下零售 4 级通路分类标准树及权威溯源定义
+# 遵循 ISO/IEC 11179 元数据注册标准与 W3C PROV-O 溯源规范
+# ==============================================================================
+
+version: "1.0.0"
+governance:
+  steward: "TopPrism FMCG Domain Ontology Working Group"
+  last_updated: "2026-08-26"
+  profile: "prism://ontology/profiles/outlet-insight"
+
+standards_authorities:
+  - id: "AUTH_SAMR_GBT18106_2021"
+    name: "国家市场监督管理总局 & 国家标准化管理委员会"
+    standard_name: "中华人民共和国国家标准 GB/T 18106-2021《零售业态分类》"
+    standard_code: "GB/T 18106-2021"
+    official_uri: "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=6F1B1AF0FFE8A15119525CCC0E5E3F7F"
+    effective_date: "2021-10-01"
+    confidence_tier: "STATUTORY"
+
+  - id: "AUTH_NBS_GBT4754_2017"
+    name: "国家统计局"
+    standard_name: "中华人民共和国国家标准 GB/T 4754-2017《国民经济行业分类与代码》"
+    standard_code: "GB/T 4754-2017"
+    official_uri: "http://www.stats.gov.cn/sj/tjbz/gmjjhyfl/"
+    confidence_tier: "STATUTORY"
+
+  - id: "AUTH_NIQ_RETAIL_TAXONOMY"
+    name: "NielsenIQ (NIQ)"
+    standard_name: "NielsenIQ Global Retail Measurement Services (RMS) Channel Taxonomy"
+    standard_code: "NIQ-RMS-CH-2023"
+    official_uri: "https://nielseniq.com/global/en/solutions/retail-measurement/"
+    confidence_tier: "INDUSTRY_STANDARD"
+
+  - id: "AUTH_CCFA_CVS_STANDARD"
+    name: "中国连锁经营协会 (CCFA)"
+    standard_name: "中国连锁经营协会《中国便利店发展报告》与零售业态规范"
+    standard_code: "CCFA-CVS-2024"
+    official_uri: "http://www.ccfa.org.cn/"
+    confidence_tier: "INDUSTRY_STANDARD"
+
+channels:
+  # ============================================================================
+  # 1. 现代通路 (Modern Trade / MT)
+  # ============================================================================
+  - uri: "prism:outlet/channel/ModernTrade"
+    code: "MT"
+    prefLabel: "现代通路"
+    altLabels: ["MT", "现代零售", "组织化零售", "现代渠道"]
+    definition: "由具有统一采购、中央物流配送、连锁品牌形象、POS系统收银和规范化管理的零售组织构成的商业通路。"
+    provenance:
+      authority_ref: "AUTH_NIQ_RETAIL_TAXONOMY"
+      section: "Section 2.1: Modern Trade Definition & Structure"
+      confidence_tier: "INDUSTRY_STANDARD"
+      notes: "全球快消零售测量的核心大类，包含大卖场、综合超市、连锁便利店及硬折扣店。"
+    sub_channels:
+      - uri: "prism:outlet/channel/ConvenienceStore"
+        code: "CVS"
+        prefLabel: "连锁便利店"
+        altLabels: ["便利店", "CVS", "现代便利店", "24小时便利店"]
+        definition: "以满足顾客即时性、便利性需求为主要目的，营业面积一般在 50~150 平方米，以即食食品、饮料等日用快消品为主，实行统一品牌形象与连锁管理的零售业态。"
+        provenance:
+          authority_ref: "AUTH_SAMR_GBT18106_2021"
+          section: "§4.2 便利店 (Convenience Store)"
+          confidence_tier: "STATUTORY"
+        industry_alignment:
+          - authority_ref: "AUTH_CCFA_CVS_STANDARD"
+            criteria: "SKU 数 2000~3000，冷链鲜食/饮料占比 >= 35%，配备冷柜与 POS"
+        physical_mapping:
+          condition: "细分渠道 LIKE '%便利店%' AND 是否连锁 = '是'"
+          benchmark_brands: ["美宜佳", "全家", "罗森", "7-Eleven", "便利蜂", "喜士多"]
+
+      - uri: "prism:outlet/channel/Supermarket"
+        code: "SUPER"
+        prefLabel: "综合超市"
+        altLabels: ["超市", "标准超市", "食品超市", "小型超市"]
+        definition: "实行开架售货、集中收款，以满足社区居民日常生活必需品（生鲜、食品饮料、日化）一次性购齐需求的零售业态，面积通常在 500~2000 平方米。"
+        provenance:
+          authority_ref: "AUTH_SAMR_GBT18106_2021"
+          section: "§4.3 超市 (Supermarket)"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 IN ('小型超市', '大卖场') OR 细分渠道 LIKE '%超市%'"
+          benchmark_brands: ["大润发", "永辉超市", "盒马鲜生", "联华超市", "世纪联华", "华润万家"]
+
+      - uri: "prism:outlet/channel/SnackDiscountStore"
+        code: "SNACK_DISCOUNT"
+        prefLabel: "零食折扣量贩店"
+        altLabels: ["零食店", "量贩零食", "零食集合店", "硬折扣零食店"]
+        definition: "以休闲零食、饮品为核心品类，采取品牌直采、无进场费、高周转、平价量贩模式的硬折扣零售集合业态。"
+        provenance:
+          authority_ref: "AUTH_SAMR_GBT18106_2021"
+          section: "§4.7 集合店 (Collection Store / Discount Specialty)"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '零食店' OR 细分渠道 LIKE '%零食%'"
+          benchmark_brands: ["零食很嗨", "好想来", "赵一鸣零食", "零食有鸣", "老婆大人"]
+
+  # ============================================================================
+  # 2. 传统通路 (Traditional Trade / TT)
+  # ============================================================================
+  - uri: "prism:outlet/channel/TraditionalTrade"
+    code: "TT"
+    prefLabel: "传统通路"
+    altLabels: ["TT", "传统渠道", "通路上游", "散店渠道", "通用贸易"]
+    definition: "以独立个体经营为主、缺乏集中供应链和标准化连锁品牌的传统分散型零售终端集合。"
+    provenance:
+      authority_ref: "AUTH_NIQ_RETAIL_TAXONOMY"
+      section: "Section 2.2: Traditional Trade / General Trade"
+      confidence_tier: "INDUSTRY_STANDARD"
+    sub_channels:
+      - uri: "prism:outlet/channel/GeneralGrocery"
+        code: "GROCERY"
+        prefLabel: "传统食杂店"
+        altLabels: ["食杂店", "夫妻老婆店", "便民杂货铺", "小卖部", "烟酒店", "街边小店"]
+        definition: "以香烟、酒、饮料、休闲食品为主，独立传统经营、营业面积一般小于 50 平方米、无明显品牌连锁形象的零售终端。"
+        provenance:
+          authority_ref: "AUTH_SAMR_GBT18106_2021"
+          section: "GB/T 18106-2004 §3.2 (食杂店历史定义) 升级至 GB/T 18106-2021 附录A 小型杂货零售"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '食杂' AND 是否连锁 = '否'"
+          business_terms: ["夫妻老婆店", "小杂货店", "烟酒小店", "小卖部"]
+
+  # ============================================================================
+  # 3. 餐饮即饮通路 (Away-From-Home / AFH / HORECA)
+  # ============================================================================
+  - uri: "prism:outlet/channel/AwayFromHome"
+    code: "AFH"
+    prefLabel: "餐饮即饮通路"
+    altLabels: ["AFH", "HORECA", "餐饮通路", "现饮渠道", "即饮市场"]
+    definition: "商品在购买现场直接开封饮用或就餐消费的餐饮、住宿、娱乐商业场所总称。"
+    provenance:
+      authority_ref: "AUTH_NBS_GBT4754_2017"
+      section: "门类 H: 住宿和餐饮业 (代码 61, 62)"
+      confidence_tier: "STATUTORY"
+    sub_channels:
+      - uri: "prism:outlet/channel/FullServiceRestaurant"
+        code: "FSR"
+        prefLabel: "正餐餐馆"
+        altLabels: ["正餐", "餐厅", "饭店", "中餐厅", "特色菜馆"]
+        definition: "提供座席、由服务人员点餐传菜、提供正规餐饮烹饪服务（川菜、粤菜、江浙菜、火锅等）的场所。"
+        provenance:
+          authority_ref: "AUTH_NBS_GBT4754_2017"
+          section: "大类 62: 餐饮业 -> 6210: 正餐服务"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '餐饮' AND 细分渠道 NOT LIKE '%快餐%' AND 细分渠道 NOT LIKE '%饮品%'"
+          benchmark_brands: ["海底捞", "西贝莜面村", "外婆家", "新白鹿", "太二酸菜鱼"]
+
+      - uri: "prism:outlet/channel/QuickServiceRestaurant"
+        code: "QSR"
+        prefLabel: "快餐小吃"
+        altLabels: ["快餐", "西式快餐", "中式快餐", "小吃简餐", "早点小吃"]
+        definition: "提供快速制作、即时供应、以柜台点餐自取或简易堂食为主的餐饮业态。"
+        provenance:
+          authority_ref: "AUTH_NBS_GBT4754_2017"
+          section: "大类 62: 餐饮业 -> 6220: 快餐服务"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '餐饮' AND (细分渠道 LIKE '%快餐%' OR 细分渠道 LIKE '%小吃%' OR 细分渠道 LIKE '%早点%')"
+          benchmark_brands: ["肯德基", "麦当劳", "汉堡王", "华莱士", "正新鸡排", "巴比馒头", "老乡鸡"]
+
+      - uri: "prism:outlet/channel/BeverageAndCafe"
+        code: "CAFE_TEA"
+        prefLabel: "现制咖啡与茶饮"
+        altLabels: ["咖啡店", "奶茶店", "新茶饮", "水吧", "现制饮品店"]
+        definition: "主要现场制作并销售咖啡、茶饮、果汁及甜品冷饮的专业饮品门店。"
+        provenance:
+          authority_ref: "AUTH_NBS_GBT4754_2017"
+          section: "大类 62: 餐饮业 -> 6230: 饮料及冷饮服务"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '餐饮' AND (细分渠道 LIKE '%咖啡%' OR 细分渠道 LIKE '%茶饮%' OR 细分渠道 LIKE '%饮品%')"
+          benchmark_brands: ["瑞幸", "星巴克", "库迪咖啡", "蜜雪冰城", "喜茶", "奈雪的茶", "古茗", "茶百道"]
+
+      - uri: "prism:outlet/channel/HotelAndLodging"
+        code: "HOTEL"
+        prefLabel: "住宿与客房"
+        altLabels: ["酒店", "宾馆", "民宿", "客栈", "度假村"]
+        definition: "为消费者提供按日计费的住宿、客房及配套商务餐饮服务的场所。"
+        provenance:
+          authority_ref: "AUTH_NBS_GBT4754_2017"
+          section: "门类 H: 61 住宿业"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '住宿'"
+          benchmark_brands: ["汉庭酒店", "全季酒店", "如家酒店", "亚朵酒店", "锦江之星"]
+
+  # ============================================================================
+  # 4. 特殊通路 (Special Trade / ST)
+  # ============================================================================
+  - uri: "prism:outlet/channel/SpecialTrade"
+    code: "ST"
+    prefLabel: "特殊通路"
+    altLabels: ["ST", "特通渠道", "特通", "封闭半封闭渠道"]
+    definition: "处于特定地理封闭或半封闭场景、拥有特定消费人群和特许经营属性的零售与服务终端集合。"
+    provenance:
+      authority_ref: "AUTH_NIQ_RETAIL_TAXONOMY"
+      section: "Section 2.4: Special Trade Outlets"
+      confidence_tier: "INDUSTRY_STANDARD"
+    sub_channels:
+      - uri: "prism:outlet/channel/TransportHub"
+        code: "TRANSPORT"
+        prefLabel: "交通枢纽网点"
+        altLabels: ["高铁站网点", "机场店", "地铁商业", "客运站网点"]
+        definition: "位于机场、高铁站、火车站、客运码头、高速公路服务区内的商业零售与餐饮网点。"
+        provenance:
+          authority_ref: "AUTH_NIQ_RETAIL_TAXONOMY"
+          section: "Special Trade -> Transit & Transport Hubs"
+          confidence_tier: "INDUSTRY_STANDARD"
+        physical_mapping:
+          condition: "经营场所 LIKE '%交通枢纽%'"
+
+      - uri: "prism:outlet/channel/GasStationCVS"
+        code: "GAS_CVS"
+        prefLabel: "加油站便利店"
+        altLabels: ["加油站零售", "易捷", "昆仑好客", "油站便利店"]
+        definition: "依托加油加气站场地设立、面向车主客群的专业便利零售终端。"
+        provenance:
+          authority_ref: "AUTH_SAMR_GBT18106_2021"
+          section: "§4.2 附注: 加油站附属便利店"
+          confidence_tier: "STATUTORY"
+        physical_mapping:
+          condition: "渠道组 = '加油站' OR 细分渠道 LIKE '%加油站%'"
+          benchmark_brands: ["易捷", "昆仑好客", "壳牌Select"]
+
+      - uri: "prism:outlet/channel/EducationCampus"
+        code: "CAMPUS"
+        prefLabel: "校园与教育机构网点"
+        altLabels: ["大学店", "高校网点", "中学小卖部", "校园超市"]
+        definition: "位于大学、高职院校、中小学校园内部及出入口周边的零售与即饮网点。"
+        provenance:
+          authority_ref: "AUTH_NIQ_RETAIL_TAXONOMY"
+          section: "Special Trade -> Educational Institutions"
+          confidence_tier: "INDUSTRY_STANDARD"
+        physical_mapping:
+          condition: "渠道组 = '教育' OR 大学\\高职外50米 = '是' OR 大学\\高职外500米 = '是' OR 中学外50米 = '是'"
+
+      - uri: "prism:outlet/channel/ScenicArea"
+        code: "SCENIC"
+        prefLabel: "景区与文旅网点"
+        altLabels: ["景区店", "景点周边", "旅游商业", "公园网点"]
+        definition: "位于自然风景区、主题乐园、文旅小镇、历史街区内部或周边辐射半径内的商业网点。"
+        provenance:
+          authority_ref: "AUTH_NIQ_RETAIL_TAXONOMY"
+          section: "Special Trade -> Tourist & Leisure Parks"
+          confidence_tier: "INDUSTRY_STANDARD"
+        physical_mapping:
+          condition: "渠道组 = '旅游' OR 景区外50米 = '是' OR 景区外1公里 = '是'"

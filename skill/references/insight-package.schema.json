@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "prism://schemas/mousheng-outlet-insight/insight-package.schema.json",
+  "title": "MoushengOutletInsightPackage",
+  "description": "谋圣·售点洞察标准交付物契约定义（严格由 3 个治理信封 + 8 个核心洞察块构成的 11 个顶级字段；任何 Action/Task 均被编译拦截）",
+  "type": "object",
+  "required": [
+    "analysis_id",
+    "artifact_type",
+    "request_context",
+    "conclusion",
+    "evidence",
+    "structure",
+    "differences",
+    "anomalies",
+    "quality_and_limits",
+    "followups",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "analysis_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "信封 1：分析唯一追踪标识（格式：mousheng-xxx 或 uuid）"
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": ["InsightPackage", "ElevationCandidate"],
+      "description": "信封 2：产物类型"
+    },
+    "request_context": {
+      "type": "object",
+      "description": "核心洞察块 1：业务问题、意图类型与分析范围",
+      "required": ["question", "intent", "target_entity"],
+      "additionalProperties": false,
+      "properties": {
+        "question": { "type": "string", "minLength": 1 },
+        "intent": {
+          "type": "string",
+          "enum": ["detail_list", "distribution_comparison", "rule_ranking", "concentration_analysis", "anomaly_detection"]
+        },
+        "target_entity": { "type": "string", "minLength": 1 },
+        "scope": { "type": "object", "description": "空间与业务范围（动态业务载荷，有意开放）" },
+        "entities": { "type": "array", "items": { "type": "string" } },
+        "metrics": { "type": "array", "items": { "type": "string" } },
+        "rules": { "type": "array", "items": { "type": "object" }, "description": "规则列表（动态业务载荷，有意开放）" },
+        "ambiguities": { "type": "array", "items": { "type": "string" } },
+        "requested_outputs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "description": "核心洞察块 2：直接回答问题的核心结论与定性陈述（严禁指令性措辞）",
+      "required": ["summary", "confidence_level", "verdict"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string", "minLength": 1, "description": "客观提炼的核心事实总结" },
+        "confidence_level": { "type": "string", "enum": ["high", "medium", "low"] },
+        "verdict": { "type": "string", "minLength": 1, "description": "基于数据的客观定性判断" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "description": "核心洞察块 3：样本量、有效样本量、表格预览与下钻键",
+      "required": ["sample_size", "effective_sample_size", "table_preview", "drilldown_keys"],
+      "additionalProperties": false,
+      "properties": {
+        "sample_size": { "type": "integer", "minimum": 0 },
+        "effective_sample_size": { "type": "integer", "minimum": 0 },
+        "table_preview": {
+          "type": "array",
+          "items": { "type": "object" },
+          "description": "前10行代表性数据预览（动态业务记录载荷，有意开放）"
+        },
+        "drilldown_keys": {
+          "type": "array",
+          "items": { "type": "object" },
+          "description": "下钻过滤键列表"
+        },
+        "out_csv_path": { "type": ["string", "null"] },
+        "chart_spec_ref": { "type": ["string", "null"] }
+      }
+    },
+    "structure": {
+      "type": "object",
+      "description": "核心洞察块 4：分布形态、集中度与结构特征（含目标配额达成与门槛截断分析）",
+      "required": ["concentration_metrics", "distributions"],
+      "additionalProperties": false,
+      "properties": {
+        "concentration_metrics": {
+          "type": "object",
+          "required": ["hhi", "cr4", "cr8", "gini", "category"],
+          "additionalProperties": false,
+          "properties": {
+            "hhi": { "type": "number", "minimum": 0.0, "description": "赫芬达尔指数 (0~10000)" },
+            "cr4": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "前4大实体份额合计 (0~1)" },
+            "cr8": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "前8大实体份额合计 (0~1)" },
+            "gini": { "type": "number", "minimum": 0.0, "maximum": 1.0, "description": "基尼系数 (0~1)" },
+            "category": { "type": "string", "enum": ["high_concentration", "moderate_concentration", "unconcentrated"] }
+          }
+        },
+        "quota_evaluation": {
+          "type": "object",
+          "description": "目标配额达成与门槛截断分析",
+          "required": ["target_quota", "pool_size", "selected_size", "fulfillment_rate", "fulfillment_status"],
+          "additionalProperties": false,
+          "properties": {
+            "target_quota": { "type": "integer", "minimum": 1 },
+            "pool_size": { "type": "integer", "minimum": 0 },
+            "selected_size": { "type": "integer", "minimum": 0 },
+            "fulfillment_rate": { "type": "number", "minimum": 0.0 },
+            "fulfillment_status": { "type": "string", "enum": ["fulfilled", "gap_detected"] },
+            "gap_count": { "type": "integer", "minimum": 0 },
+            "cutoff_thresholds": { "type": "object" }
+          }
+        },
+        "distributions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dimension", "top_segments", "long_tail_ratio"],
+            "additionalProperties": false,
+            "properties": {
+              "dimension": { "type": "string" },
+              "top_segments": {
+                "type": "array",
+                "items": { "type": "object" },
+                "description": "头部聚合项（动态业务载荷，有意开放）"
+              },
+              "long_tail_ratio": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+            }
+          }
+        }
+      }
+    },
+    "differences": {
+      "type": "object",
+      "description": "核心洞察块 5：群体对比、同态分析与显著性差异",
+      "required": ["compared_groups", "metric_contrasts"],
+      "additionalProperties": false,
+      "properties": {
+        "compared_groups": { "type": "array", "items": { "type": "string" } },
+        "metric_contrasts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["metric", "group_a_val", "group_b_val", "absolute_diff", "relative_diff_pct"],
+            "additionalProperties": false,
+            "properties": {
+              "metric": { "type": "string" },
+              "group_a_val": { "type": "number" },
+              "group_b_val": { "type": "number" },
+              "absolute_diff": { "type": "number" },
+              "relative_diff_pct": { "type": "number" },
+              "significance_note": { "type": "string" },
+              "p_value": { "type": "number" },
+              "cohens_d": { "type": "number" },
+              "effect_size": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "anomalies": {
+      "type": "object",
+      "description": "核心洞察块 6：离群对象、指标背离异动及其判定基准",
+      "required": ["baseline_method", "detected_outliers"],
+      "additionalProperties": false,
+      "properties": {
+        "baseline_method": { "type": "string", "description": "离群判定基准方法" },
+        "detected_outliers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["entity_id", "entity_name", "metric", "value", "anomaly_type"],
+            "additionalProperties": false,
+            "properties": {
+              "entity_id": { "type": "string" },
+              "entity_name": { "type": "string" },
+              "metric": { "type": "string" },
+              "value": { "type": "number" },
+              "baseline_range": { "type": "string" },
+              "anomaly_type": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "quality_and_limits": {
+      "type": "object",
+      "description": "核心洞察块 7：数据完整度、覆盖率、置信度与适用边界限制",
+      "required": ["completeness_score", "field_coverage", "applicable_dimensions", "warnings", "limitations"],
+      "additionalProperties": false,
+      "properties": {
+        "completeness_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "field_coverage": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+        },
+        "applicable_dimensions": { "type": "array", "items": { "type": "string" } },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "limitations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "followups": {
+      "type": "array",
+      "description": "核心洞察块 8：建议继续追问的下一步分析方向（严格纯分析意图，0 业务执行命令）",
+      "items": {
+        "type": "object",
+        "required": ["suggested_question", "analytical_intent"],
+        "additionalProperties": false,
+        "properties": {
+          "suggested_question": { "type": "string", "minLength": 1 },
+          "analytical_intent": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "信封 3：版本溯源与治理元数据（严格从输入流转，绝不硬编码伪造）",
+      "required": ["request_id", "insight_component_version", "insight_generated_at", "evidence_provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "request_id": { "type": "string", "minLength": 1 },
+        "insight_component_version": { "type": "string", "minLength": 1 },
+        "insight_generated_at": { "type": "string", "format": "date-time" },
+        "elevation_status": {
+          "type": "string",
+          "enum": ["evaluated", "pending_review", "promoted", "rejected"]
+        },
+        "evidence_provenance": {
+          "type": "object",
+          "required": ["dataset_id", "data_version", "ontology_profile_version", "generated_at"],
+          "additionalProperties": false,
+          "properties": {
+            "dataset_id": { "type": "string", "minLength": 1 },
+            "data_version": { "type": "string", "minLength": 1 },
+            "ontology_profile_version": { "type": "string", "minLength": 1 },
+            "dataset_mapping_version": { "type": ["string", "null"] },
+            "engine_run_id": { "type": ["string", "null"] },
+            "generated_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  }
+}

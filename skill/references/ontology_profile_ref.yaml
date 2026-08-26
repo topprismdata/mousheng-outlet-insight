@@ -1,0 +1,31 @@
+# ==============================================================================
+# ontology_profile_ref.yaml
+# 谋圣·售点洞察 (mousheng-outlet-insight) - 上位本体 Profile 引用元数据文件
+#
+# 权威原则：
+# 1. prism-ontology 是上位语义唯一权威；谋圣仅为世界模型之上的独立认识器官（Insight Component）。
+# 2. 本文件仅作为 Profile 引用声明，消费已发布的 Operational Profile。
+# ==============================================================================
+
+profile_reference:
+  profile_uri: "prism://ontology/profiles/outlet-insight"
+  ontology_version: "0.1.0"
+  profile_version: "0.1.0-rc2"
+  schema_version: "draft-2020-12"
+  checksum: "sha256:2830f9ead785c9c387d038095b85e83edf1a3dcdac03d31b6d86b8164339c3e5"
+  status: "release_candidate"
+  distribution_source: "/Users/ghb/prism-ontology/dist/outlet-insight/0.1.0-rc2/"
+  compatible_component_versions: ">=1.1.0,<2.0.0"
+
+  required_upstream_modules:
+    - module: "prism:core/meta-model"
+      version_constraint: "^0.1.0"
+    - module: "prism:domain/outlet"
+      version_constraint: "^0.1.0"
+    - module: "prism:extension/insight-artifact"
+      version_constraint: "^0.1.0"
+
+  governance:
+    authority: "prism-ontology"
+    maintainer: "TopPrism Ontology Engineering Team"
+    target_component: "mousheng-outlet-insight"
