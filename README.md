@@ -261,6 +261,18 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 
 ---
 
+## TopPrism status
+
+| Field | Value |
+|---|---|
+| Purpose | Customer Decision · Insight Component |
+| Maturity | Applied component; public implementation and regression evidence |
+| Evidence | Governed FMCG knowledge provenance and repository regression suites; no customer-deployment claim |
+| Boundary | Insight only; no dispatch, scheduling, route assignment, CRM write or automatic channel decision |
+| Related | `prism-ontology`, `visit-scheduling-optimizer` |
+
+---
+
 ## 13. 许可证
 
 内部项目 (Internal)。请联系棱镜极 TopPrism 获取使用授权。
