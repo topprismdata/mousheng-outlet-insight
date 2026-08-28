@@ -13,6 +13,10 @@
 
 </div>
 
+> **语言 / Language:** 中文为主 · English overview follows。
+>
+> **English overview:** Mousheng Outlet Insight is an independent, evidence-traceable insight component. It stops before dispatch, scheduling, routing, CRM writes, or channel decisions.
+
 ## 1. 这是什么
 
 **谋圣·售点洞察 (`mousheng-outlet-insight`)** 是棱镜极 TopPrism 公司谋圣 Mousheng 产品线下的**独立售点 Insight 组件**。它只做一件事——把售点数据和业务问题变成清晰、可信、可追溯的洞察,**不替用户做派单、排程、路线、CRM 写入或渠道决策**。
