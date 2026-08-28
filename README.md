@@ -2,6 +2,10 @@
   <img src="https://raw.githubusercontent.com/topprismdata/.github/main/assets/brand/topprism-repo-header.png" alt="TopPrism dual-prism visual" width="100%" />
 </p>
 
+> **语言 / Language:** 中文为主 · English overview follows。
+>
+> **English overview:** Mousheng Outlet Insight is an independent, evidence-traceable insight component. It stops before dispatch, scheduling, routing, CRM writes, or channel decisions.
+
 <div align="center">
 
 # 谋圣·售点洞察
@@ -12,10 +16,6 @@
 *An independent Insight component that turns outlet data into clear, trustworthy, traceable insights.*
 
 </div>
-
-> **语言 / Language:** 中文为主 · English overview follows。
->
-> **English overview:** Mousheng Outlet Insight is an independent, evidence-traceable insight component. It stops before dispatch, scheduling, routing, CRM writes, or channel decisions.
 
 ## 1. 这是什么
 
