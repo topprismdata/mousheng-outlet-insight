@@ -16,14 +16,32 @@ import pandas as pd
 import yaml
 from pathlib import Path
 
-DATA_PATH = Path("/Users/ghb/outlet-insight/data/<data>.parquet")
-if not DATA_PATH.exists():
-    DATA_PATH = Path("/Users/ghb/outlet-insight/data/<data>.csv")
+import argparse
+import os
+import sys
+
+# 路径基于脚本自身推导（可分发），复用 agent_core 的数据探测与容错读取
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
+from agent_core import find_default_data, read_csv_robust  # noqa: E402
+
+_ap = argparse.ArgumentParser(description="构建售点数据本体映射 dataset_mapping.yaml")
+_ap.add_argument("--data", default=None,
+                 help="数据 CSV/Parquet 路径；默认取 OUTLET_DATA 环境变量，否则自动探测")
+_args = _ap.parse_args()
+
+if _args.data:
+    DATA_PATH = Path(_args.data)
+elif os.environ.get("OUTLET_DATA"):
+    DATA_PATH = Path(os.environ["OUTLET_DATA"])
+else:
+    DATA_PATH = find_default_data()
 
 if DATA_PATH.suffix == '.parquet':
     df = pd.read_parquet(DATA_PATH)
 else:
-    df = pd.read_csv(DATA_PATH, nrows=5)
+    df = read_csv_robust(DATA_PATH, nrows=5)
 
 cols = list(df.columns)
 mappings = []
@@ -465,7 +483,7 @@ output_yaml_data = {
     "mappings": mappings
 }
 
-out_path = Path("/Users/ghb/outlet-insight/skill/references/dataset_mapping.yaml")
+out_path = _SCRIPT_DIR.parent / "references" / "dataset_mapping.yaml"
 with open(out_path, "w", encoding="utf-8") as f:
     yaml.dump(output_yaml_data, f, allow_unicode=True, sort_keys=False)
 

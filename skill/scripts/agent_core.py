@@ -279,6 +279,22 @@ def find_default_data() -> Path:
     )
 
 
+def read_csv_robust(path: Path | str, **kwargs) -> pd.DataFrame:
+    """容错读取 CSV：编码依次尝试 utf-8-sig → gb18030(GBK 超集) → latin-1。
+
+    其余参数透传 pd.read_csv；调用方显式给定 encoding 时直接透传，不做回退。
+    """
+    if kwargs.get("encoding"):
+        return pd.read_csv(path, **kwargs)
+    last_err: UnicodeDecodeError | None = None
+    for enc in ("utf-8-sig", "gb18030", "latin-1"):
+        try:
+            return pd.read_csv(path, encoding=enc, **kwargs)
+        except UnicodeDecodeError as e:
+            last_err = e
+    raise last_err
+
+
 def load_store_data(path: Path | str | None = None, reg: FieldRegistry | None = None,
                     use_cache: bool = True) -> pd.DataFrame:
     """加载售点数据，自动用 parquet 缓存加速（<size> MB CSV 首次约 15-25s，之后 <3s）。
@@ -298,7 +314,7 @@ def load_store_data(path: Path | str | None = None, reg: FieldRegistry | None = 
     elif path.suffix.lower() == ".parquet":
         df = pd.read_parquet(path)
     else:
-        df = pd.read_csv(path, low_memory=False)
+        df = read_csv_robust(path, low_memory=False)
         if use_cache:
             try:
                 df.to_parquet(pq, index=False)

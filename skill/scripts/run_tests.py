@@ -66,19 +66,37 @@ SESS = None  # 在 main 中创建
 def _ask(text, use_memory=False, sess=None):
     return (sess or SESS).ask(text, verbose=False, use_memory=use_memory)
 
+_BLOCKED_TXT = "查询被语义层拦截/无匹配数据"
+
+
+def _blocked(r, cid, name, scenario, expect):
+    """查询被语义层拦截或未产出结果 DataFrame（out=None）时，
+    把该用例如实记录为失败（附原因），返回 True 表示跳过后续断言（绝不抛异常）。"""
+    if r.get("out") is None:
+        reason = r.get("error") or _BLOCKED_TXT
+        R.fail(cid, name, scenario, False, expect, _BLOCKED_TXT, f"原因: {reason}")
+        return True
+    return False
+
 
 # ============================================================ A 类：明确查询
 def test_A():
     r = _ask("目标子区域B的美宜佳清单")
+    if _blocked(r, "T01", "A-品牌+大区(美宜佳+目标子区域B)", "A类明确查询", "37 行"):
+        return
     R.ok("T01", "A-品牌+大区(美宜佳+目标子区域B)", "A类明确查询",
          r["rows"] == 37, "37 行", f'{r["rows"]} 行',
          detail="DSL 过滤: 规划大区=目标子区域B; 连锁品牌名称 contains 美宜佳")
 
     r = _ask("美宜佳清单")
+    if _blocked(r, "T02", "A-品牌全量(美宜佳)", "A类明确查询", "346 行"):
+        return
     R.ok("T02", "A-品牌全量(美宜佳)", "A类明确查询",
          r["rows"] == 346, "346 行", f'{r["rows"]} 行')
 
     r = _ask("客房数大于100间的非连锁酒店")
+    if _blocked(r, "T03", "A-客房>100 且 非连锁 酒店", "A类明确查询", "行数>0 且 房间数>100 且 非连锁 全满足"):
+        return
     out = r["out"]
     cond1 = (pd.to_numeric(out["携程-房间数"], errors="coerce") > 100).all()
     cond2 = (out["是否连锁"] == "否").all()
@@ -88,10 +106,14 @@ def test_A():
          f'行数={r["rows"]}, 房间数>100全满足={cond1}, 非连锁全满足={cond2}')
 
     r = _ask("瑞幸清单")
+    if _blocked(r, "T04", "A-品牌(瑞幸)", "A类明确查询", "行数>0"):
+        return
     R.ok("T04", "A-品牌(瑞幸)", "A类明确查询",
          r["rows"] > 0, "行数>0", f'{r["rows"]} 行')
 
     r = _ask("餐饮业态的客户清单")
+    if _blocked(r, "T05", "A-业态=餐饮", "A类明确查询", "行数>0 且 渠道组=餐饮 全满足"):
+        return
     out = r["out"]
     R.ok("T05", "A-业态=餐饮", "A类明确查询",
          r["rows"] > 0 and (out["渠道组"] == "餐饮").all(),
@@ -99,6 +121,8 @@ def test_A():
          f'行数={r["rows"]}, 渠道组全为餐饮={(out["渠道组"]=="餐饮").all()}')
 
     r = _ask("未服务的食杂潜力TOP20")
+    if _blocked(r, "T06", "A-未服务+食杂+潜力TOP20", "A类明确查询", "服务状态=未服务, 渠道组=食杂, ≤20行"):
+        return
     out = r["out"]
     cond = (out["服务状态"] == "未服务").all() and (out["渠道组"] == "食杂").all() and (len(out) <= 20)
     R.ok("T06", "A-未服务+食杂+潜力TOP20", "A类明确查询",
@@ -106,6 +130,8 @@ def test_A():
          f'行数={len(out)}, 未服务全满足={(out["服务状态"]=="未服务").all()}, 食杂全满足={(out["渠道组"]=="食杂").all()}')
 
     r = _ask("餐饮高评分门店清单")
+    if _blocked(r, "T07", "A-度量(餐饮高评分≥3.8)", "A类明确查询", "行数>0 且 点评评分≥3.8 全满足"):
+        return
     out = r["out"]
     cond = (pd.to_numeric(out["大众点评餐饮点评评分星级"], errors="coerce") >= 3.8).all()
     R.ok("T07", "A-度量(餐饮高评分≥3.8)", "A类明确查询",
@@ -113,6 +139,8 @@ def test_A():
          f'行数={r["rows"]}, 评分≥3.8全满足={cond}')
 
     r = _ask("高德上榜的餐饮街")
+    if _blocked(r, "T08", "A-实体(餐饮街)+度量(高德上榜)", "A类明确查询", "行数>0 且 餐饮街+高德Y 全满足"):
+        return
     out = r["out"]
     cond = (out["经营场所"].astype(str).str.contains("餐饮街", na=False).all()
             and (out["是否高德扫街榜/状元榜"] == "Y").all())
@@ -124,22 +152,30 @@ def test_A():
 # ============================================================ B 类：分布探索
 def test_B():
     r = _ask("餐饮街的客户分布")
+    if _blocked(r, "T09", "B-餐饮街的客户分布", "B类分布探索", "行数>0"):
+        return
     R.ok("T09", "B-餐饮街的客户分布", "B类分布探索",
          r["rows"] > 0, "行数>0", f'{r["rows"]} 行 (聚合: {r["columns"]})')
 
     r = _ask("各业态在目标省份的数量")
+    if _blocked(r, "T10", "B-目标省份各业态数量", "B类分布探索", "行数>0 且含 渠道组 维度"):
+        return
     out = r["out"]
     R.ok("T10", "B-目标省份各业态数量", "B类分布探索",
          r["rows"] > 0 and "渠道组" in out.columns,
          "行数>0 且含 渠道组 维度", f'行数={r["rows"]}, 维度列={list(out.columns)}')
 
     r = _ask("美宜佳在各个大区的分布")
+    if _blocked(r, "T11", "B-美宜佳各大区分布", "B类分布探索", "行数>0 且含 规划大区 维度"):
+        return
     out = r["out"]
     R.ok("T11", "B-美宜佳各大区分布", "B类分布探索",
          r["rows"] > 0 and "规划大区" in out.columns,
          "行数>0 且含 规划大区 维度", f'行数={r["rows"]}, 维度列={list(out.columns)}')
 
     r = _ask("目标城市各城市的客户数量")
+    if _blocked(r, "T12", "B-目标城市各城市数量", "B类分布探索", "行数>0 且含 城市 维度"):
+        return
     out = r["out"]
     R.ok("T12", "B-目标城市各城市数量", "B类分布探索",
          r["rows"] > 0 and "城市" in out.columns,
@@ -151,6 +187,8 @@ def test_C():
     tmpl = ("街道餐饮客户不低于20家，周末人流按大小排序，"
             "评分3.8分以上客户占比50%以上为高，开业3年以上客户占比50%以上为高")
     r = _ask(tmpl)
+    if _blocked(r, "T13", "C-餐饮街综合规则排行", "C类规则排行", "行数>0 且含 达标率/等级/数据完整度%"):
+        return
     out = r["out"]
     has_grade = ("达标率" in out.columns) and ("等级" in out.columns) and ("数据完整度%" in out.columns)
     R.ok("T13", "C-餐饮街综合规则排行", "C类规则排行",
@@ -158,6 +196,8 @@ def test_C():
          f'行数={r["rows"]}, 关键列={[c for c in ["达标率","等级","数据完整度%"] if c in out.columns]}')
 
     r = _ask("商场里餐饮客户不低于20家为达标")
+    if _blocked(r, "T14", "C-简单规则(商场餐饮客户≥20)", "C类规则排行", "行数>0 且含 达标率 且 ≤50(top_n)"):
+        return
     out = r["out"]
     R.ok("T14", "C-简单规则(商场餐饮客户≥20)", "C类规则排行",
          r["rows"] > 0 and "达标率" in out.columns and r["rows"] <= 50,
@@ -168,12 +208,22 @@ def test_C():
 def test_multistep():
     s = QuerySession(use_cache=True)
     r1 = s.ask("美宜佳清单", verbose=False, use_memory=False)
-    assert r1["rows"] == 346
+    if _blocked(r1, "T15", "多步会话(取美宜佳→筛目标子区域B→看分布→回全量)", "多步会话",
+                "工作集: 346→37→(分布 N 行)→客房>100全量"):
+        return
+    if r1["rows"] != 346:
+        R.fail("T15", "多步会话(取美宜佳→筛目标子区域B→看分布→回全量)", "多步会话", False,
+               "step1 美宜佳清单=346 行(数据耦合前提)", f'step1 行数={r1["rows"]} (期望 346)')
+        return
     r2 = s.ask("这些里目标子区域B的", verbose=False, use_memory=False)
     ws_after2 = len(s.current)
     r3 = s.ask("看它们的业态分布", verbose=False, use_memory=False)
     r4 = s.ask("整个数据里客房数大于100间的酒店", verbose=False, use_memory=False)
     ws_after4 = len(s.current)
+    for _tag, _r in (("step2", r2), ("step3", r3), ("step4", r4)):
+        if _blocked(_r, "T15", "多步会话(取美宜佳→筛目标子区域B→看分布→回全量)", "多步会话",
+                    f"工作集: 346→37→(分布 N 行)→客房>100全量（{_tag} 被拦截）"):
+            return
     R.ok("T15", "多步会话(取美宜佳→筛目标子区域B→看分布→回全量)", "多步会话",
          ws_after2 == 37 and r3["rows"] > 0 and ws_after4 == r4["rows"] and r4["rows"] > 0,
          "工作集: 346→37→(分布 N 行)→客房>100全量",
@@ -223,6 +273,8 @@ def test_audit():
     tmpl = ("街道餐饮客户不低于20家，周末人流按大小排序，"
             "评分3.8分以上客户占比50%以上为高，开业3年以上客户占比50%以上为高")
     r = _ask(tmpl)
+    if _blocked(r, "T20", "体检-C类(数据完整度%+质量建议)", "数据质量体检", "含 数据完整度% 列 且 有 recommendation"):
+        return
     ar = r["audit"]
     has_rec = bool(ar.get("recommendation")) and ("数据完整度%" in r["out"].columns)
     R.ok("T20", "体检-C类(数据完整度%+质量建议)", "数据质量体检",
@@ -230,6 +282,8 @@ def test_audit():
          f'recommendation={ar.get("recommendation")}; audited_dim={ar.get("audited_dimensions")}')
 
     r = _ask("客房数大于100间的非连锁酒店")
+    if _blocked(r, "T21", "体检-A类(关键字段缺失率)", "数据质量体检", "audit 含 field_missing 键"):
+        return
     ar = r["audit"]
     R.ok("T21", "体检-A类(关键字段缺失率)", "数据质量体检",
          "field_missing" in ar, "audit 含 field_missing 键",
@@ -241,9 +295,18 @@ def test_correction_and_embedding():
     QueryMemory().clear()
     s = QuerySession(use_cache=True)
     r1 = s.ask("美宜佳清单", verbose=False, use_memory=True)
+    if _blocked(r1, "T22", "纠偏闭环(美宜佳346 → :fix目标子区域B37 → 重复命中对)", "纠偏闭环",
+                "首问346, fix后37, 重复原话命中37"):
+        return
     r2 = s.fix_last(correct_nl="美宜佳且规划大区=目标子区域B", verbose=False)
+    if _blocked(r2, "T22", "纠偏闭环(美宜佳346 → :fix目标子区域B37 → 重复命中对)", "纠偏闭环",
+                "首问346, fix后37, 重复原话命中37"):
+        return
     s2 = QuerySession(use_cache=True)
     r3 = s2.ask("美宜佳清单", verbose=False, use_memory=True)
+    if _blocked(r3, "T22", "纠偏闭环(美宜佳346 → :fix目标子区域B37 → 重复命中对)", "纠偏闭环",
+                "首问346, fix后37, 重复原话命中37"):
+        return
     R.ok("T22", "纠偏闭环(美宜佳346 → :fix目标子区域B37 → 重复命中对)", "纠偏闭环",
          r1["rows"] == 346 and r2["rows"] == 37 and r3["rows"] == 37,
          "首问346, fix后37, 重复原话命中37",
@@ -664,7 +727,7 @@ def test_dm_layer():
          hit_dm and no_dm and equal and fallback and no_silent,
          "等值+count 命中 DM 且与底表扫描等价；contains/DM外维度回退底表",
          f"hit_dm={hit_dm} equal={equal} fallback={fallback} no_silent={no_silent} "
-         f"top1={o1.iloc[0]['连锁品牌名称']}={o1.iloc[0]['门店数']}")
+         f"top1={((o1.iloc[0]['连锁品牌名称'], o1.iloc[0]['门店数']) if not o1.empty else '空(DM结果0行)')}")
 
 
 def test_feedback_log():
@@ -1032,7 +1095,7 @@ def gen_report(out_path: Path, total: float):
 </style></head>
 <body><div class="wrap">
  <h1>outlet-insight 数据分析 Agent · 场景化测试报告</h1>
- <div class="sub">生成时间：{time.strftime('%Y-%m-%d %H:%M:%S')} ｜ 数据：<data>):,} 行）｜ 运行耗时 {total:.1f}s</div>
+ <div class="sub">生成时间：{time.strftime('%Y-%m-%d %H:%M:%S')} ｜ 数据：{len(SESS.full_df):,} 行 ｜ 运行耗时 {total:.1f}s</div>
 
  <div class="cards">
    <div class="card"><div class="n">{len(R.cases)}</div><div class="l">总用例数</div></div>
@@ -1091,10 +1154,19 @@ def main():
         QueryMemory().clear()
 
     t0 = time.time()
-    test_A(); test_B(); test_C(); test_multistep(); test_dryplan()
-    test_guardrails(); test_audit(); test_correction_and_embedding(); test_mcp(); test_profile()
-    test_approx(); test_engine(); test_insight(); test_time_predicate(); test_data_assertions(); test_feedback_log()
-    test_dm_layer(); test_boundary_contracts()
+    def _guarded(fn):
+        try:
+            fn()
+        except Exception as e:  # 用例函数自身异常 → 如实记录为失败用例，绝不中断整套件
+            R.fail(f"EX-{fn.__name__}", f"{fn.__name__} 未捕获异常", "套件健壮性",
+                   "用例函数执行无异常", f"{type(e).__name__}: {e}",
+                   traceback.format_exc(limit=6))
+
+    for _t in (test_A, test_B, test_C, test_multistep, test_dryplan,
+               test_guardrails, test_audit, test_correction_and_embedding, test_mcp,
+               test_profile, test_approx, test_engine, test_insight, test_time_predicate,
+               test_data_assertions, test_feedback_log, test_dm_layer, test_boundary_contracts):
+        _guarded(_t)
     total = time.time() - t0
 
     if guard:

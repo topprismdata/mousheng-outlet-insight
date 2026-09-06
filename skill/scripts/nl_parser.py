@@ -350,3 +350,43 @@ def auto_parse(text: str, reg: FieldRegistry) -> dict:
 
     q["analysis_intent"] = compile_analysis_intent(text, reg, q)
     return q
+
+
+# ----------------------------- Dry-plan 透明预览 -----------------------------
+def explain_query(text: str, reg: FieldRegistry, src_df: pd.DataFrame,
+                  scope_label: str | None = None) -> str:
+    """Dry-plan：把将要执行的步骤翻译成中文透明预览（不真正执行）。
+
+    借鉴 WrenAI 的 dry-plan 思想——执行前让调用方看到确定性编译后的真实步骤，
+    可审查、可追溯，降低误执行风险。
+
+    注：本函数此前被 4 个入口 import 却从未入库（见 issue #1 根因），
+    现按镜像副本 skill_mirror/scripts/nl_parser.py 原样补回。
+    """
+    q = auto_parse(text, reg)
+    label = scope_label or f"{len(src_df):,} 行"
+    lines = [f"[scope] 在 {label} 上执行"]
+    v = validate_query(q, reg)
+    if not v["ok"]:
+        lines.append("[编译拦截] 字段/算子不通过语义层校验：")
+        for e in v["errors"]:
+            lines.append("  ✗ " + e)
+        return "\n".join(lines)
+    # 度量/实体确定性展开后的真实物理过滤
+    for f in _expand_semantics(q.get("filters", []), reg):
+        lines.append(f"[筛选] {f['field']} {f.get('op')} {f.get('value')!r}")
+    if q.get("candidate_filter"):
+        for f in _expand_semantics(q["candidate_filter"], reg):
+            lines.append(f"[候选过滤] {f['field']} {f.get('op')} {f.get('value')!r}")
+    if q.get("group_by"):
+        metrics = q.get("metrics") or [{"name": "count"}]
+        mnames = [m.get("name") or m.get("field") for m in metrics]
+        lines.append(f"[聚合] 按 {q['group_by']} 分组，指标 {mnames}")
+    for o in q.get("order_by", []):
+        lines.append(f"[排序] {o['field']} {o.get('dir', 'desc')}")
+    if q.get("limit"):
+        lines.append(f"[限制] 前 {q['limit']} 行")
+    if q.get("type") == "C":
+        lines.append(f"[规则] {len(q.get('rules', []))} 条规则，候选字段={q.get('candidate_field')}")
+    lines.append("[体检] 执行后自动运行数据质量体检（决策助手）")
+    return "\n".join(lines)
