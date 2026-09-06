@@ -17,11 +17,13 @@ import os
 import sqlite3
 import pandas as pd
 
-from dm_layer import build_dm, query_stat, drilldown, GEO_NORM, DIMENSIONS
+from agent_core import find_default_data
+from dm_layer import build_dm, default_dm_path, query_stat, drilldown, GEO_NORM, DIMENSIONS
 
-PARQUET = "/Users/ghb/outlet-insight/data/<data>.parquet"
-CSV = "/Users/ghb/outlet-insight/data/<data>.csv"
-DB = "/Users/ghb/outlet-insight/data/sh_dm.sqlite"
+_DATA = find_default_data()  # OUTLET_DATA → 仓库 data/ → ~/outlet-insight/data → ~/Downloads
+PARQUET = str(_DATA.with_suffix(".parquet"))
+CSV = str(_DATA)
+DB = os.environ.get("OUTLET_DM_DB") or str(default_dm_path(_DATA))
 
 pd.set_option("display.width", 160)
 pd.set_option("display.max_rows", 40)

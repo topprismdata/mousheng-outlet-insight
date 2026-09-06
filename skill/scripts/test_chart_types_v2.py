@@ -6,12 +6,14 @@
 运行: python test_chart_types_v2.py
 """
 import json
+import os
 import sys
 from pathlib import Path
 
 import mcp_server as m
 
-V3 = Path("/Users/ghb/outlet-insight/output/charts_v3")
+V3 = Path(os.environ.get("OUTLET_OUTPUT_DIR")
+          or Path(__file__).resolve().parents[2] / "output" / "charts_v3")
 V3.mkdir(parents=True, exist_ok=True)
 
 DB_READY = getattr(m.SESS, "dm_db", None) is not None

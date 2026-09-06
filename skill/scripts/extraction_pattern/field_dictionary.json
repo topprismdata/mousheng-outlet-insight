@@ -1,6 +1,6 @@
 {
   "meta": {
-    "source": "/Users/ghb/Downloads/Downloads/售点洞察1784601676919.csv",
+    "source": "~/Downloads/售点洞察1784601676919.csv",
     "total_columns": 152,
     "group_legend": {
       "identity": "售点身份标识",

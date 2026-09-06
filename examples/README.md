@@ -17,7 +17,9 @@
 
 ## 运行时使用
 
-### 1. 从项目根目录 (`/Users/ghb/outlet-insight/`) 运行 CLI：
+> 环境要求：项目依赖包含 pandas / shapely / jsonschema，请通过 requirements 或 pip 安装。
+
+### 1. 从项目根目录运行 CLI：
 ```bash
 python skill/scripts/insight_cli.py \
     --request examples/insight-request.example.json \

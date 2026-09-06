@@ -23,12 +23,12 @@ mcp_server.py
   - drilldown       给定下钻过滤键，回底表取原始门店明细（常驻内存，不读盘）
   - chart           图形化：stat 级查询 → Flint 渲染成离线 HTML 图表（按度量语义自动配色）
 
-注册到 ~/.workbuddy/mcp.json 示例：
+注册到 MCP 客户端（如 ~/.workbuddy/mcp.json）示例（<项目根> = 本仓库根目录的绝对路径）：
   {
     "mcpServers": {
       "outlet-insight": {
-        "command": "/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python",
-        "args": ["/Users/ghb/.workbuddy/skills/outlet-insight/scripts/mcp_server.py"]
+        "command": "python3",
+        "args": ["<项目根>/skill/scripts/mcp_server.py"]
       }
     }
   }
@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -48,11 +49,14 @@ from profiler import load_profile, set_profile  # 第5块：统计/画像层
 from dm_layer import query_stat, query_stat_cross, drilldown_df, DIMENSIONS as DM_DIMENSIONS  # 第10块：DM汇总层
 from viz_adapter import build_flint_spec, write_spec  # 第10块：Flint 图形化适配层
 from adapters.legacy_dataframe_api import synthesize
-# 图形化渲染所需的环境（Node 桥 + 受管 node workspace）
+# 图形化渲染所需的环境（Node 桥 + node_modules）：环境变量优先 → PATH/仓库相对路径 → home 兜底
 HERE = Path(__file__).resolve().parent
-NODE = "/Users/ghb/.workbuddy/binaries/node/versions/22.22.2/bin/node"
-NODE_PATH = "/Users/ghb/.workbuddy/binaries/node/workspace/node_modules"
-CHART_OUT = Path("/Users/ghb/outlet-insight/output/charts")
+REPO_ROOT = HERE.parent.parent
+NODE = (os.environ.get("OUTLET_NODE") or shutil.which("node")
+        or str(Path.home() / ".workbuddy/binaries/node/versions/22.22.2/bin/node"))
+NODE_PATH = os.environ.get("OUTLET_NODE_PATH") or str(
+    Path.home() / ".workbuddy/binaries/node/workspace/node_modules")
+CHART_OUT = Path(os.environ.get("OUTLET_OUTPUT_DIR") or REPO_ROOT / "output" / "charts")
 
 # 启动时加载一次全量数据，常驻（MCP 服务进程级单例）
 print("[mcp] 启动：加载全量售点数据...", file=sys.stderr)

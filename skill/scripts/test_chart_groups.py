@@ -4,7 +4,7 @@
 chart 工具系统测试：用历史业务场景(Q1-Q8 精神) + 新图表能力(配色/主题/多系列/热力图)
 做多组端到端验证。跑一次出控制台摘要 + output/charts_test_report.md。
 
-用法: /Users/ghb/.workbuddy/binaries/python/envs/store/bin/python test_chart_groups.py
+用法: python3 test_chart_groups.py
 """
 from __future__ import annotations
 

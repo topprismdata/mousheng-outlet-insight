@@ -14,22 +14,29 @@
 from __future__ import annotations
 
 import argparse
+import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-from dm_layer import query_stat
+from agent_core import find_default_data
+from dm_layer import default_dm_path, query_stat
 from viz_adapter import build_and_write
 
 HERE = Path(__file__).resolve().parent
-NODE = "/Users/ghb/.workbuddy/binaries/node/versions/22.22.2/bin/node"
-NODE_PATH = "/Users/ghb/.workbuddy/binaries/node/workspace/node_modules"
-OUT_DIR = Path("/Users/ghb/outlet-insight/output/sh_query_tests")
-DB = "/Users/ghb/outlet-insight/data/sh_dm.sqlite"
+NODE = (os.environ.get("OUTLET_NODE") or shutil.which("node")
+        or str(Path.home() / ".workbuddy/binaries/node/versions/22.22.2/bin/node"))
+NODE_PATH = os.environ.get("OUTLET_NODE_PATH") or str(
+    Path.home() / ".workbuddy/binaries/node/workspace/node_modules")
+OUT_DIR = Path(os.environ.get("OUTLET_OUTPUT_DIR")
+               or HERE.parent.parent / "output" / "sh_query_tests")
+_DATA = find_default_data()  # OUTLET_DATA → 仓库 data/ → ~/outlet-insight/data → ~/Downloads
+DB = os.environ.get("OUTLET_DM_DB") or str(default_dm_path(_DATA))
 
 
 def _render(spec_path: Path, html_path: Path, backend: str, palette: str, theme: str):
-    env = {**__import__("os").environ, "NODE_PATH": NODE_PATH}
+    env = {**os.environ, "NODE_PATH": NODE_PATH}
     r = subprocess.run(
         [NODE, str(HERE / "render_flint.mjs"), str(spec_path), str(html_path),
          backend, palette, theme],

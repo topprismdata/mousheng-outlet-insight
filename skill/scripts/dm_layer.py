@@ -409,8 +409,11 @@ def route_b_query(query: dict, reg=None, db_path: str | None = None):
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import sys
-    PARQUET = "/Users/ghb/outlet-insight/data/<data>.parquet"
-    DB = "/Users/ghb/outlet-insight/data/sh_dm.sqlite"
+    from agent_core import find_default_data
+
+    _data = find_default_data()  # OUTLET_DATA → 仓库 data/ → ~/outlet-insight/data → ~/Downloads
+    PARQUET = str(_data.with_suffix(".parquet"))
+    DB = os.environ.get("OUTLET_DM_DB") or str(default_dm_path(_data))
 
     if "--build" in sys.argv or not os.path.exists(DB):
         build_dm(PARQUET, DB)

@@ -46,14 +46,16 @@ agent_created: true
 Insight Component 本身是零数据库依赖、零 CSV 依赖的纯认识计算组件。
 
 ### 1. 命令行调用 (Pure JSON-in / JSON-out CLI)
+
+> 环境要求：项目依赖包含 pandas / shapely / jsonschema，请通过 requirements 或 pip 安装。
+
 ```bash
-PY=/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python
-cd SKILL_DIR/scripts
+cd <SKILL_DIR>/scripts
 # 探测官方权威 InsightRequest 示例 -> 产出 InsightPackage
-$PY insight_cli.py --request ../examples/insight-request.example.json --out /tmp/package.json --validate --pretty
+python3 insight_cli.py --request ../examples/insight-request.example.json --out /tmp/package.json --validate --pretty
 
 # 或通过管道输入
-cat ../examples/insight-request.example.json | $PY insight_cli.py --pretty
+cat ../examples/insight-request.example.json | python3 insight_cli.py --pretty
 ```
 
 ### 2. Python 模块调用
