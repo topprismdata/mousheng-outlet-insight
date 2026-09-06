@@ -9,21 +9,31 @@
 
 profile_reference:
   profile_uri: "prism://ontology/profiles/outlet-insight"
-  ontology_version: "0.1.0"
+  # 原 "0.1.0" 为上游已删除的孤儿发行（prism-ontology#13）；现指向实际存在的发行身份（tag: outlet-insight-v0.1.0-rc2）
+  ontology_version: "0.1.0-rc2"
   profile_version: "0.1.0-rc2"
   schema_version: "draft-2020-12"
-  checksum: "sha256:2830f9ead785c9c387d038095b85e83edf1a3dcdac03d31b6d86b8164339c3e5"
+  # outlet-insight.profile.yaml @ dist/outlet-insight/0.1.0-rc2（与 profile.lock locked_checksums 一致）
+  checksum: "sha256:035cece0400258ab5571f0c5217cf2c48f4088b25c045caff291bdc30e92f09b"
   status: "release_candidate"
-  distribution_source: "/Users/ghb/prism-ontology/dist/outlet-insight/0.1.0-rc2/"
+  # 可移植定位符（禁止机器绝对路径）；门禁解析优先级：
+  # PRISM_DIST_DIR -> 仓库同级 ../prism-ontology/dist/outlet-insight/<profile_version> -> ~/prism-ontology/dist/outlet-insight/<profile_version>
+  distribution_source: "prism-ontology/dist/outlet-insight/0.1.0-rc2"
+  distribution_source_env: "PRISM_DIST_DIR"
   compatible_component_versions: ">=1.1.0,<2.0.0"
 
   required_upstream_modules:
-    - module: "prism:core/meta-model"
-      version_constraint: "^0.1.0"
-    - module: "prism:domain/outlet"
-      version_constraint: "^0.1.0"
-    - module: "prism:extension/insight-artifact"
-      version_constraint: "^0.1.0"
+    # 模块 ID 与 dist/outlet-insight/0.1.0-rc2/outlet-insight.profile.yaml included_modules 对齐；
+    # rc3 起上游删除 4 个概念 URI 且 rc4 SHACL 将 observedValue 更名 hasResultValue（破坏性），
+    # 当前唯一通过下游门禁的发行即锁定版本，故约束精确钉定：
+    - module: "prism:core"
+      version_constraint: "==0.1.0-rc2"
+    - module: "prism:outlet"
+      version_constraint: "==0.1.0-rc2"
+    - module: "prism:insight"
+      version_constraint: "==0.1.0-rc2"
+    - module: "prism:sales-visit-boundary"
+      version_constraint: "==0.1.0-rc2"
 
   governance:
     authority: "prism-ontology"
