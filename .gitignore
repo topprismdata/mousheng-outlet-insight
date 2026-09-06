@@ -91,3 +91,13 @@ skill/test_report.html
 # ---- 明确禁止: output/ 任何运行时产物 ----
 output/**
 !/output/.gitkeep
+
+# ---- 运行时自学飞轮缓存 (RAG query memory runtime cache, NOT for Public) ----
+# 注意: 第 62-64 行的 references/query_memory.* 模式因含路径分隔符而锚定在仓库根,
+# 匹配不到 skill/references/ 下的实际文件 (git check-ignore 验证), 故按 skill/ 前缀重新声明。
+# 这些文件由 skill/scripts/memory.py 与 feedback_integration.py 在运行时读写,
+# 内容含针对私有数据集 (data/) 的执行产物, 属运行时缓存, 禁止入库; 详见 docs/asset-governance.md。
+skill/references/query_memory.jsonl
+skill/references/query_memory_emb.npz
+skill/references/query_memory.jsonl.bak
+skill/references/query_memory_emb.npz.bak
