@@ -1,30 +1,23 @@
 lock_metadata:
   profile_uri: prism://ontology/profiles/outlet-insight
   locked_version: 0.1.0-rc2
-  git_commit: f8fa1d230ca12f1045ce22ecf2c2799a024d904a
+  git_commit: b70780dac1404cd040e98d556b5a1dde4a88a9fd
   release_tag: outlet-insight-v0.1.0-rc2
   clean_working_tree: true
-  locked_at: '2026-08-25T08:52:54.950826+00:00'
+  locked_at: '2026-09-06T15:45:08.444060+00:00'
   upstream_authority: TopPrism Ontology Engineering Committee
-  distribution_path: '~/prism-ontology/dist/outlet-insight/0.1.0-rc2'
-  distribution_resolution: 'PRISM_DIST_DIR -> ../prism-ontology/dist/outlet-insight/<version> -> ~/prism-ontology/dist/outlet-insight/<version>'
+  distribution_path: ~/prism-ontology/dist/outlet-insight/0.1.0-rc2
+  distribution_resolution: repo-sibling ../prism-ontology/dist/outlet-insight/0.1.0-rc2
   verification_status: verified_and_locked
-  reproducibility_note: >-
-    2026-09-06 复核：发行包 SHA-256（11 文件）全部匹配，本锁身份字段仍真实有效；但 dataset_mapping.yaml
-    在脱敏提交 8c87170/dbe0a2f 中，将 3 个上游已注册 URI（其真名含客户企业标识，依脱敏政策不在本文件记录；
-    对应关系见 docs/ontology-compatibility-matrix.md §5）改名为中性名 prism:org/示范饮料集团、
-    prism:source/BeverageTownshipMaster、prism:observed/示范企业乡镇主数据 —— 任何上游发行均未注册这些
-    中性别名，故门禁对 rc2 复跑即失败（3 个未注册 URI）；对 rc3/rc4 另缺 prism:provenance/DataEngineeringContext
-    （上游 rc3 起删除）。修复映射前无法经门禁重新生成本锁。
 locked_checksums:
-  outlet-insight.profile.yaml: sha256:035cece0400258ab5571f0c5217cf2c48f4088b25c045caff291bdc30e92f09b
-  outlet-insight.owl.ttl: sha256:7f67774530c847ddaae5cfc977d5793ea94a4125ccbe0f3ac13905bbd30810d0
-  outlet-insight.shacl.ttl: sha256:2a20e5a4e8460dfe95a912d5b9164dbffc327959bc67a76386e62b83ffc8f5d5
-  metric-definitions.yaml: sha256:f763841a93a94dec7835460f9792615cc48a249934385e91275a3a6726fd46dc
+  competency-question-report.md: sha256:32291e84548cb778384ad9b35e03485a34fd0d0cd546042d9219cfe1a37dd2b7
+  competency-questions.yaml: sha256:100cb79211d43370221a7a9a53f15fa86d9bcd71dbaca112fc9c8e020c98783c
   concepts.yaml: sha256:7769951519ec26cfa4454a45cf37f137123fdd0cd893b5814166ef1510a49827
-  relations.yaml: sha256:3e7e53aae223f8354dc34ae5c3680c7f109a4ef4b368595d3eb865575321fe55
-  sources.yaml: sha256:a454002cf7fc932d20f2c7b231dba66ee7cee8da98301a494b9f2f36dfa9334a
-  organizations.yaml: sha256:2a859af1064a34392f5bb2010df7a4d61be028d86872d972e9daa7e0950de55e
-  competency-questions.yaml: sha256:b8cf675c7d5c32bd71044098ad7d1c748922085283ab25ad48b856894858410b
-  competency-question-report.md: sha256:f65348ee67f0e66b648eaca378c38a68f2ec95f286d807fa396f0309e0c2c7cd
-  profile-manifest.json: sha256:6a7c576ae76fd3122a3af9273dddf162ec9380707e27a31a16ded8d47a981b7b
+  metric-definitions.yaml: sha256:f763841a93a94dec7835460f9792615cc48a249934385e91275a3a6726fd46dc
+  organizations.yaml: sha256:d4a0348eeb65f70ba758c1f923759443354635fd985bb1b0e6cc4c03666746a3
+  outlet-insight.owl.ttl: sha256:7f67774530c847ddaae5cfc977d5793ea94a4125ccbe0f3ac13905bbd30810d0
+  outlet-insight.profile.yaml: sha256:035cece0400258ab5571f0c5217cf2c48f4088b25c045caff291bdc30e92f09b
+  outlet-insight.shacl.ttl: sha256:2a20e5a4e8460dfe95a912d5b9164dbffc327959bc67a76386e62b83ffc8f5d5
+  profile-manifest.json: sha256:97656abc3ab109122a49a8cf410431924998dbc69f69f541473078d994a79185
+  relations.yaml: sha256:b4c3ce30ac23ee5f42bffeca78ecddc3c64e99bdb9c5bdc5e1ab8279c9af35b4
+  sources.yaml: sha256:e637fcd86bd5ddb0fc077afafb9a784514ecb63f9561d6e382b43c823762baee
