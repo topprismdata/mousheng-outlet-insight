@@ -122,40 +122,39 @@
 ### 0. 无数据即可验证(30 秒,验证 FMCG 知识库 CI)
 
 ```bash
-PY=/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python
-cd ~/outlet-insight/skill/scripts
+cd skill/scripts        # 在本仓库根目录下执行
 
 # 受管 FMCG 知识库严苛溯源 CI Gate (无需任何数据)
-$PY fmcg_knowledge_engine.py ci
+python3 fmcg_knowledge_engine.py ci
 
 # 反向归因: 业务口语 -> 受管实体 + 权威溯源
-$PY fmcg_knowledge_engine.py diagnose --query "查一下夫妻老婆店的清单"
+python3 fmcg_knowledge_engine.py diagnose --query "查一下夫妻老婆店的清单"
 ```
 
-### 1. 全量回归套件 (6 个 suite,52/52 全绿)
+### 1. 全量回归套件 (6 个 suite，作者机数据下 52/52；干净克隆下数据耦合用例如实记红)
 
 ```bash
-$PY test_doc_examples.py                 # Phase A: 官方示例权威性      5/5
-$PY -m pytest -v test_evidence_semantics.py     # Phase B: 证据语义增强     4/4
-$PY -m pytest -v test_priority_quota.py          # Phase C: 业务目标配额     4/4
-$PY test_insight_quality.py              # Phase D: 11 大黄金场景      11/11
-$PY test_ci_eval_assertions.py           # Phase E: CI 门禁与越界词 19/19
-$PY -m pytest -v test_fmcg_provenance.py       # Phase F: 受管 FMCG 溯源   9/9   ← v1.2.0 新增
+python3 test_doc_examples.py                 # Phase A: 官方示例权威性      5/5
+python3 -m pytest -v test_evidence_semantics.py     # Phase B: 证据语义增强     4/4
+python3 -m pytest -v test_priority_quota.py          # Phase C: 业务目标配额     4/4
+python3 test_insight_quality.py              # Phase D: 11 大黄金场景      11/11
+python3 test_ci_eval_assertions.py           # Phase E: CI 门禁与越界词 19/19
+python3 -m pytest -v test_fmcg_provenance.py       # Phase F: 受管 FMCG 溯源   9/9   ← v1.2.0 新增
 ```
 
 ### 2. 有数据时的自然语言查询(需先获取底表)
 
 ```bash
-$PY agent_cli.py "目标子区域B的美宜佳清单"
-$PY agent_cli.py "查一下夫妻老婆店的清单"
-$PY agent_cli.py "餐饮街 ≥20 家 + 周末客流排序 + 评分 3.8+ 占比 50%+ 为高"
-$PY dm_demo.py                           # DM 统计 + 交互下钻演示
+python3 agent_cli.py "目标子区域B的美宜佳清单"
+python3 agent_cli.py "查一下夫妻老婆店的清单"
+python3 agent_cli.py "餐饮街 ≥20 家 + 周末客流排序 + 评分 3.8+ 占比 50%+ 为高"
+python3 dm_demo.py                           # DM 统计 + 交互下钻演示
 ```
 
 ### 3. 通过 MCP 暴露给其他 Agent
 
 ```bash
-$PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
+python3 mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 ```
 
 ---
@@ -204,7 +203,7 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 │   ├── designs/fmcg-knowledge-base/                ← 设计沉淀镜像
 │   ├── 开源Data_Agent生态研究*.md                  ← WrenAI/Cube/TaskWeaver/Vanna 调研
 │   ├── 售点洞察实例问题集.md
-│   ├── outlet-insight_PRD*.md                    ← 历史 PRD 版本(已废弃,仅作追溯)
+│   ├── archive/                                  ← 历史 PRD 版本 v2.9.bak/v3.0/v3.1/v3.2(已归档,仅作追溯,政策见 archive/README.md)
 │   └── ...
 ├── examples/                                       ← 权威 Insight Package 契约示例
 ├── demo/                                           ← 浏览器交互 demo (HTML+Flask)
@@ -228,7 +227,9 @@ $PY mcp_server.py                        # stdio MCP, 暴露 8 个 tool
 
 ## 10. 验证与质量
 
-**当前状态**:`v1.3.0-rc3` (语义层 v1.2.0) · **全量回归 52/52 100% 绿灯**
+**当前状态**：`v1.3.0-rc3`（语义层 v1.2.0）· 回归套件在**作者本机数据 + 专用解释器**下全绿；**干净克隆**（无 `data/` 私有 CSV）下，绑定真实数据内容的用例会被如实记为失败（不再崩溃）——见运行前提。
+
+> **运行前提**：全量套件依赖未入库的 `data/*.csv`（PII，已 gitignore）。缺失时 `find_default_data()` 回退并如实报告；部分用例断言作者私有数据的具体行数值（如 `目标子区域B/37/346`），换数据必然不绿，属预期而非缺陷。需装依赖（pandas/shapely/jsonschema）的解释器，`python3` 裸环境会 import 失败。
 
 | 套件 | 项数 | 状态 |
 |---|---:|:---:|

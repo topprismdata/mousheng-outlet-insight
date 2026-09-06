@@ -4,6 +4,7 @@
 > **所属品牌**：棱镜极 TopPrism ｜ 所属产品：谋圣 Mousheng ｜ 技术标识：`mousheng-outlet-insight`  
 > **当前版本**：`1.3.0-rc3` (语义层 v1.2.0 升级: 受管 FMCG 领域知识库 + W3C PROV-O 实体溯源)
 > **当前状态**：双轨引擎换血完毕（Vanna+DuckDB+SQL防火墙），50 题金标盲测 100% 通过（首次解释正确率 100% / 专家认可率 100%），智能多维研报生成器上线，全量回归 165/165 全绿。
+> **权威分工**：本文件 = skill 运行时行为指南（权威：Insight 组件运行时行为、验证门禁、产品红线）；仓库结构/上手命令/文档地图见根目录 `AGENT.md`。权威需求文档：`docs/mousheng-outlet-insight_PRD.md`（v1.3.0-rc3）。
 
 ---
 
@@ -14,8 +15,7 @@
 ---
 
 ## 2. 统一项目目录与核心模块地图
-
-**项目根目录：`~/outlet-insight/`**
+**仓库根目录**（作者机器上位于 `~/outlet-insight/`；其他环境以本仓库检出目录为准）
 
 | 子目录 | 内容 | 关键模块与文件 |
 |---|---|---|
@@ -27,9 +27,9 @@
 ---
 
 ## 3. 数据与运行环境
-
-- **底表**：`data/<data>.parquet`（<size> MB，<n_rows> 行 × <n_cols> 列目标区域全量潜客大宽表）
-- **Python**：`/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python`（DuckDB 1.5.5, Vanna 2.0.2, scipy, ECharts 已就绪）
+- **底表直读**：`data/<data>.parquet`（由 `data/<data>.csv` 缓存生成，见根 AGENT.md §3；<size> MB，<n_rows> 行 × <n_cols> 列目标区域全量潜客大宽表）
+- **Python**：`python3`（DuckDB 1.5.5, Vanna 2.0.2, scipy, ECharts 等依赖就绪）
+- 上游 `prism-ontology` dist 路径后续将引入环境变量 `PRISM_DIST_DIR`（暂未启用）
 - **数据核心特征**：100% 服务状态=未服务（全是潜客）；省份=目标省份 <p>% + 目标城市 <p>% + 目标省份 <p>%；"SH"≠目标城市（目标大区口径）；城市列存 "目标城区" 而非 "目标城市"
 
 ---
@@ -37,24 +37,22 @@
 ## 4. 快速验证命令（先跑这三条）
 
 ```bash
-PY=/Users/ghb/.workbuddy/binaries/python/envs/store/bin/python
-cd ~/outlet-insight
+cd <仓库根目录>   # 本仓库检出目录
 
 # 1. 运行自动化 CI 安全门禁与越界词断言 (19/19 必须全绿)
-$PY skill/scripts/test_ci_eval_assertions.py
+python3 skill/scripts/test_ci_eval_assertions.py
 
 # 2. 运行 50 题长尾盲测集测试 (50/50 必须全绿)
-$PY skill/scripts/blind_test_suite.py
+python3 skill/scripts/blind_test_suite.py
 
 # 3. 运行 11 大黄金场景洞察质量测试 (11/11 必须全绿)
-$PY skill/scripts/test_insight_quality.py
+python3 skill/scripts/test_insight_quality.py
 
 # 4. 运行受管 FMCG 知识库溯源合规测试 (9/9 必须全绿) - W3C PROV-O 强制
-$PY -m pytest -v skill/scripts/test_fmcg_provenance.py
+python3 -m pytest -v skill/scripts/test_fmcg_provenance.py
 
 # 5. 启动 FMCG 知识库严苛 CI Gate (64 entities, 0 missing source)
-$PY skill/scripts/fmcg_knowledge_engine.py ci
-```
+python3 skill/scripts/fmcg_knowledge_engine.py ci
 ```
 
 ---
@@ -67,3 +65,4 @@ $PY skill/scripts/fmcg_knowledge_engine.py ci
 4. **确定性与零随机性**：洞察合成与集中度评估纯基于数学统计与规则，同输入 100% 产出同输出。
 5. **版本一致性**：组件版本统一锁定为 `1.3.0-rc3`，权威示例 `examples/` 必须保持字节级配对一致。
 6. **实体定义必须有溯源**：v1.2.0 起，任何实体（品牌/业态/认知概念/度量）的定义都必须带 `uri` + `provenance.authority_ref` + `provenance.confidence_tier`。禁止 UNVERIFIED/LLM_GENERATED_NO_SOURCE 等级。CI Gate 失败必须就地修复，严禁隐式放宽。
+7. **工程级铁律见根 `AGENT.md` §6**：过滤条件绝不静默丢失、护栏不放松、零回归、规则轨零 LLM 等仓库级约定此处不重复；两侧冲突时，产品行为红线以本文件为准、工程约定以根文件为准。

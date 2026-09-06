@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-PRD 一致性 lint（基于 outlet-insight_PRD.md 实跑校验）
+PRD 一致性 lint（基于 docs/mousheng-outlet-insight_PRD.md 实跑校验）
 校验项：
   1. §11/§13/§14 中引用的 FR 必须都在 §5 定义
   2. 每个 ✅ FR 都必须有对应的真实测试（R.ok/R.fail 存在于 run_tests.py）
@@ -14,9 +14,9 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path("/Users/ghb/WorkBuddy/2026-07-22-17-52-31")
-PRD = ROOT / "outlet-insight_PRD.md"
-TESTS = Path("/Users/ghb/.workbuddy/skills/outlet-insight/scripts/run_tests.py")
+ROOT = Path(__file__).resolve().parents[1]
+PRD = ROOT / "docs" / "mousheng-outlet-insight_PRD.md"
+TESTS = ROOT / "skill" / "scripts" / "run_tests.py"
 
 prd_text = PRD.read_text(encoding="utf-8")
 test_text = TESTS.read_text(encoding="utf-8")
@@ -58,6 +58,13 @@ for l in s5.splitlines():
     if m:
         fr_def[m.group(1)] = {"status": m.group(3), "prio": m.group(4), "desc": m.group(2).strip()}
 defined_ids = set(fr_def.keys())
+if not defined_ids:
+    sys.exit(
+        f"未能在 {PRD.name} 中解析出 §5 FR 定义表"
+        "（期望格式：| FR-NN | 描述 | ✅/🔲 | P0/P1/P2 |）。"
+        "该表来自 v3.5 时代的工作区 PRD，未随仓库入库；"
+        "待 PRD 恢复 FR 表后此脚本方可实跑。"
+    )
 
 # ---- 提取真实测试 ID（run_tests.py 中 R.ok/R.fail("Txx" ...)）----
 test_ids = set(re.findall(r'R\.(?:ok|fail)\(\s*"(T\d+)"', test_text))
