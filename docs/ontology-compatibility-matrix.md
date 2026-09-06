@@ -92,7 +92,7 @@
 - **对 rc4**：身份校验 ✓、tag 祖先 ✓、14/14 SHA-256 ✓、field-mapping 44 条 `mapping_only` 消费 ✓，随后 **URI 集合断言失败（4 个未注册）**：
   `prism:observed/示范企业乡镇主数据`、`prism:org/示范饮料集团`、`prism:provenance/DataEngineeringContext`、`prism:source/BeverageTownshipMaster`。
 - **对 rc2**：同样失败，但仅 **3 个未注册**（除 `DataEngineeringContext` 外的上述 3 个）。
-- 根因：这 3 个 URI 是脱敏提交 `8c87170`/`dbe0a2f` 对**上游已注册 URI** 的下游改名——`prism:org/示范饮料集团`→`示范饮料集团`、`prism:source/BeverageTownshipMaster`→`BeverageTownshipMaster`、`prism:observed/示范企业乡镇主数据`→`示范企业乡镇主数据`；任何上游发行（rc1–rc4）均未注册脱敏别名。
+- 根因：这 3 个 URI 是脱敏提交 `8c87170`/`dbe0a2f` 对**上游已注册 URI** 的下游改名——`org`/`source`/`observed` 三类上游 URI 真名含客户企业标识（依脱敏政策不复述）→ 改为中性名 `示范饮料集团`/`BeverageTownshipMaster`/`示范企业乡镇主数据`；任何上游发行（rc1–rc4）均未注册脱敏别名。
 - 结论：**当前没有任何上游发行能让门禁通过**，`profile.lock` 保持 rc2（最后一个真实生成的锁；发行包字节级未变，11 项哈希 2026-09-06 复验全部匹配），并在锁内以 `reproducibility_note` 标注不可再生状态。**不得**为使门禁变绿而弱化精确集合校验或伪造别名注册。
 
 **rc4 重锁前置清单（下游待办）**：

@@ -11,10 +11,11 @@ lock_metadata:
   verification_status: verified_and_locked
   reproducibility_note: >-
     2026-09-06 复核：发行包 SHA-256（11 文件）全部匹配，本锁身份字段仍真实有效；但 dataset_mapping.yaml
-    在脱敏提交 8c87170/dbe0a2f 中将 prism:org/示范饮料集团、prism:source/BeverageTownshipMaster、
-    prism:observed/示范企业乡镇主数据 改名为 prism:org/示范饮料集团、prism:source/BeverageTownshipMaster、
-    prism:observed/示范企业乡镇主数据（任何上游发行均未注册脱敏别名），门禁对 rc2 复跑即失败（3 个未注册 URI）；
-    对 rc3/rc4 另缺 prism:provenance/DataEngineeringContext（上游 rc3 起删除）。修复映射前无法经门禁重新生成本锁。
+    在脱敏提交 8c87170/dbe0a2f 中，将 3 个上游已注册 URI（其真名含客户企业标识，依脱敏政策不在本文件记录；
+    对应关系见 docs/ontology-compatibility-matrix.md §5）改名为中性名 prism:org/示范饮料集团、
+    prism:source/BeverageTownshipMaster、prism:observed/示范企业乡镇主数据 —— 任何上游发行均未注册这些
+    中性别名，故门禁对 rc2 复跑即失败（3 个未注册 URI）；对 rc3/rc4 另缺 prism:provenance/DataEngineeringContext
+    （上游 rc3 起删除）。修复映射前无法经门禁重新生成本锁。
 locked_checksums:
   outlet-insight.profile.yaml: sha256:035cece0400258ab5571f0c5217cf2c48f4088b25c045caff291bdc30e92f09b
   outlet-insight.owl.ttl: sha256:7f67774530c847ddaae5cfc977d5793ea94a4125ccbe0f3ac13905bbd30810d0
