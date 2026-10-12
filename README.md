@@ -154,7 +154,7 @@ python3 dm_demo.py                           # DM 统计 + 交互下钻演示
 ### 3. 通过 MCP 暴露给其他 Agent
 
 ```bash
-python3 mcp_server.py                        # stdio MCP, 暴露 8 个 tool
+python3 mcp_server.py                        # stdio MCP, 暴露 9 个 tool
 ```
 
 ---

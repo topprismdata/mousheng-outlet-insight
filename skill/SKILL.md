@@ -112,7 +112,7 @@ assert package["provenance"]["insight_generated_at"] == "2026-08-25T12:00:00Z"
 
 13. **受管 FMCG 领域知识库与 W3C PROV-O 实体溯源 (v1.2.0 新增)**：
     - 4 个权威资产 (`skill/references/fmcg_*_provenance.yaml` + `cognitive_concepts_provenance.yaml`) + `fmcg_knowledge_engine.py` 严苛 CI Gate, 确保 100% 实体均带权威溯源 (国标/NIQ/Wikidata/饮料品牌/学术专著);
-    - 涵盖 4 级通路分类 (MT/TT/AFH/ST)、8 项核心分销度量 (ND/WD/ROS/SOS/Cooler Purity/5P/Tier/Potential)、25 个核心连锁品牌、12 个业务黑话与认知概念;
+    - 涵盖 4 级通路分类 (MT/TT/AFH/ST)、8 项核心分销度量 (ND/WD/ROS/SOS/Cooler Purity/5P/Tier/Potential)、25 个核心连锁品牌、11 个业务黑话与认知概念(以 cognitive_concepts_provenance.yaml 为准);
     - `agent_core.FieldRegistry.diagnose_text()` 在 AnalysisIntent 中自动反向归因, 输出每个受管实体的 `uri` 与 `provenance`, 让业务人员随时可查验 "我的理解来自哪里";
     - 置信等级严格分层: STATUTORY (法定国标) / INDUSTRY_STANDARD (行业标准) / ENTERPRISE_PRACTICE (企业披露) / ACADEMIC_AUTHORITY (顶级论文) / OPEN_KNOWLEDGE (开放图谱) / EMPIRICAL (实证统计) — 严禁 UNVERIFIED。
 
